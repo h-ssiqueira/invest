@@ -1,0 +1,119 @@
+openapi: 3.0.3
+info:
+  title: Swagger Investment - OpenAPI 3.0
+  description: |-
+    Simple invest management application
+  contact:
+    email: hss@outlook.com.br
+  license:
+    name: MIT
+  version: 1.0.0
+servers:
+  - url: https://localhost
+tags:
+  - name: Investment
+    description: Investment APIs
+  - name: Rate
+    description: Rate APIs
+  - name: User
+    description: Operations about user
+paths:
+  /investment:
+    post:
+      tags:
+        - Investment
+      summary: Add a new investment
+      description: Add a new investment to the application
+      operationId: addPet
+      requestBody:
+        description: Create a new investment to the application
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvestmentRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+    #get:
+  /investment/{type}:
+    get:
+      tags:
+        - Investment
+      summary: Find pet by ID
+      description: Returns a single pet
+      operationId: getPetById
+      parameters:
+        - name: type
+          in: path
+          description: Type of the investment
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestmentResultResponse'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Pet not found
+  #/rate/selic:
+  #/rate/ipca:
+components:
+  schemas:
+    InvestmentRequest:
+      type: object
+      properties:
+        bank:
+          type: string
+        type:
+          type: string
+        rate:
+          type: number
+          format: float
+        initialDate:
+          type: string
+          format: date
+        finalDate:
+          type: string
+          format: date
+        amount:
+          type: number
+    InvestmentResultResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                type: object
+                properties:
+                  bank:
+                    type: string
+                  type:
+                    type: string
+                  rate:
+                    type: number
+                    format: float
+                  initialDate:
+                    type: string
+                    format: date
+                  finalDate:
+                    type: string
+                    format: date
+                  amount:
+                    type: number
+                  expectedFinalAmount:
+                    type: number
+                  earnedAmount:
+                    type: number
