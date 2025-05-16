@@ -22,15 +22,15 @@ paths:
     post:
       tags:
         - Investment
-      summary: Add a new investment
-      description: Add a new investment to the application
+      summary: Add a new investment list
+      description: Adds new investments to the application
       operationId: addPet
       requestBody:
-        description: Create a new investment to the application
+        description: Create new investments to the application
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InvestmentRequest'
+              $ref: '#/components/schemas/InvestmentRequestList'
         required: true
       responses:
         '201':
@@ -69,6 +69,10 @@ paths:
   #/rate/ipca:
 components:
   schemas:
+    InvestmentRequestList:
+      type: array
+      items:
+        $ref: '#/components/schemas/InvestmentRequest'
     InvestmentRequest:
       type: object
       properties:
@@ -102,7 +106,11 @@ components:
                     type: string
                   type:
                     type: string
+                    enum: ['CDB','RDB','LCA','LCI','CRA','CRI']
                   rate:
+                    type: number
+                    format: float
+                  tax:
                     type: number
                     format: float
                   initialDate:
@@ -113,7 +121,12 @@ components:
                     format: date
                   amount:
                     type: number
+                    format: double
                   expectedFinalAmount:
                     type: number
+                    format: double
                   earnedAmount:
+                    type: number
+                    format: double
+                  profit:
                     type: number
