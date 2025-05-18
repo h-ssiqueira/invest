@@ -24,36 +24,40 @@ paths:
         - Investment
       summary: Add a new investment list
       description: Adds new investments to the application
-      operationId: addPet
+      operationId: addInvestiments
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyId'
       requestBody:
         description: Create new investments to the application
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InvestmentRequestList'
+              $ref: '#/components/schemas/InvestmentRequestWrapper'
         required: true
       responses:
         '201':
           description: Successful operation
+        '207':
+          description: Partial successful operation - some items have fail in validations
         '400':
           description: Invalid input
         '422':
           description: Validation exception
-    #get:
-  /investment/{type}:
     get:
       tags:
         - Investment
-      summary: Find pet by ID
-      description: Returns a single pet
-      operationId: getPetById
+      summary: Find investment by query parameters
+      description: Returns investments by parameters
+      operationId: getInvestments
       parameters:
-        - name: type
-          in: path
-          description: Type of the investment
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/InvestmentType'
+        - $ref: '#/components/parameters/Bank'
+        - $ref: '#/components/parameters/InitialDate'
+        - $ref: '#/components/parameters/FinalDate'
+        - $ref: '#/components/parameters/Aliquot'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/InvestmentSort'
       responses:
         '200':
           description: successful operation
@@ -63,12 +67,40 @@ paths:
                 $ref: '#/components/schemas/InvestmentResultResponse'
         '400':
           description: Invalid ID supplied
-        '404':
-          description: Pet not found
-  #/rate/selic:
-  #/rate/ipca:
+  /rate/{type}:
+    get:
+      tags: 
+        - Rate
+      summary: Retrieve tax rates
+      description: Retrieve tax rates over the time
+      operationId: getRate
+      parameters:
+        - name: type
+          in: path
+          schema:
+            type: string
+            enum: ['SELIC','IPCA']
+          required: true
+        - $ref: '#/components/parameters/InitialDate'
+        - $ref: '#/components/parameters/FinalDate'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateResponseWrapper'
+        '400':
+          description: Bad request
+        '429':
+          description: Too many requests
 components:
   schemas:
+    InvestmentRequestWrapper:
+      type: object
+      properties:
+        items:
+          $ref: '#/components/schemas/InvestmentRequestList'
     InvestmentRequestList:
       type: array
       items:
@@ -80,6 +112,9 @@ components:
           type: string
         type:
           type: string
+        aliquot:
+          type: string
+          enum: ['PREFIXED','INFLATION','POSTFIXED']
         rate:
           type: number
           format: float
@@ -130,3 +165,85 @@ components:
                     format: double
                   profit:
                     type: number
+    RateResponseWrapper:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                type: object
+                properties:
+                  rate:
+                    type: number
+                    format: float
+                  initialDate:
+                    type: string
+                    format: date
+                  finalDate:
+                    type: string
+                    format: date
+  parameters:
+    IdempotencyId:
+      name: idempotency-id
+      in: header
+      description: Idempotency identifier header
+      required: true
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      description: Page number
+      schema:
+        type: integer
+        minimum: 1
+    Size:
+      name: size
+      in: query
+      description: Number of items per page
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    InvestmentSort:
+      name: sort
+      in: query
+      description: Order of investment response
+      schema:
+        type: string
+    InvestmentType:
+      name: type
+      in: query
+      description: Type of the investment
+      schema:
+        type: string
+    Bank:
+      name: bank
+      in: query
+      description: Bank of investment
+      schema:
+        type: string
+    InitialDate:
+      name: initialDate
+      in: query
+      description: Initial date of investment
+      schema:
+        type: string
+        format: date
+    FinalDate:
+      name: finalDate
+      in: query
+      description: Final date of investment
+      schema:
+        type: string
+        format: date
+    Aliquot:
+      name: aliquot
+      in: query
+      description: Final date of investment
+      schema:
+        type: string
+        enum: ['PREFIXED','INFLATION','POSTFIXED']
