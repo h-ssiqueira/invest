@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        logicalFilePath="createTables.xml">
+
+    <property name="author" value="Henrique" global="true"/>
+
+    <changeSet id="investment_table" author="${author}" labels="1.0.0">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="INVESTMENT"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="INVESTMENT">
+            <column name="ID" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="CREATED_AT" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BANK" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="INVESTMENT_TYPE" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ALIQUOT" type="VARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="INITIAL_DATE" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINAL_DATE" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RATE" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AMOUNT" type="DECIMAL(18,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPLETED" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="INVESTMENT" indexName="idx_investment_reference_dates">
+            <column name="INITIAL_DATE"/>
+            <column name="FINAL_DATE"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex indexName="idx_investment_reference_dates" tableName="INVESTMENT"/>
+            <dropTable tableName="INVESTMENT"/>
+        </rollback>
+
+        <comment>Creating INVESTMENT table</comment>
+    </changeSet>
+
+    <changeSet id="IPCA_table" author="${author}" labels="1.0.0">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="IPCA"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="IPCA">
+            <column name="ID" autoIncrement="true" type="INTEGER">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="REFERENCE_DATE" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RATE" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="IPCA" indexName="idx_ipca_reference_date">
+            <column name="REFERENCE_DATE"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex indexName="idx_ipca_reference_date" tableName="IPCA"/>
+            <dropTable tableName="IPCA"/>
+        </rollback>
+
+        <comment>Creating IPCA table</comment>
+    </changeSet>
+
+    <changeSet id="SELIC_table" author="${author}" labels="1.0.0">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="SELIC"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="SELIC">
+            <column name="ID" autoIncrement="true" type="INTEGER">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="REFERENCE_START_DATE" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REFERENCE_END_DATE" type="DATE"/>
+            <column name="RATE" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="SELIC" indexName="idx_selic_reference_dates">
+            <column name="REFERENCE_START_DATE"/>
+            <column name="REFERENCE_END_DATE"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex indexName="idx_selic_reference_dates" tableName="SELIC"/>
+            <dropTable tableName="SELIC"/>
+        </rollback>
+
+        <comment>Creating SELIC table</comment>
+    </changeSet>
+
+    <changeSet id="Holiday_table" author="${author}" labels="1.0.0">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="HOLIDAY"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="HOLIDAY">
+            <column name="ID" autoIncrement="true" type="INTEGER">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="REFERENCE_DATE" type="DATE">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="NAME" type="VARCHAR(35)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="HOLIDAY" indexName="idx_holiday_reference_date">
+            <column name="REFERENCE_DATE"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex indexName="idx_holiday_reference_date" tableName="HOLIDAY"/>
+            <dropTable tableName="HOLIDAY"/>
+        </rollback>
+
+        <comment>Creating HOLIDAY table</comment>
+    </changeSet>
+
+</databaseChangeLog>

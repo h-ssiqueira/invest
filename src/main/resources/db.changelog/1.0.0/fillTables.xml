@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        logicalFilePath="fillTables.xml">
+
+    <changeSet id="Holiday_table_fill" author="${author}" labels="1.0.0" runOnChange="true">
+        <loadUpdateData commentLineStartsWith="//"
+                        encoding="UTF-8"
+                        file="holidays.csv"
+                        primaryKey="id"
+                        quotchar="'"
+                        relativeToChangelogFile="true"
+                        separator=";"
+                        tableName="HOLIDAY"
+                        usePreparedStatements="true">
+            <column name="ID" header="id"/>
+            <column name="REFERENCE_DATE" header="date"/>
+            <column name="NAME" header="holiday"/>
+        </loadUpdateData>
+
+        <rollback>
+            <sql>TRUNCATE TABLE HOLIDAY;</sql>
+        </rollback>
+
+        <comment>Adding registers to HOLIDAY table</comment>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,1003 @@
+id,date,holiday
+1,1990-01-01,Confraternização Universal
+2,1990-02-26,Carnaval
+3,1990-02-27,Carnaval
+4,1990-04-13,Sexta-feira Santa
+5,1990-05-01,Dia do Trabalho
+6,1990-06-14,Corpus Christi
+7,1990-11-20,Dia Nacional da Consciência Negra
+8,1990-12-24,Véspera de Natal
+9,1990-12-25,Natal
+10,1990-12-31,Véspera de Ano-Novo
+11,1991-01-01,Confraternização Universal
+12,1991-02-11,Carnaval
+13,1991-02-12,Carnaval
+14,1991-03-29,Sexta-feira Santa
+15,1991-05-01,Dia do Trabalho
+16,1991-05-30,Corpus Christi
+17,1991-11-20,Dia Nacional da Consciência Negra
+18,1991-12-24,Véspera de Natal
+19,1991-12-25,Natal
+20,1991-12-31,Véspera de Ano-Novo
+21,1992-01-01,Confraternização Universal
+22,1992-03-02,Carnaval
+23,1992-03-03,Carnaval
+24,1992-04-17,Sexta-feira Santa
+25,1992-04-21,Tiradentes
+26,1992-05-01,Dia do Trabalho
+27,1992-06-18,Corpus Christi
+28,1992-11-20,Dia Nacional da Consciência Negra
+29,1992-12-24,Véspera de Natal
+30,1992-12-25,Natal
+31,1992-12-31,Véspera de Ano-Novo
+32,1993-01-01,Confraternização Universal
+33,1993-02-22,Carnaval
+34,1993-02-23,Carnaval
+35,1993-04-09,Sexta-feira Santa
+36,1993-04-21,Tiradentes
+37,1993-06-10,Corpus Christi
+38,1993-12-24,Véspera de Natal
+39,1993-12-31,Véspera de Ano-Novo
+40,1994-02-14,Carnaval
+41,1994-02-15,Carnaval
+42,1994-04-01,Sexta-feira Santa
+43,1994-04-21,Tiradentes
+44,1994-06-02,Corpus Christi
+45,1995-02-27,Carnaval
+46,1995-02-28,Carnaval
+47,1995-04-14,Sexta-feira Santa
+48,1995-04-21,Tiradentes
+49,1995-05-01,Dia do Trabalho
+50,1995-06-15,Corpus Christi
+51,1995-11-20,Dia Nacional da Consciência Negra
+52,1995-12-25,Natal
+53,1996-01-01,Confraternização Universal
+54,1996-02-19,Carnaval
+55,1996-02-20,Carnaval
+56,1996-04-05,Sexta-feira Santa
+57,1996-05-01,Dia do Trabalho
+58,1996-06-06,Corpus Christi
+59,1996-11-20,Dia Nacional da Consciência Negra
+60,1996-12-24,Véspera de Natal
+61,1996-12-25,Natal
+62,1996-12-31,Véspera de Ano-Novo
+63,1997-01-01,Confraternização Universal
+64,1997-02-10,Carnaval
+65,1997-02-11,Carnaval
+66,1997-03-28,Sexta-feira Santa
+67,1997-04-21,Tiradentes
+68,1997-05-01,Dia do Trabalho
+69,1997-05-29,Corpus Christi
+70,1997-11-20,Dia Nacional da Consciência Negra
+71,1997-12-24,Véspera de Natal
+72,1997-12-25,Natal
+73,1997-12-31,Véspera de Ano-Novo
+74,1998-01-01,Confraternização Universal
+75,1998-02-23,Carnaval
+76,1998-02-24,Carnaval
+77,1998-04-10,Sexta-feira Santa
+78,1998-04-21,Tiradentes
+79,1998-05-01,Dia do Trabalho
+80,1998-06-11,Corpus Christi
+81,1998-11-20,Dia Nacional da Consciência Negra
+82,1998-12-24,Véspera de Natal
+83,1998-12-25,Natal
+84,1998-12-31,Véspera de Ano-Novo
+85,1999-01-01,Confraternização Universal
+86,1999-02-15,Carnaval
+87,1999-02-16,Carnaval
+88,1999-04-02,Sexta-feira Santa
+89,1999-04-21,Tiradentes
+90,1999-06-03,Corpus Christi
+91,1999-12-24,Véspera de Natal
+92,1999-12-31,Véspera de Ano-Novo
+93,2000-03-06,Carnaval
+94,2000-03-07,Carnaval
+95,2000-04-21,Sexta-feira Santa
+96,2000-04-21,Tiradentes
+97,2000-05-01,Dia do Trabalho
+98,2000-06-22,Corpus Christi
+99,2000-11-20,Dia Nacional da Consciência Negra
+100,2000-12-25,Natal
+101,2001-01-01,Confraternização Universal
+102,2001-02-26,Carnaval
+103,2001-02-27,Carnaval
+104,2001-04-13,Sexta-feira Santa
+105,2001-05-01,Dia do Trabalho
+106,2001-06-14,Corpus Christi
+107,2001-11-20,Dia Nacional da Consciência Negra
+108,2001-12-24,Véspera de Natal
+109,2001-12-25,Natal
+110,2001-12-31,Véspera de Ano-Novo
+111,2002-01-01,Confraternização Universal
+112,2002-02-11,Carnaval
+113,2002-02-12,Carnaval
+114,2002-03-29,Sexta-feira Santa
+115,2002-05-01,Dia do Trabalho
+116,2002-05-30,Corpus Christi
+117,2002-11-20,Dia Nacional da Consciência Negra
+118,2002-12-24,Véspera de Natal
+119,2002-12-25,Natal
+120,2002-12-31,Véspera de Ano-Novo
+121,2003-01-01,Confraternização Universal
+122,2003-03-03,Carnaval
+123,2003-03-04,Carnaval
+124,2003-04-18,Sexta-feira Santa
+125,2003-04-21,Tiradentes
+126,2003-05-01,Dia do Trabalho
+127,2003-06-19,Corpus Christi
+128,2003-11-20,Dia Nacional da Consciência Negra
+129,2003-12-24,Véspera de Natal
+130,2003-12-25,Natal
+131,2003-12-31,Véspera de Ano-Novo
+132,2004-01-01,Confraternização Universal
+133,2004-02-23,Carnaval
+134,2004-02-24,Carnaval
+135,2004-04-09,Sexta-feira Santa
+136,2004-04-21,Tiradentes
+137,2004-06-10,Corpus Christi
+138,2004-12-24,Véspera de Natal
+139,2004-12-31,Véspera de Ano-Novo
+140,2005-02-07,Carnaval
+141,2005-02-08,Carnaval
+142,2005-03-25,Sexta-feira Santa
+143,2005-04-21,Tiradentes
+144,2005-05-26,Corpus Christi
+145,2006-02-27,Carnaval
+146,2006-02-28,Carnaval
+147,2006-04-14,Sexta-feira Santa
+148,2006-04-21,Tiradentes
+149,2006-05-01,Dia do Trabalho
+150,2006-06-15,Corpus Christi
+151,2006-11-20,Dia Nacional da Consciência Negra
+152,2006-12-25,Natal
+153,2007-01-01,Confraternização Universal
+154,2007-02-19,Carnaval
+155,2007-02-20,Carnaval
+156,2007-04-06,Sexta-feira Santa
+157,2007-05-01,Dia do Trabalho
+158,2007-06-07,Corpus Christi
+159,2007-11-20,Dia Nacional da Consciência Negra
+160,2007-12-24,Véspera de Natal
+161,2007-12-25,Natal
+162,2007-12-31,Véspera de Ano-Novo
+163,2008-01-01,Confraternização Universal
+164,2008-02-04,Carnaval
+165,2008-02-05,Carnaval
+166,2008-03-21,Sexta-feira Santa
+167,2008-04-21,Tiradentes
+168,2008-05-01,Dia do Trabalho
+169,2008-05-22,Corpus Christi
+170,2008-11-20,Dia Nacional da Consciência Negra
+171,2008-12-24,Véspera de Natal
+172,2008-12-25,Natal
+173,2008-12-31,Véspera de Ano-Novo
+174,2009-01-01,Confraternização Universal
+175,2009-02-23,Carnaval
+176,2009-02-24,Carnaval
+177,2009-04-10,Sexta-feira Santa
+178,2009-04-21,Tiradentes
+179,2009-05-01,Dia do Trabalho
+180,2009-06-11,Corpus Christi
+181,2009-11-20,Dia Nacional da Consciência Negra
+182,2009-12-24,Véspera de Natal
+183,2009-12-25,Natal
+184,2009-12-31,Véspera de Ano-Novo
+185,2010-01-01,Confraternização Universal
+186,2010-02-15,Carnaval
+187,2010-02-16,Carnaval
+188,2010-04-02,Sexta-feira Santa
+189,2010-04-21,Tiradentes
+190,2010-06-03,Corpus Christi
+191,2010-12-24,Véspera de Natal
+192,2010-12-31,Véspera de Ano-Novo
+193,2011-03-07,Carnaval
+194,2011-03-08,Carnaval
+195,2011-04-21,Tiradentes
+196,2011-04-22,Sexta-feira Santa
+197,2011-06-23,Corpus Christi
+198,2012-02-20,Carnaval
+199,2012-02-21,Carnaval
+200,2012-04-06,Sexta-feira Santa
+201,2012-05-01,Dia do Trabalho
+202,2012-06-07,Corpus Christi
+203,2012-11-20,Dia Nacional da Consciência Negra
+204,2012-12-24,Véspera de Natal
+205,2012-12-25,Natal
+206,2012-12-31,Véspera de Ano-Novo
+207,2013-01-01,Confraternização Universal
+208,2013-02-11,Carnaval
+209,2013-02-12,Carnaval
+210,2013-03-29,Sexta-feira Santa
+211,2013-05-01,Dia do Trabalho
+212,2013-05-30,Corpus Christi
+213,2013-11-20,Dia Nacional da Consciência Negra
+214,2013-12-24,Véspera de Natal
+215,2013-12-25,Natal
+216,2013-12-31,Véspera de Ano-Novo
+217,2014-01-01,Confraternização Universal
+218,2014-03-03,Carnaval
+219,2014-03-04,Carnaval
+220,2014-04-18,Sexta-feira Santa
+221,2014-04-21,Tiradentes
+222,2014-05-01,Dia do Trabalho
+223,2014-06-19,Corpus Christi
+224,2014-11-20,Dia Nacional da Consciência Negra
+225,2014-12-24,Véspera de Natal
+226,2014-12-25,Natal
+227,2014-12-31,Véspera de Ano-Novo
+228,2015-01-01,Confraternização Universal
+229,2015-02-16,Carnaval
+230,2015-02-17,Carnaval
+231,2015-04-03,Sexta-feira Santa
+232,2015-04-21,Tiradentes
+233,2015-05-01,Dia do Trabalho
+234,2015-06-04,Corpus Christi
+235,2015-11-20,Dia Nacional da Consciência Negra
+236,2015-12-24,Véspera de Natal
+237,2015-12-25,Natal
+238,2015-12-31,Véspera de Ano-Novo
+239,2016-01-01,Confraternização Universal
+240,2016-02-08,Carnaval
+241,2016-02-09,Carnaval
+242,2016-03-25,Sexta-feira Santa
+243,2016-04-21,Tiradentes
+244,2016-05-26,Corpus Christi
+245,2017-02-27,Carnaval
+246,2017-02-28,Carnaval
+247,2017-04-14,Sexta-feira Santa
+248,2017-04-21,Tiradentes
+249,2017-05-01,Dia do Trabalho
+250,2017-06-15,Corpus Christi
+251,2017-11-20,Dia Nacional da Consciência Negra
+252,2017-12-25,Natal
+253,2018-01-01,Confraternização Universal
+254,2018-02-12,Carnaval
+255,2018-02-13,Carnaval
+256,2018-03-30,Sexta-feira Santa
+257,2018-05-01,Dia do Trabalho
+258,2018-05-31,Corpus Christi
+259,2018-11-20,Dia Nacional da Consciência Negra
+260,2018-12-24,Véspera de Natal
+261,2018-12-25,Natal
+262,2018-12-31,Véspera de Ano-Novo
+263,2019-01-01,Confraternização Universal
+264,2019-03-04,Carnaval
+265,2019-03-05,Carnaval
+266,2019-04-19,Sexta-feira Santa
+267,2019-05-01,Dia do Trabalho
+268,2019-06-20,Corpus Christi
+269,2019-11-20,Dia Nacional da Consciência Negra
+270,2019-12-24,Véspera de Natal
+271,2019-12-25,Natal
+272,2019-12-31,Véspera de Ano-Novo
+273,2020-01-01,Confraternização Universal
+274,2020-02-24,Carnaval
+275,2020-02-25,Carnaval
+276,2020-04-10,Sexta-feira Santa
+277,2020-04-21,Tiradentes
+278,2020-05-01,Dia do Trabalho
+279,2020-06-11,Corpus Christi
+280,2020-11-20,Dia Nacional da Consciência Negra
+281,2020-12-24,Véspera de Natal
+282,2020-12-25,Natal
+283,2020-12-31,Véspera de Ano-Novo
+284,2021-01-01,Confraternização Universal
+285,2021-02-15,Carnaval
+286,2021-02-16,Carnaval
+287,2021-04-02,Sexta-feira Santa
+288,2021-04-21,Tiradentes
+289,2021-06-03,Corpus Christi
+290,2021-12-24,Véspera de Natal
+291,2021-12-31,Véspera de Ano-Novo
+292,2022-02-28,Carnaval
+293,2022-03-01,Carnaval
+294,2022-04-15,Sexta-feira Santa
+295,2022-04-21,Tiradentes
+296,2022-06-16,Corpus Christi
+297,2023-02-20,Carnaval
+298,2023-02-21,Carnaval
+299,2023-04-07,Sexta-feira Santa
+300,2023-04-21,Tiradentes
+301,2023-05-01,Dia do Trabalho
+302,2023-06-08,Corpus Christi
+303,2023-11-20,Dia Nacional da Consciência Negra
+304,2023-12-25,Natal
+305,2024-01-01,Confraternização Universal
+306,2024-02-12,Carnaval
+307,2024-02-13,Carnaval
+308,2024-03-29,Sexta-feira Santa
+309,2024-05-01,Dia do Trabalho
+310,2024-05-30,Corpus Christi
+311,2024-11-20,Dia Nacional da Consciência Negra
+312,2024-12-24,Véspera de Natal
+313,2024-12-25,Natal
+314,2024-12-31,Véspera de Ano-Novo
+315,2025-01-01,Confraternização Universal
+316,2025-03-03,Carnaval
+317,2025-03-04,Carnaval
+318,2025-04-18,Sexta-feira Santa
+319,2025-04-21,Tiradentes
+320,2025-05-01,Dia do Trabalho
+321,2025-06-19,Corpus Christi
+322,2025-11-20,Dia Nacional da Consciência Negra
+323,2025-12-24,Véspera de Natal
+324,2025-12-25,Natal
+325,2025-12-31,Véspera de Ano-Novo
+326,2026-01-01,Confraternização Universal
+327,2026-02-16,Carnaval
+328,2026-02-17,Carnaval
+329,2026-04-03,Sexta-feira Santa
+330,2026-04-21,Tiradentes
+331,2026-05-01,Dia do Trabalho
+332,2026-06-04,Corpus Christi
+333,2026-11-20,Dia Nacional da Consciência Negra
+334,2026-12-24,Véspera de Natal
+335,2026-12-25,Natal
+336,2026-12-31,Véspera de Ano-Novo
+337,2027-01-01,Confraternização Universal
+338,2027-02-08,Carnaval
+339,2027-02-09,Carnaval
+340,2027-03-26,Sexta-feira Santa
+341,2027-04-21,Tiradentes
+342,2027-05-27,Corpus Christi
+343,2027-12-24,Véspera de Natal
+344,2027-12-31,Véspera de Ano-Novo
+345,2028-02-28,Carnaval
+346,2028-02-29,Carnaval
+347,2028-04-14,Sexta-feira Santa
+348,2028-04-21,Tiradentes
+349,2028-05-01,Dia do Trabalho
+350,2028-06-15,Corpus Christi
+351,2028-11-20,Dia Nacional da Consciência Negra
+352,2028-12-25,Natal
+353,2029-01-01,Confraternização Universal
+354,2029-02-12,Carnaval
+355,2029-02-13,Carnaval
+356,2029-03-30,Sexta-feira Santa
+357,2029-05-01,Dia do Trabalho
+358,2029-05-31,Corpus Christi
+359,2029-11-20,Dia Nacional da Consciência Negra
+360,2029-12-24,Véspera de Natal
+361,2029-12-25,Natal
+362,2029-12-31,Véspera de Ano-Novo
+363,2030-01-01,Confraternização Universal
+364,2030-03-04,Carnaval
+365,2030-03-05,Carnaval
+366,2030-04-19,Sexta-feira Santa
+367,2030-05-01,Dia do Trabalho
+368,2030-06-20,Corpus Christi
+369,2030-11-20,Dia Nacional da Consciência Negra
+370,2030-12-24,Véspera de Natal
+371,2030-12-25,Natal
+372,2030-12-31,Véspera de Ano-Novo
+373,2031-01-01,Confraternização Universal
+374,2031-02-24,Carnaval
+375,2031-02-25,Carnaval
+376,2031-04-11,Sexta-feira Santa
+377,2031-04-21,Tiradentes
+378,2031-05-01,Dia do Trabalho
+379,2031-06-12,Corpus Christi
+380,2031-11-20,Dia Nacional da Consciência Negra
+381,2031-12-24,Véspera de Natal
+382,2031-12-25,Natal
+383,2031-12-31,Véspera de Ano-Novo
+384,2032-01-01,Confraternização Universal
+385,2032-02-09,Carnaval
+386,2032-02-10,Carnaval
+387,2032-03-26,Sexta-feira Santa
+388,2032-04-21,Tiradentes
+389,2032-05-27,Corpus Christi
+390,2032-12-24,Véspera de Natal
+391,2032-12-31,Véspera de Ano-Novo
+392,2033-02-28,Carnaval
+393,2033-03-01,Carnaval
+394,2033-04-15,Sexta-feira Santa
+395,2033-04-21,Tiradentes
+396,2033-06-16,Corpus Christi
+397,2034-02-20,Carnaval
+398,2034-02-21,Carnaval
+399,2034-04-07,Sexta-feira Santa
+400,2034-04-21,Tiradentes
+401,2034-05-01,Dia do Trabalho
+402,2034-06-08,Corpus Christi
+403,2034-11-20,Dia Nacional da Consciência Negra
+404,2034-12-25,Natal
+405,2035-01-01,Confraternização Universal
+406,2035-02-05,Carnaval
+407,2035-02-06,Carnaval
+408,2035-03-23,Sexta-feira Santa
+409,2035-05-01,Dia do Trabalho
+410,2035-05-24,Corpus Christi
+411,2035-11-20,Dia Nacional da Consciência Negra
+412,2035-12-24,Véspera de Natal
+413,2035-12-25,Natal
+414,2035-12-31,Véspera de Ano-Novo
+415,2036-01-01,Confraternização Universal
+416,2036-02-25,Carnaval
+417,2036-02-26,Carnaval
+418,2036-04-11,Sexta-feira Santa
+419,2036-04-21,Tiradentes
+420,2036-05-01,Dia do Trabalho
+421,2036-06-12,Corpus Christi
+422,2036-11-20,Dia Nacional da Consciência Negra
+423,2036-12-24,Véspera de Natal
+424,2036-12-25,Natal
+425,2036-12-31,Véspera de Ano-Novo
+426,2037-01-01,Confraternização Universal
+427,2037-02-16,Carnaval
+428,2037-02-17,Carnaval
+429,2037-04-03,Sexta-feira Santa
+430,2037-04-21,Tiradentes
+431,2037-05-01,Dia do Trabalho
+432,2037-06-04,Corpus Christi
+433,2037-11-20,Dia Nacional da Consciência Negra
+434,2037-12-24,Véspera de Natal
+435,2037-12-25,Natal
+436,2037-12-31,Véspera de Ano-Novo
+437,2038-01-01,Confraternização Universal
+438,2038-03-08,Carnaval
+439,2038-03-09,Carnaval
+440,2038-04-21,Tiradentes
+441,2038-04-23,Sexta-feira Santa
+442,2038-06-24,Corpus Christi
+443,2038-12-24,Véspera de Natal
+444,2038-12-31,Véspera de Ano-Novo
+445,2039-02-21,Carnaval
+446,2039-02-22,Carnaval
+447,2039-04-08,Sexta-feira Santa
+448,2039-04-21,Tiradentes
+449,2039-06-09,Corpus Christi
+450,2040-02-13,Carnaval
+451,2040-02-14,Carnaval
+452,2040-03-30,Sexta-feira Santa
+453,2040-05-01,Dia do Trabalho
+454,2040-05-31,Corpus Christi
+455,2040-11-20,Dia Nacional da Consciência Negra
+456,2040-12-24,Véspera de Natal
+457,2040-12-25,Natal
+458,2040-12-31,Véspera de Ano-Novo
+459,2041-01-01,Confraternização Universal
+460,2041-03-04,Carnaval
+461,2041-03-05,Carnaval
+462,2041-04-19,Sexta-feira Santa
+463,2041-05-01,Dia do Trabalho
+464,2041-06-20,Corpus Christi
+465,2041-11-20,Dia Nacional da Consciência Negra
+466,2041-12-24,Véspera de Natal
+467,2041-12-25,Natal
+468,2041-12-31,Véspera de Ano-Novo
+469,2042-01-01,Confraternização Universal
+470,2042-02-17,Carnaval
+471,2042-02-18,Carnaval
+472,2042-04-04,Sexta-feira Santa
+473,2042-04-21,Tiradentes
+474,2042-05-01,Dia do Trabalho
+475,2042-06-05,Corpus Christi
+476,2042-11-20,Dia Nacional da Consciência Negra
+477,2042-12-24,Véspera de Natal
+478,2042-12-25,Natal
+479,2042-12-31,Véspera de Ano-Novo
+480,2043-01-01,Confraternização Universal
+481,2043-02-09,Carnaval
+482,2043-02-10,Carnaval
+483,2043-03-27,Sexta-feira Santa
+484,2043-04-21,Tiradentes
+485,2043-05-01,Dia do Trabalho
+486,2043-05-28,Corpus Christi
+487,2043-11-20,Dia Nacional da Consciência Negra
+488,2043-12-24,Véspera de Natal
+489,2043-12-25,Natal
+490,2043-12-31,Véspera de Ano-Novo
+491,2044-01-01,Confraternização Universal
+492,2044-02-29,Carnaval
+493,2044-03-01,Carnaval
+494,2044-04-15,Sexta-feira Santa
+495,2044-04-21,Tiradentes
+496,2044-06-16,Corpus Christi
+497,2045-02-20,Carnaval
+498,2045-02-21,Carnaval
+499,2045-04-07,Sexta-feira Santa
+500,2045-04-21,Tiradentes
+501,2045-05-01,Dia do Trabalho
+502,2045-06-08,Corpus Christi
+503,2045-11-20,Dia Nacional da Consciência Negra
+504,2045-12-25,Natal
+505,2046-01-01,Confraternização Universal
+506,2046-02-05,Carnaval
+507,2046-02-06,Carnaval
+508,2046-03-23,Sexta-feira Santa
+509,2046-05-01,Dia do Trabalho
+510,2046-05-24,Corpus Christi
+511,2046-11-20,Dia Nacional da Consciência Negra
+512,2046-12-24,Véspera de Natal
+513,2046-12-25,Natal
+514,2046-12-31,Véspera de Ano-Novo
+515,2047-01-01,Confraternização Universal
+516,2047-02-25,Carnaval
+517,2047-02-26,Carnaval
+518,2047-04-12,Sexta-feira Santa
+519,2047-05-01,Dia do Trabalho
+520,2047-06-13,Corpus Christi
+521,2047-11-20,Dia Nacional da Consciência Negra
+522,2047-12-24,Véspera de Natal
+523,2047-12-25,Natal
+524,2047-12-31,Véspera de Ano-Novo
+525,2048-01-01,Confraternização Universal
+526,2048-02-17,Carnaval
+527,2048-02-18,Carnaval
+528,2048-04-03,Sexta-feira Santa
+529,2048-04-21,Tiradentes
+530,2048-05-01,Dia do Trabalho
+531,2048-06-04,Corpus Christi
+532,2048-11-20,Dia Nacional da Consciência Negra
+533,2048-12-24,Véspera de Natal
+534,2048-12-25,Natal
+535,2048-12-31,Véspera de Ano-Novo
+536,2049-01-01,Confraternização Universal
+537,2049-03-01,Carnaval
+538,2049-03-02,Carnaval
+539,2049-04-16,Sexta-feira Santa
+540,2049-04-21,Tiradentes
+541,2049-06-17,Corpus Christi
+542,2049-12-24,Véspera de Natal
+543,2049-12-31,Véspera de Ano-Novo
+544,2050-02-21,Carnaval
+545,2050-02-22,Carnaval
+546,2050-04-08,Sexta-feira Santa
+547,2050-04-21,Tiradentes
+548,2050-06-09,Corpus Christi
+549,2051-02-13,Carnaval
+550,2051-02-14,Carnaval
+551,2051-03-31,Sexta-feira Santa
+552,2051-04-21,Tiradentes
+553,2051-05-01,Dia do Trabalho
+554,2051-06-01,Corpus Christi
+555,2051-11-20,Dia Nacional da Consciência Negra
+556,2051-12-25,Natal
+557,2052-01-01,Confraternização Universal
+558,2052-03-04,Carnaval
+559,2052-03-05,Carnaval
+560,2052-04-19,Sexta-feira Santa
+561,2052-05-01,Dia do Trabalho
+562,2052-06-20,Corpus Christi
+563,2052-11-20,Dia Nacional da Consciência Negra
+564,2052-12-24,Véspera de Natal
+565,2052-12-25,Natal
+566,2052-12-31,Véspera de Ano-Novo
+567,2053-01-01,Confraternização Universal
+568,2053-02-17,Carnaval
+569,2053-02-18,Carnaval
+570,2053-04-04,Sexta-feira Santa
+571,2053-04-21,Tiradentes
+572,2053-05-01,Dia do Trabalho
+573,2053-06-05,Corpus Christi
+574,2053-11-20,Dia Nacional da Consciência Negra
+575,2053-12-24,Véspera de Natal
+576,2053-12-25,Natal
+577,2053-12-31,Véspera de Ano-Novo
+578,2054-01-01,Confraternização Universal
+579,2054-02-09,Carnaval
+580,2054-02-10,Carnaval
+581,2054-03-27,Sexta-feira Santa
+582,2054-04-21,Tiradentes
+583,2054-05-01,Dia do Trabalho
+584,2054-05-28,Corpus Christi
+585,2054-11-20,Dia Nacional da Consciência Negra
+586,2054-12-24,Véspera de Natal
+587,2054-12-25,Natal
+588,2054-12-31,Véspera de Ano-Novo
+589,2055-01-01,Confraternização Universal
+590,2055-03-01,Carnaval
+591,2055-03-02,Carnaval
+592,2055-04-16,Sexta-feira Santa
+593,2055-04-21,Tiradentes
+594,2055-06-17,Corpus Christi
+595,2055-12-24,Véspera de Natal
+596,2055-12-31,Véspera de Ano-Novo
+597,2056-02-14,Carnaval
+598,2056-02-15,Carnaval
+599,2056-03-31,Sexta-feira Santa
+600,2056-04-21,Tiradentes
+601,2056-05-01,Dia do Trabalho
+602,2056-06-01,Corpus Christi
+603,2056-11-20,Dia Nacional da Consciência Negra
+604,2056-12-25,Natal
+605,2057-01-01,Confraternização Universal
+606,2057-03-05,Carnaval
+607,2057-03-06,Carnaval
+608,2057-04-20,Sexta-feira Santa
+609,2057-05-01,Dia do Trabalho
+610,2057-06-21,Corpus Christi
+611,2057-11-20,Dia Nacional da Consciência Negra
+612,2057-12-24,Véspera de Natal
+613,2057-12-25,Natal
+614,2057-12-31,Véspera de Ano-Novo
+615,2058-01-01,Confraternização Universal
+616,2058-02-25,Carnaval
+617,2058-02-26,Carnaval
+618,2058-04-12,Sexta-feira Santa
+619,2058-05-01,Dia do Trabalho
+620,2058-06-13,Corpus Christi
+621,2058-11-20,Dia Nacional da Consciência Negra
+622,2058-12-24,Véspera de Natal
+623,2058-12-25,Natal
+624,2058-12-31,Véspera de Ano-Novo
+625,2059-01-01,Confraternização Universal
+626,2059-02-10,Carnaval
+627,2059-02-11,Carnaval
+628,2059-03-28,Sexta-feira Santa
+629,2059-04-21,Tiradentes
+630,2059-05-01,Dia do Trabalho
+631,2059-05-29,Corpus Christi
+632,2059-11-20,Dia Nacional da Consciência Negra
+633,2059-12-24,Véspera de Natal
+634,2059-12-25,Natal
+635,2059-12-31,Véspera de Ano-Novo
+636,2060-01-01,Confraternização Universal
+637,2060-03-01,Carnaval
+638,2060-03-02,Carnaval
+639,2060-04-16,Sexta-feira Santa
+640,2060-04-21,Tiradentes
+641,2060-06-17,Corpus Christi
+642,2060-12-24,Véspera de Natal
+643,2060-12-31,Véspera de Ano-Novo
+644,2061-02-21,Carnaval
+645,2061-02-22,Carnaval
+646,2061-04-08,Sexta-feira Santa
+647,2061-04-21,Tiradentes
+648,2061-06-09,Corpus Christi
+649,2062-02-06,Carnaval
+650,2062-02-07,Carnaval
+651,2062-03-24,Sexta-feira Santa
+652,2062-04-21,Tiradentes
+653,2062-05-01,Dia do Trabalho
+654,2062-05-25,Corpus Christi
+655,2062-11-20,Dia Nacional da Consciência Negra
+656,2062-12-25,Natal
+657,2063-01-01,Confraternização Universal
+658,2063-02-26,Carnaval
+659,2063-02-27,Carnaval
+660,2063-04-13,Sexta-feira Santa
+661,2063-05-01,Dia do Trabalho
+662,2063-06-14,Corpus Christi
+663,2063-11-20,Dia Nacional da Consciência Negra
+664,2063-12-24,Véspera de Natal
+665,2063-12-25,Natal
+666,2063-12-31,Véspera de Ano-Novo
+667,2064-01-01,Confraternização Universal
+668,2064-02-18,Carnaval
+669,2064-02-19,Carnaval
+670,2064-04-04,Sexta-feira Santa
+671,2064-04-21,Tiradentes
+672,2064-05-01,Dia do Trabalho
+673,2064-06-05,Corpus Christi
+674,2064-11-20,Dia Nacional da Consciência Negra
+675,2064-12-24,Véspera de Natal
+676,2064-12-25,Natal
+677,2064-12-31,Véspera de Ano-Novo
+678,2065-01-01,Confraternização Universal
+679,2065-02-09,Carnaval
+680,2065-02-10,Carnaval
+681,2065-03-27,Sexta-feira Santa
+682,2065-04-21,Tiradentes
+683,2065-05-01,Dia do Trabalho
+684,2065-05-28,Corpus Christi
+685,2065-11-20,Dia Nacional da Consciência Negra
+686,2065-12-24,Véspera de Natal
+687,2065-12-25,Natal
+688,2065-12-31,Véspera de Ano-Novo
+689,2066-01-01,Confraternização Universal
+690,2066-02-22,Carnaval
+691,2066-02-23,Carnaval
+692,2066-04-09,Sexta-feira Santa
+693,2066-04-21,Tiradentes
+694,2066-06-10,Corpus Christi
+695,2066-12-24,Véspera de Natal
+696,2066-12-31,Véspera de Ano-Novo
+697,2067-02-14,Carnaval
+698,2067-02-15,Carnaval
+699,2067-04-01,Sexta-feira Santa
+700,2067-04-21,Tiradentes
+701,2067-06-02,Corpus Christi
+702,2068-03-05,Carnaval
+703,2068-03-06,Carnaval
+704,2068-04-20,Sexta-feira Santa
+705,2068-05-01,Dia do Trabalho
+706,2068-06-21,Corpus Christi
+707,2068-11-20,Dia Nacional da Consciência Negra
+708,2068-12-24,Véspera de Natal
+709,2068-12-25,Natal
+710,2068-12-31,Véspera de Ano-Novo
+711,2069-01-01,Confraternização Universal
+712,2069-02-25,Carnaval
+713,2069-02-26,Carnaval
+714,2069-04-12,Sexta-feira Santa
+715,2069-05-01,Dia do Trabalho
+716,2069-06-13,Corpus Christi
+717,2069-11-20,Dia Nacional da Consciência Negra
+718,2069-12-24,Véspera de Natal
+719,2069-12-25,Natal
+720,2069-12-31,Véspera de Ano-Novo
+721,2070-01-01,Confraternização Universal
+722,2070-02-10,Carnaval
+723,2070-02-11,Carnaval
+724,2070-03-28,Sexta-feira Santa
+725,2070-04-21,Tiradentes
+726,2070-05-01,Dia do Trabalho
+727,2070-05-29,Corpus Christi
+728,2070-11-20,Dia Nacional da Consciência Negra
+729,2070-12-24,Véspera de Natal
+730,2070-12-25,Natal
+731,2070-12-31,Véspera de Ano-Novo
+732,2071-01-01,Confraternização Universal
+733,2071-03-02,Carnaval
+734,2071-03-03,Carnaval
+735,2071-04-17,Sexta-feira Santa
+736,2071-04-21,Tiradentes
+737,2071-05-01,Dia do Trabalho
+738,2071-06-18,Corpus Christi
+739,2071-11-20,Dia Nacional da Consciência Negra
+740,2071-12-24,Véspera de Natal
+741,2071-12-25,Natal
+742,2071-12-31,Véspera de Ano-Novo
+743,2072-01-01,Confraternização Universal
+744,2072-02-22,Carnaval
+745,2072-02-23,Carnaval
+746,2072-04-08,Sexta-feira Santa
+747,2072-04-21,Tiradentes
+748,2072-06-09,Corpus Christi
+749,2073-02-06,Carnaval
+750,2073-02-07,Carnaval
+751,2073-03-24,Sexta-feira Santa
+752,2073-04-21,Tiradentes
+753,2073-05-01,Dia do Trabalho
+754,2073-05-25,Corpus Christi
+755,2073-11-20,Dia Nacional da Consciência Negra
+756,2073-12-25,Natal
+757,2074-01-01,Confraternização Universal
+758,2074-02-26,Carnaval
+759,2074-02-27,Carnaval
+760,2074-04-13,Sexta-feira Santa
+761,2074-05-01,Dia do Trabalho
+762,2074-06-14,Corpus Christi
+763,2074-11-20,Dia Nacional da Consciência Negra
+764,2074-12-24,Véspera de Natal
+765,2074-12-25,Natal
+766,2074-12-31,Véspera de Ano-Novo
+767,2075-01-01,Confraternização Universal
+768,2075-02-18,Carnaval
+769,2075-02-19,Carnaval
+770,2075-04-05,Sexta-feira Santa
+771,2075-05-01,Dia do Trabalho
+772,2075-06-06,Corpus Christi
+773,2075-11-20,Dia Nacional da Consciência Negra
+774,2075-12-24,Véspera de Natal
+775,2075-12-25,Natal
+776,2075-12-31,Véspera de Ano-Novo
+777,2076-01-01,Confraternização Universal
+778,2076-03-02,Carnaval
+779,2076-03-03,Carnaval
+780,2076-04-17,Sexta-feira Santa
+781,2076-04-21,Tiradentes
+782,2076-05-01,Dia do Trabalho
+783,2076-06-18,Corpus Christi
+784,2076-11-20,Dia Nacional da Consciência Negra
+785,2076-12-24,Véspera de Natal
+786,2076-12-25,Natal
+787,2076-12-31,Véspera de Ano-Novo
+788,2077-01-01,Confraternização Universal
+789,2077-02-22,Carnaval
+790,2077-02-23,Carnaval
+791,2077-04-09,Sexta-feira Santa
+792,2077-04-21,Tiradentes
+793,2077-06-10,Corpus Christi
+794,2077-12-24,Véspera de Natal
+795,2077-12-31,Véspera de Ano-Novo
+796,2078-02-14,Carnaval
+797,2078-02-15,Carnaval
+798,2078-04-01,Sexta-feira Santa
+799,2078-04-21,Tiradentes
+800,2078-06-02,Corpus Christi
+801,2079-03-06,Carnaval
+802,2079-03-07,Carnaval
+803,2079-04-21,Tiradentes
+804,2079-04-21,Sexta-feira Santa
+805,2079-05-01,Dia do Trabalho
+806,2079-06-22,Corpus Christi
+807,2079-11-20,Dia Nacional da Consciência Negra
+808,2079-12-25,Natal
+809,2080-01-01,Confraternização Universal
+810,2080-02-19,Carnaval
+811,2080-02-20,Carnaval
+812,2080-04-05,Sexta-feira Santa
+813,2080-05-01,Dia do Trabalho
+814,2080-06-06,Corpus Christi
+815,2080-11-20,Dia Nacional da Consciência Negra
+816,2080-12-24,Véspera de Natal
+817,2080-12-25,Natal
+818,2080-12-31,Véspera de Ano-Novo
+819,2081-01-01,Confraternização Universal
+820,2081-02-10,Carnaval
+821,2081-02-11,Carnaval
+822,2081-03-28,Sexta-feira Santa
+823,2081-04-21,Tiradentes
+824,2081-05-01,Dia do Trabalho
+825,2081-05-29,Corpus Christi
+826,2081-11-20,Dia Nacional da Consciência Negra
+827,2081-12-24,Véspera de Natal
+828,2081-12-25,Natal
+829,2081-12-31,Véspera de Ano-Novo
+830,2082-01-01,Confraternização Universal
+831,2082-03-02,Carnaval
+832,2082-03-03,Carnaval
+833,2082-04-17,Sexta-feira Santa
+834,2082-04-21,Tiradentes
+835,2082-05-01,Dia do Trabalho
+836,2082-06-18,Corpus Christi
+837,2082-11-20,Dia Nacional da Consciência Negra
+838,2082-12-24,Véspera de Natal
+839,2082-12-25,Natal
+840,2082-12-31,Véspera de Ano-Novo
+841,2083-01-01,Confraternização Universal
+842,2083-02-15,Carnaval
+843,2083-02-16,Carnaval
+844,2083-04-02,Sexta-feira Santa
+845,2083-04-21,Tiradentes
+846,2083-06-03,Corpus Christi
+847,2083-12-24,Véspera de Natal
+848,2083-12-31,Véspera de Ano-Novo
+849,2084-02-07,Carnaval
+850,2084-02-08,Carnaval
+851,2084-03-24,Sexta-feira Santa
+852,2084-04-21,Tiradentes
+853,2084-05-01,Dia do Trabalho
+854,2084-05-25,Corpus Christi
+855,2084-11-20,Dia Nacional da Consciência Negra
+856,2084-12-25,Natal
+857,2085-01-01,Confraternização Universal
+858,2085-02-26,Carnaval
+859,2085-02-27,Carnaval
+860,2085-04-13,Sexta-feira Santa
+861,2085-05-01,Dia do Trabalho
+862,2085-06-14,Corpus Christi
+863,2085-11-20,Dia Nacional da Consciência Negra
+864,2085-12-24,Véspera de Natal
+865,2085-12-25,Natal
+866,2085-12-31,Véspera de Ano-Novo
+867,2086-01-01,Confraternização Universal
+868,2086-02-11,Carnaval
+869,2086-02-12,Carnaval
+870,2086-03-29,Sexta-feira Santa
+871,2086-05-01,Dia do Trabalho
+872,2086-05-30,Corpus Christi
+873,2086-11-20,Dia Nacional da Consciência Negra
+874,2086-12-24,Véspera de Natal
+875,2086-12-25,Natal
+876,2086-12-31,Véspera de Ano-Novo
+877,2087-01-01,Confraternização Universal
+878,2087-03-03,Carnaval
+879,2087-03-04,Carnaval
+880,2087-04-18,Sexta-feira Santa
+881,2087-04-21,Tiradentes
+882,2087-05-01,Dia do Trabalho
+883,2087-06-19,Corpus Christi
+884,2087-11-20,Dia Nacional da Consciência Negra
+885,2087-12-24,Véspera de Natal
+886,2087-12-25,Natal
+887,2087-12-31,Véspera de Ano-Novo
+888,2088-01-01,Confraternização Universal
+889,2088-02-23,Carnaval
+890,2088-02-24,Carnaval
+891,2088-04-09,Sexta-feira Santa
+892,2088-04-21,Tiradentes
+893,2088-06-10,Corpus Christi
+894,2088-12-24,Véspera de Natal
+895,2088-12-31,Véspera de Ano-Novo
+896,2089-02-14,Carnaval
+897,2089-02-15,Carnaval
+898,2089-04-01,Sexta-feira Santa
+899,2089-04-21,Tiradentes
+900,2089-06-02,Corpus Christi
+901,2090-02-27,Carnaval
+902,2090-02-28,Carnaval
+903,2090-04-14,Sexta-feira Santa
+904,2090-04-21,Tiradentes
+905,2090-05-01,Dia do Trabalho
+906,2090-06-15,Corpus Christi
+907,2090-11-20,Dia Nacional da Consciência Negra
+908,2090-12-25,Natal
+909,2091-01-01,Confraternização Universal
+910,2091-02-19,Carnaval
+911,2091-02-20,Carnaval
+912,2091-04-06,Sexta-feira Santa
+913,2091-05-01,Dia do Trabalho
+914,2091-06-07,Corpus Christi
+915,2091-11-20,Dia Nacional da Consciência Negra
+916,2091-12-24,Véspera de Natal
+917,2091-12-25,Natal
+918,2091-12-31,Véspera de Ano-Novo
+919,2092-01-01,Confraternização Universal
+920,2092-02-11,Carnaval
+921,2092-02-12,Carnaval
+922,2092-03-28,Sexta-feira Santa
+923,2092-04-21,Tiradentes
+924,2092-05-01,Dia do Trabalho
+925,2092-05-29,Corpus Christi
+926,2092-11-20,Dia Nacional da Consciência Negra
+927,2092-12-24,Véspera de Natal
+928,2092-12-25,Natal
+929,2092-12-31,Véspera de Ano-Novo
+930,2093-01-01,Confraternização Universal
+931,2093-02-23,Carnaval
+932,2093-02-24,Carnaval
+933,2093-04-10,Sexta-feira Santa
+934,2093-04-21,Tiradentes
+935,2093-05-01,Dia do Trabalho
+936,2093-06-11,Corpus Christi
+937,2093-11-20,Dia Nacional da Consciência Negra
+938,2093-12-24,Véspera de Natal
+939,2093-12-25,Natal
+940,2093-12-31,Véspera de Ano-Novo
+941,2094-01-01,Confraternização Universal
+942,2094-02-15,Carnaval
+943,2094-02-16,Carnaval
+944,2094-04-02,Sexta-feira Santa
+945,2094-04-21,Tiradentes
+946,2094-06-03,Corpus Christi
+947,2094-12-24,Véspera de Natal
+948,2094-12-31,Véspera de Ano-Novo
+949,2095-03-07,Carnaval
+950,2095-03-08,Carnaval
+951,2095-04-21,Tiradentes
+952,2095-04-22,Sexta-feira Santa
+953,2095-06-23,Corpus Christi
+954,2096-02-27,Carnaval
+955,2096-02-28,Carnaval
+956,2096-04-13,Sexta-feira Santa
+957,2096-05-01,Dia do Trabalho
+958,2096-06-14,Corpus Christi
+959,2096-11-20,Dia Nacional da Consciência Negra
+960,2096-12-24,Véspera de Natal
+961,2096-12-25,Natal
+962,2096-12-31,Véspera de Ano-Novo
+963,2097-01-01,Confraternização Universal
+964,2097-02-11,Carnaval
+965,2097-02-12,Carnaval
+966,2097-03-29,Sexta-feira Santa
+967,2097-05-01,Dia do Trabalho
+968,2097-05-30,Corpus Christi
+969,2097-11-20,Dia Nacional da Consciência Negra
+970,2097-12-24,Véspera de Natal
+971,2097-12-25,Natal
+972,2097-12-31,Véspera de Ano-Novo
+973,2098-01-01,Confraternização Universal
+974,2098-03-03,Carnaval
+975,2098-03-04,Carnaval
+976,2098-04-18,Sexta-feira Santa
+977,2098-04-21,Tiradentes
+978,2098-05-01,Dia do Trabalho
+979,2098-06-19,Corpus Christi
+980,2098-11-20,Dia Nacional da Consciência Negra
+981,2098-12-24,Véspera de Natal
+982,2098-12-25,Natal
+983,2098-12-31,Véspera de Ano-Novo
+984,2099-01-01,Confraternização Universal
+985,2099-02-23,Carnaval
+986,2099-02-24,Carnaval
+987,2099-04-10,Sexta-feira Santa
+988,2099-04-21,Tiradentes
+989,2099-05-01,Dia do Trabalho
+990,2099-06-11,Corpus Christi
+991,2099-11-20,Dia Nacional da Consciência Negra
+992,2099-12-24,Véspera de Natal
+993,2099-12-25,Natal
+994,2099-12-31,Véspera de Ano-Novo
+995,2100-01-01,Confraternização Universal
+996,2100-02-08,Carnaval
+997,2100-02-09,Carnaval
+998,2100-03-26,Sexta-feira Santa
+999,2100-04-21,Tiradentes
+1000,2100-05-27,Corpus Christi
+1001,2100-12-24,Véspera de Natal
+1002,2100-12-31,Véspera de Ano-Novo

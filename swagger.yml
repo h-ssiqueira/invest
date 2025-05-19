@@ -22,7 +22,7 @@ paths:
         - Investment
       summary: Add a new investment list
       description: Adds new investments to the application
-      operationId: addInvestiments
+      operationId: addInvestments
       parameters:
         - $ref: '#/components/parameters/IdempotencyId'
       requestBody:
