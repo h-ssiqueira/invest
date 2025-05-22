@@ -8,7 +8,7 @@
 
     <property name="author" value="Henrique" global="true"/>
 
-    <changeSet id="investment_table" author="${author}" labels="1.0.0">
+    <changeSet id="Investment_table" author="${author}" labels="1.0.0">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="INVESTMENT"/>

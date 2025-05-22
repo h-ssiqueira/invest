@@ -16,7 +16,7 @@ tags:
   - name: Rate
     description: Rate APIs
 paths:
-  /investments:
+  /api/v1/investments:
     post:
       tags:
         - Investment
@@ -71,7 +71,7 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /rates/{rateType}:
+  /api/v1/rates/{rateType}:
     get:
       tags: 
         - Rate

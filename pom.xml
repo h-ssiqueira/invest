@@ -128,10 +128,8 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <delegatePattern>true</delegatePattern>
-                                <validateSpec>false</validateSpec>
                                 <implicitHeaders>true</implicitHeaders>
                                 <serializationLibrary>jackson</serializationLibrary>
-                                <openApiNullable>false</openApiNullable>
                                 <useTags>true</useTags>
                                 <useJakartaEe>true</useJakartaEe>
                                 <useSpringboot3>true</useSpringboot3>
