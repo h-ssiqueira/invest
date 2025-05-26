@@ -142,6 +142,7 @@ components:
           type: number
           format: float
           example: 10.55
+          minimum: 0.01
         initialDate:
           type: string
           format: date
@@ -154,6 +155,7 @@ components:
           type: number
           format: double
           example: 1000.19
+          minimum: 0.01
     InvestmentResultResponse:
       type: object
       properties:
@@ -174,7 +176,7 @@ components:
               type: array
               items:
                 oneOf:
-                  - $ref: '#/components/schemas/InvestmentResultResponseDTO'
+                  - $ref: '#/components/schemas/InvestmentRequest'
                   - $ref: '#/components/schemas/InvestmentErrorResponseDTO'
     InvestmentErrorResponseDTO:
       type: object
@@ -263,8 +265,8 @@ components:
     IdempotencyId:
       name: idempotency-id
       in: header
-      description: Idempotency identifier header
-      required: true
+      description: Idempotency identifier header, in case no value is informed, the server calculates based on the input informed
+      required: false
       schema:
         type: string
     Page:

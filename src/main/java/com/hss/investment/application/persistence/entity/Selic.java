@@ -1,4 +1,4 @@
-package com.hss.application.persistence.entity;
+package com.hss.investment.application.persistence.entity;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
@@ -9,10 +9,12 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Table(name = "SELIC")
 @Entity
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Selic {
 

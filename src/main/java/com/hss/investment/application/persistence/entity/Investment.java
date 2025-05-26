@@ -1,4 +1,4 @@
-package com.hss.application.persistence.entity;
+package com.hss.investment.application.persistence.entity;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,7 +23,7 @@ import java.util.UUID;
 
 @Table(name = "INVESTMENT")
 @Entity
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Investment {
 
@@ -53,8 +54,22 @@ public class Investment {
     @Column(name = "COMPLETED", nullable = false)
     private boolean completed;
 
-    @AllArgsConstructor
+    private Investment(String bank, InvestmentType type, InvestmentRange range, BaseRate rate, BigDecimal amount) {
+        this.bank = bank;
+        this.investmentType = type;
+        this.investmentRange = range;
+        this.baseRate = rate;
+        this.amount = amount;
+        this.createdAt = ZonedDateTime.now();
+        this.completed = false;
+    }
+
+    public static Investment create(String bank, InvestmentType type, InvestmentRange range, BaseRate rate, BigDecimal amount) {
+        return new Investment(bank,type,range,rate,amount);
+    }
+
     @Getter
+    @AllArgsConstructor
     public enum InvestmentType {
         CDB(true),
         RDB(true),
@@ -62,7 +77,7 @@ public class Investment {
         LCI(false),
         CRA(false),
         CRI(false);
-        
+
         private final boolean hasTaxes;
     }
     
@@ -71,6 +86,7 @@ public class Investment {
     }
 
     @Embeddable
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     @EqualsAndHashCode
@@ -82,6 +98,13 @@ public class Investment {
         @Column(name = "FINAL_DATE", nullable = false, updatable = false)
         private LocalDate finalDate;
 
+        public static InvestmentRange of(LocalDate initialDate, LocalDate finalDate) {
+            if(initialDate.isAfter(finalDate)) {
+                throw new IllegalArgumentException();
+            }
+            return new InvestmentRange(initialDate, finalDate);
+        }
+
         public Integer getInvestmentDays() {
             return initialDate.until(finalDate).getDays();
         }
@@ -89,6 +112,7 @@ public class Investment {
 
     @Getter
     @Embeddable
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @EqualsAndHashCode
     public static class BaseRate {
@@ -99,5 +123,9 @@ public class Investment {
         
         @AttributeOverride(name = "rate", column = @Column(name = "RATE", nullable = false, updatable = false, precision = 10, scale = 2))
         private Percentage rate;
+
+        public static BaseRate of(AliquotType type, BigDecimal rate) {
+            return new BaseRate(type, Percentage.of(rate));
+        }
     }
 }

@@ -1,6 +1,6 @@
-package com.hss.application.persistence;
+package com.hss.investment.application.persistence;
 
-import com.hss.application.persistence.entity.Holiday;
+import com.hss.investment.application.persistence.entity.Holiday;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
