@@ -1,4 +1,4 @@
-package com.hss.investment.dto;
+package com.hss.investment.application.dto;
 
 import com.hss.investment.application.persistence.entity.Investment;
 import org.springframework.data.domain.Pageable;

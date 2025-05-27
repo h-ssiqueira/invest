@@ -1,6 +1,6 @@
 package com.hss.investment.application.service;
 
-import com.hss.investment.dto.RateQueryDTO;
+import com.hss.investment.application.dto.RateQueryDTO;
 import com.hss.openapi.model.RateResponseWrapperDataItemsInner;
 import org.springframework.transaction.annotation.Transactional;
 

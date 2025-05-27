@@ -1,5 +1,6 @@
 package com.hss.investment.application.persistence.entity;
 
+import com.hss.investment.application.exception.InvestmentException;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -20,6 +21,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.UUID;
+
+import static com.hss.investment.application.exception.ErrorMessages.INV_002;
 
 @Table(name = "INVESTMENT")
 @Entity
@@ -100,7 +103,7 @@ public class Investment {
 
         public static InvestmentRange of(LocalDate initialDate, LocalDate finalDate) {
             if(initialDate.isAfter(finalDate)) {
-                throw new IllegalArgumentException();
+                throw new InvestmentException(INV_002);
             }
             return new InvestmentRange(initialDate, finalDate);
         }

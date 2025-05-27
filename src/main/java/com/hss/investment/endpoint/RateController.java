@@ -1,8 +1,8 @@
 package com.hss.investment.endpoint;
 
+import com.hss.investment.application.dto.GenericResponseDTO;
+import com.hss.investment.application.dto.RateQueryDTO;
 import com.hss.investment.application.service.RateService;
-import com.hss.investment.dto.GenericResponseDTO;
-import com.hss.investment.dto.RateQueryDTO;
 import com.hss.openapi.api.RateApi;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

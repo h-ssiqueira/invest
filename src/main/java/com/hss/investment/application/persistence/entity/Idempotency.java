@@ -1,5 +1,6 @@
 package com.hss.investment.application.persistence.entity;
 
+import com.hss.investment.application.exception.InvestmentException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static com.hss.investment.application.exception.ErrorMessages.INV_001;
 import static java.util.Objects.isNull;
 
 @Table(name = "IDEMPOTENCY")
@@ -38,7 +40,7 @@ public class Idempotency {
 
     public static Idempotency of(String idempotency) {
         if(isNull(idempotency) || idempotency.isBlank()) {
-            throw new IllegalArgumentException();
+            throw new InvestmentException(INV_001);
         }
         return new Idempotency(idempotency);
     }

@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    jdbc-url: jdbc:postgresql://${POSTGRESQL_HOST:172.17.0.2}:5432/investments
+    url: jdbc:postgresql://${POSTGRESQL_HOST:172.17.0.2}:5432/investment
     username: ${POSTGRESQL_USERNAME:postgres}
     password: ${POSTGRESQL_PASSWORD:admin}
     hikari.connectionTimeout: 5000
@@ -15,6 +15,9 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/changelog.xml
+  mvc:
+    problemdetails:
+      enabled: true
 
 server:
   port: ${SERVER_PORT:8080}

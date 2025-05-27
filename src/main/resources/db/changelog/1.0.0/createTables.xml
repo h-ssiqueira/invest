@@ -168,7 +168,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="REFERENCE_DATE" type="DATE">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="NAME" type="VARCHAR(35)">
                 <constraints nullable="false"/>

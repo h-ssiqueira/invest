@@ -1,9 +1,10 @@
 package com.hss.investment.endpoint;
 
+import com.hss.investment.application.dto.GenericResponseDTO;
+import com.hss.investment.application.dto.InvestmentQueryDTO;
+import com.hss.investment.application.exception.InvestmentException;
 import com.hss.investment.application.persistence.entity.Investment;
 import com.hss.investment.application.service.InvestmentService;
-import com.hss.investment.dto.GenericResponseDTO;
-import com.hss.investment.dto.InvestmentQueryDTO;
 import com.hss.openapi.api.InvestmentApi;
 import com.hss.openapi.model.InvestmentErrorResponseDTO;
 import com.hss.openapi.model.InvestmentRequestWrapper;
@@ -12,12 +13,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 
+import static com.hss.investment.application.dto.utils.SortExtractor.extractSort;
+import static com.hss.investment.application.exception.ErrorMessages.INV_004;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.MULTI_STATUS;
 
@@ -35,7 +37,7 @@ public class InvestmentController implements InvestmentApi {
             .filter(InvestmentErrorResponseDTO.class::isInstance)
             .count();
         if(errors == investmentRequestWrapper.getItems().size()) {
-            throw new IllegalArgumentException();
+            throw new InvestmentException(INV_004);
         }
         return errors == 0L ? ResponseEntity.status(CREATED).build() : ResponseEntity.status(MULTI_STATUS).body(new GenericResponseDTO<>(responseDto));
     }
@@ -47,7 +49,7 @@ public class InvestmentController implements InvestmentApi {
             bank,
             initialDate, finalDate,
             Investment.AliquotType.valueOf(aliquot),
-            PageRequest.of(page, size, Sort.unsorted()))
+            PageRequest.of(page, size, extractSort(sort)))
         );
         return ResponseEntity.ok(new GenericResponseDTO<>(new InvestmentResultResponseData().items(result)));
     }

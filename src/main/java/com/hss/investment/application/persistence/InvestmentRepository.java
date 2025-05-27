@@ -1,7 +1,7 @@
 package com.hss.investment.application.persistence;
 
+import com.hss.investment.application.dto.InvestmentQueryDTO;
 import com.hss.investment.application.persistence.entity.Investment;
-import com.hss.investment.dto.InvestmentQueryDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

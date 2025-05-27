@@ -1,8 +1,9 @@
 package com.hss.investment.application.service;
 
+import com.hss.investment.application.dto.InvestmentQueryDTO;
+import com.hss.investment.application.exception.InvestmentException;
 import com.hss.investment.application.persistence.InvestmentRepository;
 import com.hss.investment.application.persistence.entity.Investment;
-import com.hss.investment.dto.InvestmentQueryDTO;
 import com.hss.openapi.model.InvestmentErrorResponseDTO;
 import com.hss.openapi.model.InvestmentRequest;
 import com.hss.openapi.model.InvestmentResultResponseDTO;
@@ -16,17 +17,19 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hss.investment.application.exception.ErrorMessages.INV_002;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public final class InvestmentServiceImpl implements InvestmentService {
+public non-sealed class InvestmentServiceImpl implements InvestmentService {
 
     private final InvestmentRepository investmentRepository;
 
     @Override
     public PartialInvestmentResultData addInvestments(List<InvestmentRequest> dtoList) {
         var response = new PartialInvestmentResultData();
-        List<Investment> items = new ArrayList<>();
+        var items = new ArrayList<Investment>();
         dtoList.forEach(investment -> {
             try {
                 var entity = Investment.create(
@@ -38,7 +41,7 @@ public final class InvestmentServiceImpl implements InvestmentService {
                 );
                 items.add(entity);
                 response.addItemsItem(investment);
-            } catch (IllegalArgumentException ex) {
+            } catch (InvestmentException ex) {
                 response.addItemsItem(new InvestmentErrorResponseDTO());
             }
         });
@@ -49,7 +52,7 @@ public final class InvestmentServiceImpl implements InvestmentService {
     @Override
     public List<InvestmentResultResponseDTO> retrieveInvestments(InvestmentQueryDTO dto) {
         if(dto.initialDate().isAfter(dto.finalDate())) {
-            throw new IllegalArgumentException();
+            throw new InvestmentException(INV_002);
         }
         var result = investmentRepository.findByParameters(dto, dto.page());
         return result.stream()

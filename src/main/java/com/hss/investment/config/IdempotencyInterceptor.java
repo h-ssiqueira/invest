@@ -1,5 +1,6 @@
 package com.hss.investment.config;
 
+import com.hss.investment.application.exception.InvestmentException;
 import com.hss.investment.application.persistence.IdempotencyRepository;
 import com.hss.investment.application.persistence.entity.Idempotency;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import java.security.MessageDigest;
 import java.util.Optional;
 
 import static ch.qos.logback.core.encoder.ByteArrayUtil.toHexString;
+import static com.hss.investment.application.exception.ErrorMessages.INV_005;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Component
@@ -29,7 +31,7 @@ public class IdempotencyInterceptor implements HandlerInterceptor {
         }
         var idempotency = Optional.ofNullable(request.getHeader("idempotency-Id")).orElse(calculate(request));
         // TODO: set path + method
-        var found = idempotencyRepository.findByIdempotency(idempotency);
+        var found = idempotencyRepository.findByIdempotencyValue(idempotency);
         if(found.isPresent()) {
             log.warn("Request already executed! id: {}", found.get().getId());
             return false;
@@ -44,7 +46,7 @@ public class IdempotencyInterceptor implements HandlerInterceptor {
             var params = request.getParameterMap();
             return toHexString(sha256.digest(params.toString().getBytes()));
         } catch(Exception e) {
-            throw new IllegalArgumentException(e.getMessage());
+            throw new InvestmentException(INV_005.formatted(e.getMessage()));
         }
     }
 }

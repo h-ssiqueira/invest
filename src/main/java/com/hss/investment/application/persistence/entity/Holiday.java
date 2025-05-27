@@ -22,7 +22,7 @@ public class Holiday {
     @Column(name = "ID", nullable = false, updatable = false, unique = true)
     private Integer id;
 
-    @Column(name = "REFERENCE_DATE", nullable = false, updatable = false, unique = true)
+    @Column(name = "REFERENCE_DATE", nullable = false, updatable = false)
     private LocalDate referenceDate;
 
     @Column(name = "NAME", nullable = false, updatable = false)

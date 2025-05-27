@@ -294,6 +294,7 @@ components:
       description: Order of investment response
       schema:
         type: string
+        pattern: "^(initialDate|finalDate|bank|aliquot|investmentType),(asc|desc)$"
         example: 'initialDate,desc'
     InvestmentType:
       name: type

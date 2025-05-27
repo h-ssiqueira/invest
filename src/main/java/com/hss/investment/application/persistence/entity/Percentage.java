@@ -1,5 +1,6 @@
 package com.hss.investment.application.persistence.entity;
 
+import com.hss.investment.application.exception.InvestmentException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -8,6 +9,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+
+import static com.hss.investment.application.exception.ErrorMessages.INV_003;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,7 +23,7 @@ public class Percentage {
 
     public static Percentage of(BigDecimal rate) {
         if(rate.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException();
+            throw new InvestmentException(INV_003);
         }
         return new Percentage(rate);
     }

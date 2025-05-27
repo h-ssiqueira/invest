@@ -13,7 +13,6 @@
                         primaryKey="id"
                         quotchar="'"
                         relativeToChangelogFile="true"
-                        separator=";"
                         tableName="HOLIDAY"
                         usePreparedStatements="true">
             <column name="ID" header="id"/>

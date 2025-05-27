@@ -1,4 +1,4 @@
-package com.hss.investment.dto;
+package com.hss.investment.application.dto;
 
 public record GenericResponseDTO<T>(T data) {
 }
