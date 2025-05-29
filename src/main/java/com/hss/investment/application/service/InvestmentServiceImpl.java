@@ -9,6 +9,7 @@ import com.hss.openapi.model.InvestmentRequest;
 import com.hss.openapi.model.InvestmentResultResponseDTO;
 import com.hss.openapi.model.InvestmentType;
 import com.hss.openapi.model.PartialInvestmentResultData;
+import com.hss.openapi.model.PartialInvestmentResultDataItemsInner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
 
     @Override
     public PartialInvestmentResultData addInvestments(List<InvestmentRequest> dtoList) {
-        var response = new PartialInvestmentResultData();
+        var responseList = new ArrayList<PartialInvestmentResultDataItemsInner>();
         var items = new ArrayList<Investment>();
         dtoList.forEach(investment -> {
             try {
@@ -40,13 +41,13 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
                     BigDecimal.valueOf(investment.getAmount())
                 );
                 items.add(entity);
-                response.addItemsItem(investment);
+                responseList.add(investment);
             } catch (InvestmentException ex) {
-                response.addItemsItem(new InvestmentErrorResponseDTO());
+                responseList.add(InvestmentErrorResponseDTO.builder().build());
             }
         });
         investmentRepository.saveAll(items);
-        return response;
+        return PartialInvestmentResultData.builder().items(responseList).build();
     }
 
     @Override
@@ -56,13 +57,14 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
         }
         var result = investmentRepository.findByParameters(dto, dto.page());
         return result.stream()
-            .map(item -> new InvestmentResultResponseDTO()
+            .map(item -> InvestmentResultResponseDTO.builder()
                 .bank(item.getBank())
                 .amount(item.getAmount().doubleValue())
                 .initialDate(item.getInvestmentRange().getInitialDate())
                 .finalDate(item.getInvestmentRange().getFinalDate())
                 .type(InvestmentType.valueOf(item.getInvestmentType().name()))
                 .rate(item.getBaseRate().getRate().getRate().floatValue())
+                .build()
             ).toList();
     }
 }

@@ -19,15 +19,21 @@
 
         <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
         <postgresql.driver.version>42.7.5</postgresql.driver.version>
+        <core.swagger.annotations.version>2.2.30</core.swagger.annotations.version>
+        <swagger.annotations.version>1.6.14</swagger.annotations.version>
+        <jackson.databind.nullable.version>0.2.6</jackson.databind.nullable.version>
         <jakarta.validation.version>3.1.1</jakarta.validation.version>
         <liquibase.version>4.31.1</liquibase.version>
         <lombok.version>1.18.38</lombok.version>
+        <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
         <openapi.generator.maven.version>7.13.0</openapi.generator.maven.version>
         <spring.version>6.2.7</spring.version>
         <spring.boot.version>3.4.5</spring.boot.version>
     </properties>
 
     <dependencies>
+        <!-- Spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -54,11 +60,7 @@
             <artifactId>spring-boot-starter-validation</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-            <version>${jakarta.validation.version}</version>
-        </dependency>
+        <!-- Database -->
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
@@ -69,20 +71,21 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.driver.version}</version>
         </dependency>
+        <!-- DTOs -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.openapitools</groupId>
-            <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.6</version>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>2.2.30</version>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>${jackson.databind.nullable.version}</version>
         </dependency>
 
         <!-- Testing -->
@@ -92,10 +95,21 @@
             <version>${spring.boot.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- Swagger -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>${jakarta.validation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${core.swagger.annotations.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
-            <version>1.6.14</version>
+            <version>${swagger.annotations.version}</version>
         </dependency>
     </dependencies>
 
@@ -110,9 +124,19 @@
                     <target>${java.version}</target>
                     <annotationProcessorPaths>
                         <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>${lombok.mapstruct.binding.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -127,19 +151,16 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>
-                                ${project.basedir}/src/main/resources/swagger.yml
-                            </inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/swagger.yml</inputSpec>
                             <generatorName>spring</generatorName>
                             <apiPackage>com.hss.openapi.api</apiPackage>
                             <modelPackage>com.hss.openapi.model</modelPackage>
-                            <supportingFilesToGenerate>
-                                ApiUtil.java
-                            </supportingFilesToGenerate>
+                            <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>${project.basedir}/src/main/resources/templates</templateDirectory>
                             <configOptions>
+                                <additionalModelTypeAnnotations>@lombok.Data @lombok.Builder @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
                                 <implicitHeaders>true</implicitHeaders>
                                 <serializationLibrary>jackson</serializationLibrary>
                                 <useTags>true</useTags>

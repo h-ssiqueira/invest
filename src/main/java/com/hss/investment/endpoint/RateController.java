@@ -19,8 +19,14 @@ public class RateController implements RateApi {
     private final RateService rateService;
 
     @Override
-    public ResponseEntity<GenericResponseDTO<?>> getRate(HttpServletRequest request, HttpServletResponse response, String rateType, LocalDate initialDate, LocalDate finalDate) {
-        var responseDto = rateService.retrieveRates(new RateQueryDTO(RateQueryDTO.RateType.valueOf(rateType), initialDate, finalDate));
+    public ResponseEntity<GenericResponseDTO<?>> getRate(HttpServletRequest request,
+                                                         HttpServletResponse response,
+                                                         String rateType,
+                                                         LocalDate initialDate,
+                                                         LocalDate finalDate) {
+        var responseDto = rateService.retrieveRates(new RateQueryDTO(
+            RateQueryDTO.RateType.valueOf(rateType), initialDate, finalDate
+        ));
         return ResponseEntity.ok(new GenericResponseDTO<>(responseDto));
     }
 }

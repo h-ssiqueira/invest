@@ -30,7 +30,9 @@ public class InvestmentController implements InvestmentApi {
     private final InvestmentService investmentService;
 
     @Override
-    public ResponseEntity<GenericResponseDTO<?>> addInvestments(HttpServletRequest request, HttpServletResponse response, InvestmentRequestWrapper investmentRequestWrapper) {
+    public ResponseEntity<GenericResponseDTO<?>> addInvestments(HttpServletRequest request,
+                                                                HttpServletResponse response,
+                                                                InvestmentRequestWrapper investmentRequestWrapper) {
         var responseDto = investmentService.addInvestments(investmentRequestWrapper.getItems());
         var errors = responseDto.getItems()
             .stream()
@@ -39,11 +41,22 @@ public class InvestmentController implements InvestmentApi {
         if(errors == investmentRequestWrapper.getItems().size()) {
             throw new InvestmentException(INV_004);
         }
-        return errors == 0L ? ResponseEntity.status(CREATED).build() : ResponseEntity.status(MULTI_STATUS).body(new GenericResponseDTO<>(responseDto));
+        return errors == 0L ?
+            ResponseEntity.status(CREATED).build() :
+            ResponseEntity.status(MULTI_STATUS).body(new GenericResponseDTO<>(responseDto));
     }
 
     @Override
-    public ResponseEntity<GenericResponseDTO<?>> getInvestments(HttpServletRequest request, HttpServletResponse response, String type, String bank, LocalDate initialDate, LocalDate finalDate, String aliquot, Integer page, Integer size, String sort) {
+    public ResponseEntity<GenericResponseDTO<?>> getInvestments(HttpServletRequest request,
+                                                                HttpServletResponse response,
+                                                                String type,
+                                                                String bank,
+                                                                LocalDate initialDate,
+                                                                LocalDate finalDate,
+                                                                String aliquot,
+                                                                Integer page,
+                                                                Integer size,
+                                                                String sort) {
         var result = investmentService.retrieveInvestments(new InvestmentQueryDTO(
             Investment.InvestmentType.valueOf(type),
             bank,
@@ -51,6 +64,6 @@ public class InvestmentController implements InvestmentApi {
             Investment.AliquotType.valueOf(aliquot),
             PageRequest.of(page, size, extractSort(sort)))
         );
-        return ResponseEntity.ok(new GenericResponseDTO<>(new InvestmentResultResponseData().items(result)));
+        return ResponseEntity.ok(new GenericResponseDTO<>(InvestmentResultResponseData.builder().items(result).build()));
     }
 }
