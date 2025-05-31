@@ -1,4 +1,4 @@
-package com.hss.investment.endpoint;
+package com.hss.investment.util;
 
 public abstract class URLConstants {
 

@@ -3,6 +3,7 @@ package com.hss.investment.endpoint;
 import com.hss.investment.application.persistence.InvestmentRepository;
 import com.hss.investment.application.service.RateServiceImpl;
 import com.hss.investment.config.IdempotencyInterceptor;
+import com.hss.investment.util.URLConstants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

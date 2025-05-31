@@ -3,7 +3,7 @@ package com.hss.investment.application.service.mapper;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 
-import static com.hss.investment.application.service.mapper.InvestmentDTOsMock.getRateQueryResultDTOList;
+import static com.hss.investment.util.InvestmentDTOsMock.getRateQueryResultDTOList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class GeneralMapperTest {

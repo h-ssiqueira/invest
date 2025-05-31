@@ -18,12 +18,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hss.investment.application.exception.ErrorMessages.INV_002;
+import static com.hss.investment.application.service.validator.DateValidator.validateInitialAndFinalDates;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public non-sealed class InvestmentServiceImpl implements InvestmentService {
+public final class InvestmentServiceImpl implements InvestmentService {
 
     private final InvestmentRepository investmentRepository;
 
@@ -52,9 +52,7 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
 
     @Override
     public List<InvestmentResultResponseDTO> retrieveInvestments(InvestmentQueryDTO dto) {
-        if(dto.initialDate().isAfter(dto.finalDate())) {
-            throw new InvestmentException(INV_002);
-        }
+        validateInitialAndFinalDates(dto.initialDate(), dto.finalDate());
         var result = investmentRepository.findByParameters(dto, dto.page());
         return result.stream()
             .map(item -> InvestmentResultResponseDTO.builder()
