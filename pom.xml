@@ -116,6 +116,28 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring.boot.version}</version>
+                <configuration>
+                    <image>
+                        <!-- <builder>mine/java-cnb-builder</builder>
+                        <runImage>mine/java-cnb-run</runImage> -->
+                        <env>
+                            <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
+                        </env>
+                        <!-- <name>hss.com.investment/${project.artifactId}</name> -->
+                        <!-- <publish>true</publish> -->
+                    </image>
+                    <!-- <docker>
+                        <publishRegistry>
+                            <username>user</username>
+                            <password>secret</password>
+                        </publishRegistry>
+                    </docker> -->
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin.version}</version>
