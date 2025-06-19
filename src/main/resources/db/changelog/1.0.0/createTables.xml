@@ -104,7 +104,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="REFERENCE_DATE" type="DATE">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="RATE" type="DECIMAL(10,2)">
                 <constraints nullable="false"/>
@@ -135,7 +135,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="REFERENCE_START_DATE" type="DATE">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="REFERENCE_END_DATE" type="DATE"/>
             <column name="RATE" type="DECIMAL(10,2)">

@@ -21,8 +21,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Slf4j
 public class IdempotencyInterceptor implements HandlerInterceptor {
 
+    private final IdempotencyRepository idempotencyRepository;
+
     @Autowired
-    private IdempotencyRepository idempotencyRepository;
+    public IdempotencyInterceptor(IdempotencyRepository idempotencyRepository) {
+        this.idempotencyRepository = idempotencyRepository;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

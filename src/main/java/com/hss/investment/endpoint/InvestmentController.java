@@ -20,6 +20,7 @@ import java.time.LocalDate;
 
 import static com.hss.investment.application.dto.utils.SortExtractor.extractSort;
 import static com.hss.investment.application.exception.ErrorMessages.INV_004;
+import static java.util.Objects.nonNull;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.MULTI_STATUS;
 
@@ -58,12 +59,12 @@ public class InvestmentController implements InvestmentApi {
                                                                 Integer size,
                                                                 String sort) {
         var result = investmentService.retrieveInvestments(new InvestmentQueryDTO(
-            Investment.InvestmentType.valueOf(type),
+            nonNull(type) ? Investment.InvestmentType.valueOf(type) : null,
             bank,
             initialDate, finalDate,
-            Investment.AliquotType.valueOf(aliquot),
-            PageRequest.of(page, size, extractSort(sort)))
+            nonNull(aliquot) ? Investment.AliquotType.valueOf(aliquot) : null,
+            PageRequest.of(page, size,  extractSort(nonNull(sort) ? sort : "initialDate,desc")))
         );
-        return ResponseEntity.ok(new GenericResponseDTO<>(InvestmentResultResponseData.builder().items(result).build()));
+        return ResponseEntity.ok(new GenericResponseDTO<>(new InvestmentResultResponseData().items(result)));
     }
 }

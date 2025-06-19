@@ -25,8 +25,10 @@ public class RateController implements RateApi {
                                                          LocalDate initialDate,
                                                          LocalDate finalDate) {
         var responseDto = rateService.retrieveRates(new RateQueryDTO(
-            RateQueryDTO.RateType.valueOf(rateType), initialDate, finalDate
+            RateQueryDTO.RateType.fromValue(rateType), initialDate, finalDate
         ));
         return ResponseEntity.ok(new GenericResponseDTO<>(responseDto));
     }
+
+
 }

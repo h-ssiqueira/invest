@@ -17,6 +17,7 @@
         <project.build.sourceEncoding>${default.encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${default.encoding}</project.reporting.outputEncoding>
 
+        <commons.csv.version>1.14.0</commons.csv.version>
         <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
         <postgresql.driver.version>42.7.5</postgresql.driver.version>
         <core.swagger.annotations.version>2.2.30</core.swagger.annotations.version>
@@ -86,6 +87,11 @@
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
             <version>${jackson.databind.nullable.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commons.csv.version}</version>
         </dependency>
 
         <!-- Testing -->
@@ -182,10 +188,10 @@
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>${project.basedir}/src/main/resources/templates</templateDirectory>
                             <configOptions>
-                                <additionalModelTypeAnnotations>@lombok.Data @lombok.Builder @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
                                 <implicitHeaders>true</implicitHeaders>
                                 <serializationLibrary>jackson</serializationLibrary>
                                 <useTags>true</useTags>
+                                <dateLibrary>java8</dateLibrary>
                                 <useJakartaEe>true</useJakartaEe>
                                 <useSpringboot3>true</useSpringboot3>
                                 <interfaceOnly>true</interfaceOnly>

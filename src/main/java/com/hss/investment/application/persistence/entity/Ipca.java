@@ -3,13 +3,17 @@ package com.hss.investment.application.persistence.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Table(name = "IPCA")
@@ -17,9 +21,11 @@ import java.time.LocalDate;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@EqualsAndHashCode(exclude = "id")
 public class Ipca {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", unique = true, updatable = false, nullable = false)
     private Integer id;
 
@@ -28,4 +34,13 @@ public class Ipca {
 
     @Embedded
     private Percentage rate;
+
+    private Ipca(LocalDate referenceDate, Percentage rate) {
+        this.rate = rate;
+        this.referenceDate = referenceDate;
+    }
+
+    public static Ipca of(LocalDate referenceDate, BigDecimal rate) {
+        return new Ipca(referenceDate, Percentage.of(rate));
+    }
 }

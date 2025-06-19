@@ -24,3 +24,10 @@ server:
   error:
     include-binding-errors: always
     include-message: always
+
+logging.level.com.hss.investment: DEBUG
+
+investments:
+  kaggle:
+    username: ${KAGGLE_USER}
+    key: ${KAGGLE_KEY}

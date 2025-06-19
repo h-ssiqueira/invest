@@ -19,4 +19,6 @@ public interface SelicRepository extends JpaRepository<Selic, Integer> {
         (:finalDate IS NULL AND s.range.initialDate >= :initialDate)
         """)
     List<RateQueryResultDTO> findByReferenceDateBetween(@Param("initialDate") LocalDate initialDate, @Param("finalDate") LocalDate finalDate);
+
+    Selic findFirstByOrderByRangeInitialDateDesc();
 }

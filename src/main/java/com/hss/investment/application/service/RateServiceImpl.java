@@ -14,7 +14,7 @@ import static com.hss.investment.application.service.validator.DateValidator.val
 
 @RequiredArgsConstructor
 @Service
-public final class RateServiceImpl implements RateService {
+public non-sealed class RateServiceImpl implements RateService {
 
     private final SelicRepository selicRepository;
     private final IpcaRepository ipcaRepository;

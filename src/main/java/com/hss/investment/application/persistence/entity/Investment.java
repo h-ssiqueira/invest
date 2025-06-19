@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,11 +24,13 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import static com.hss.investment.application.exception.ErrorMessages.INV_002;
+import static java.util.Objects.nonNull;
 
 @Table(name = "INVESTMENT")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@EqualsAndHashCode(exclude = {"id","createdAt"})
 public class Investment {
 
     @Id
@@ -98,11 +101,12 @@ public class Investment {
         @Column(name = "INITIAL_DATE", nullable = false, updatable = false)
         private LocalDate initialDate;
 
-        @Column(name = "FINAL_DATE", nullable = false, updatable = false)
+        @Setter
+        @Column(name = "FINAL_DATE", nullable = false)
         private LocalDate finalDate;
 
         public static InvestmentRange of(LocalDate initialDate, LocalDate finalDate) {
-            if(initialDate.isAfter(finalDate)) {
+            if(nonNull(finalDate) && initialDate.isAfter(finalDate)) {
                 throw new InvestmentException(INV_002);
             }
             return new InvestmentRange(initialDate, finalDate);

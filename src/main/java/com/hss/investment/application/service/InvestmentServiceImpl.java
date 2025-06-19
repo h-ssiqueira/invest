@@ -23,7 +23,7 @@ import static com.hss.investment.application.service.validator.DateValidator.val
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public final class InvestmentServiceImpl implements InvestmentService {
+public non-sealed class InvestmentServiceImpl implements InvestmentService {
 
     private final InvestmentRepository investmentRepository;
 
@@ -43,11 +43,11 @@ public final class InvestmentServiceImpl implements InvestmentService {
                 items.add(entity);
                 responseList.add(investment);
             } catch (InvestmentException ex) {
-                responseList.add(InvestmentErrorResponseDTO.builder().build());
+                responseList.add(new InvestmentErrorResponseDTO());
             }
         });
         investmentRepository.saveAll(items);
-        return PartialInvestmentResultData.builder().items(responseList).build();
+        return new PartialInvestmentResultData().items(responseList);
     }
 
     @Override
@@ -55,14 +55,13 @@ public final class InvestmentServiceImpl implements InvestmentService {
         validateInitialAndFinalDates(dto.initialDate(), dto.finalDate());
         var result = investmentRepository.findByParameters(dto, dto.page());
         return result.stream()
-            .map(item -> InvestmentResultResponseDTO.builder()
+            .map(item -> new InvestmentResultResponseDTO()
                 .bank(item.getBank())
                 .amount(item.getAmount().doubleValue())
                 .initialDate(item.getInvestmentRange().getInitialDate())
                 .finalDate(item.getInvestmentRange().getFinalDate())
                 .type(InvestmentType.valueOf(item.getInvestmentType().name()))
                 .rate(item.getBaseRate().getRate().getRate().floatValue())
-                .build()
             ).toList();
     }
 }

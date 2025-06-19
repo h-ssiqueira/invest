@@ -142,7 +142,7 @@ components:
           type: number
           format: float
           example: 10.55
-          minimum: 0.01
+          minimum: 0.001
         initialDate:
           type: string
           format: date

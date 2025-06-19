@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 class RateServiceImplTest {
 
     @Spy
-    private GeneralMapper mapper = Mappers.getMapper(GeneralMapper.class);
+    private final GeneralMapper mapper = Mappers.getMapper(GeneralMapper.class);
 
     @Mock
     private SelicRepository selicRepository;

@@ -20,4 +20,6 @@ public interface IpcaRepository extends JpaRepository<Ipca, Integer> {
         (:finalDate IS NULL AND i.referenceDate >= :initialDate)
         """)
     List<RateQueryResultDTO> findByReferenceDateBetween(@Param("initialDate") LocalDate initialDate, @Param("finalDate") LocalDate finalDate);
+
+    Ipca findFirstByOrderByReferenceDateDesc();
 }
