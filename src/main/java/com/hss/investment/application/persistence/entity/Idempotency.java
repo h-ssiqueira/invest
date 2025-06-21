@@ -3,12 +3,15 @@ package com.hss.investment.application.persistence.entity;
 import com.hss.investment.application.exception.InvestmentException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,6 +23,7 @@ import static java.util.Objects.isNull;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
+@Accessors(fluent = true)
 public class Idempotency {
 
     @Id
@@ -29,6 +33,13 @@ public class Idempotency {
 
     @Column(name = "IDEMPOTENCY", nullable = false, unique = true, updatable = false)
     private String idempotencyValue;
+
+    @Column(name = "URL", nullable = false, updatable = false)
+    private String url;
+
+    @Column(name = "METHOD", nullable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
+    private HttpMethod method;
 
     @Column(name = "CREATED_AT", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -43,5 +54,9 @@ public class Idempotency {
             throw new InvestmentException(INV_001);
         }
         return new Idempotency(idempotency);
+    }
+
+    public enum HttpMethod {
+        POST,PUT,DELETE,PATCH
     }
 }

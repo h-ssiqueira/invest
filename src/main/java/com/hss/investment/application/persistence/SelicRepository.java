@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface SelicRepository extends JpaRepository<Selic, Integer> {
 
@@ -17,8 +18,8 @@ public interface SelicRepository extends JpaRepository<Selic, Integer> {
         WHERE (:initialDate IS NULL AND :finalDate IS NULL) OR
         (:initialDate IS NULL AND s.range.finalDate <= :finalDate) OR
         (:finalDate IS NULL AND s.range.initialDate >= :initialDate)
-        """)
+        ORDER BY s.range.initialDate DESC""")
     List<RateQueryResultDTO> findByReferenceDateBetween(@Param("initialDate") LocalDate initialDate, @Param("finalDate") LocalDate finalDate);
 
-    Selic findFirstByOrderByRangeInitialDateDesc();
+    Optional<Selic> findFirstByOrderByRangeInitialDateDesc();
 }

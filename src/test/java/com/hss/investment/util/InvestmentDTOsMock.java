@@ -2,7 +2,6 @@ package com.hss.investment.util;
 
 import com.hss.investment.application.dto.RateQueryDTO;
 import com.hss.investment.application.dto.RateQueryResultDTO;
-import com.hss.investment.application.persistence.entity.Investment;
 import com.hss.openapi.model.InvestmentAliquot;
 import com.hss.openapi.model.InvestmentErrorResponseDTO;
 import com.hss.openapi.model.InvestmentErrorResponseDTOErrorsInner;
@@ -37,13 +36,11 @@ public final class InvestmentDTOsMock {
     }
 
     public static InvestmentRequestWrapper getInvestmentRequestWrapper() {
-        return new InvestmentRequestWrapper()
-            .items(getInvestmentRequestList());
+        return new InvestmentRequestWrapper().items(getInvestmentRequestList());
     }
 
     public static InvestmentRequestWrapper getInvestmentRequestWrapperError() {
-        return new InvestmentRequestWrapper()
-            .addItemsItem(getInvestmentRequest());
+        return new InvestmentRequestWrapper().items(List.of(getInvestmentRequest()));
     }
 
     public static InvestmentRequest getInvestmentRequest() {
@@ -59,16 +56,16 @@ public final class InvestmentDTOsMock {
 
     public static InvestmentErrorResponseDTO getInvestmentErrorResponseDTO() {
         return new InvestmentErrorResponseDTO()
-            .addErrorsItem(new InvestmentErrorResponseDTOErrorsInner().detail("Invalid date"));
+            .type("type").title("title")
+            .errors(List.of(new InvestmentErrorResponseDTOErrorsInner().detail("Invalid date").pointer("pointer")));
     }
 
     public static PartialInvestmentResultData getPartialInvestmentResultDataSuccess() {
-        return new PartialInvestmentResultData().addItemsItem(getInvestmentRequest());
+        return new PartialInvestmentResultData().items(List.of(getInvestmentRequest()));
     }
 
     public static PartialInvestmentResultData getPartialInvestmentResultDataError() {
-        return new PartialInvestmentResultData()
-            .addItemsItem(getInvestmentErrorResponseDTO());
+        return new PartialInvestmentResultData().items(List.of(getInvestmentErrorResponseDTO()));
     }
 
     public static PartialInvestmentResultData getPartialInvestmentResultDataMultiStatus() {

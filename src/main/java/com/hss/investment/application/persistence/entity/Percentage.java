@@ -28,7 +28,11 @@ public class Percentage {
         return new Percentage(rate);
     }
 
-    public BigDecimal getRate() {
+    public BigDecimal ratePercentage() {
+        return rate;
+    }
+
+    public BigDecimal rateCalculate() {
         return rate.divide(BigDecimal.valueOf(100));
     }
 

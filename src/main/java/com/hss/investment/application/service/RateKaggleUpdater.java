@@ -42,23 +42,30 @@ import static org.apache.commons.csv.CSVFormat.DEFAULT;
 @RequiredArgsConstructor
 public class RateKaggleUpdater {
 
+    private static final RestTemplate client = new RestTemplate();
     private final SelicRepository selicRepository;
     private final IpcaRepository ipcaRepository;
-    private static final RestTemplate client = new RestTemplate();
-
     @Value("${investments.kaggle.username}")
     private String username;
 
     @Value("${investments.kaggle.key}")
     private String key;
 
+    private static byte[] getCsvBytes(ZipInputStream zis) throws IOException {
+        var baos = new ByteArrayOutputStream();
+        var buffer = new byte[4096];
+        int len;
+        while ((len = zis.read(buffer)) > 0)
+            baos.write(buffer, 0, len);
+        return baos.toByteArray();
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void processRates() {
         log.info("Updating rates...");
-        var encodedAuth = Base64.getEncoder().encodeToString((username + ":" + key).getBytes(UTF_8));
         var request = RequestEntity.get("https://www.kaggle.com/api/v1/datasets/download/hssiqueira/brazil-interest-rate-history-selic")
-            .header("Authorization", encodedAuth)
+            .header("Authorization", Base64.getEncoder().encodeToString((username + ":" + key).getBytes(UTF_8)))
             .build();
         try {
             log.info("Downloading dataset...");
@@ -70,7 +77,7 @@ public class RateKaggleUpdater {
             log.info("Download complete!");
             processZipContents(response.getBody());
             log.info("All rates processed successfully!");
-        } catch (Exception ex){
+        } catch (Exception ex) {
             log.error(ex.getMessage());
             throw new InvestmentException(INV_005.formatted(ex.getMessage()));
         }
@@ -80,66 +87,69 @@ public class RateKaggleUpdater {
         try (var zis = new ZipInputStream(new ByteArrayInputStream(zipBytes))) {
             ZipEntry entry;
             while (nonNull(entry = zis.getNextEntry())) {
+                var filename = entry.getName();
                 log.debug("Found file in ZIP: " + entry.getName());
-                if (entry.getName().endsWith(".csv")) {
-                    var baos = new ByteArrayOutputStream();
-                    var buffer = new byte[4096];
-                    int len;
-                    while ((len = zis.read(buffer)) > 0)
-                        baos.write(buffer, 0, len);
-                    var csvBytes = baos.toByteArray();
-                    try (
-                        var csvParser = CSVParser.builder()
-                            .setFormat(DEFAULT.builder().setHeader().setSkipHeaderRecord(true).get())
-                            .setReader(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvBytes), UTF_8))).get()
-                    ){
-                        log.debug("CSV Headers: " + csvParser.getHeaderNames());
-                        if(entry.getName().equals("IBGE_IPCA.csv")) {
-                            log.info("Processing IPCA rates...");
-                            processIpca(csvParser);
-                        } else if (entry.getName().equals("BACEN_SELIC.csv")) {
-                            log.info("Processing SELIC rates...");
-                            processSelic(csvParser);
-                        }
-                    }
+                if (filename.endsWith(".csv")) {
+                    processCSV(getCsvBytes(zis), filename);
                 }
                 zis.closeEntry();
             }
         }
     }
 
+    private void processCSV(byte[] csvBytes, String filename) throws IOException {
+        try (
+            var csvParser = CSVParser.builder()
+                .setFormat(DEFAULT.builder().setHeader().setSkipHeaderRecord(true).get())
+                .setReader(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvBytes), UTF_8)))
+                .get()
+        ) {
+            log.debug("CSV Headers: " + csvParser.getHeaderNames());
+            if (filename.equals("IBGE_IPCA.csv")) {
+                log.info("Processing IPCA rates...");
+                processIpca(csvParser);
+            } else if (filename.equals("BACEN_SELIC.csv")) {
+                log.info("Processing SELIC rates...");
+                processSelic(csvParser);
+            }
+        }
+    }
+
     private void processIpca(CSVParser csvParser) {
-        var lastIPCA = ipcaRepository.findFirstByOrderByReferenceDateDesc();
+        var lastIPCAOpt = ipcaRepository.findFirstByOrderByReferenceDateDesc();
         var list = new java.util.ArrayList<>(csvParser.stream()
             .map(row -> Ipca.of(
                 YearMonth.parse(row.get(0), DateTimeFormatter.ofPattern("MM/yyyy")).atDay(1),
                 BigDecimal.valueOf(Double.parseDouble(row.get(1))))
             ).toList());
-        if(nonNull(lastIPCA))
+        if (lastIPCAOpt.isPresent()) {
+            var lastIPCA = lastIPCAOpt.get();
             list.removeIf(ipca ->
-                ipca.getReferenceDate().isBefore(lastIPCA.getReferenceDate()) ||
-                ipca.getReferenceDate().isEqual(lastIPCA.getReferenceDate())
+                ipca.referenceDate().isBefore(lastIPCA.referenceDate()) ||
+                ipca.referenceDate().isEqual(lastIPCA.referenceDate())
             );
+        }
         log.debug("Saved {} new registers into database", list.size());
         ipcaRepository.saveAllAndFlush(list);
     }
 
     private void processSelic(CSVParser csvParser) {
-        var lastSELIC = selicRepository.findFirstByOrderByRangeInitialDateDesc();
+        var lastSELICOpt = selicRepository.findFirstByOrderByRangeInitialDateDesc();
         var list = new java.util.ArrayList<>(csvParser.stream()
             .map(row -> Selic.of(
                 toLocalDate(row.get(5)),
                 toLocalDate(row.get(6)),
                 BigDecimal.valueOf(Double.parseDouble(row.get(7))))
             ).toList());
-        if(nonNull(lastSELIC)) {
+        if (lastSELICOpt.isPresent()) {
+            var lastSELIC = lastSELICOpt.get();
             var second = list.get(1);
             list.removeIf(selic ->
-                selic.getRange().getInitialDate().isBefore(lastSELIC.getRange().getInitialDate()) ||
-                selic.getRange().getInitialDate().isEqual(lastSELIC.getRange().getInitialDate())
+                selic.range().initialDate().isBefore(lastSELIC.range().initialDate()) ||
+                selic.range().initialDate().isEqual(lastSELIC.range().initialDate())
             );
-            if(lastSELIC.getRange().getInitialDate().equals(second.getRange().getInitialDate()) && nonNull(second.getRange().getFinalDate())) {
-                lastSELIC.getRange().setFinalDate(second.getRange().getFinalDate());
+            if (lastSELIC.range().initialDate().equals(second.range().initialDate()) && nonNull(second.range().finalDate())) {
+                lastSELIC.range().finalDate(second.range().finalDate());
                 list.add(lastSELIC);
             }
         }

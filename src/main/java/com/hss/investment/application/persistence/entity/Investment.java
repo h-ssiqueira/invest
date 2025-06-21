@@ -17,6 +17,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -30,6 +31,7 @@ import static java.util.Objects.nonNull;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Accessors(fluent = true)
 @EqualsAndHashCode(exclude = {"id","createdAt"})
 public class Investment {
 
@@ -75,6 +77,7 @@ public class Investment {
     }
 
     @Getter
+    @Accessors(fluent = true)
     @AllArgsConstructor
     public enum InvestmentType {
         CDB(true),
@@ -95,6 +98,7 @@ public class Investment {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
+    @Accessors(fluent = true)
     @EqualsAndHashCode
     public static class InvestmentRange {
 
@@ -102,6 +106,7 @@ public class Investment {
         private LocalDate initialDate;
 
         @Setter
+        @Accessors(chain = true)
         @Column(name = "FINAL_DATE", nullable = false)
         private LocalDate finalDate;
 
@@ -118,6 +123,7 @@ public class Investment {
     }
 
     @Getter
+    @Accessors(fluent = true)
     @Embeddable
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)

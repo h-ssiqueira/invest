@@ -43,7 +43,7 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
                 items.add(entity);
                 responseList.add(investment);
             } catch (InvestmentException ex) {
-                responseList.add(new InvestmentErrorResponseDTO());
+                responseList.add(new InvestmentErrorResponseDTO().type(ex.getClass().getName()).title(ex.getMessage()));
             }
         });
         investmentRepository.saveAll(items);
@@ -56,12 +56,12 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
         var result = investmentRepository.findByParameters(dto, dto.page());
         return result.stream()
             .map(item -> new InvestmentResultResponseDTO()
-                .bank(item.getBank())
-                .amount(item.getAmount().doubleValue())
-                .initialDate(item.getInvestmentRange().getInitialDate())
-                .finalDate(item.getInvestmentRange().getFinalDate())
-                .type(InvestmentType.valueOf(item.getInvestmentType().name()))
-                .rate(item.getBaseRate().getRate().getRate().floatValue())
+                .bank(item.bank())
+                .amount(item.amount().doubleValue())
+                .initialDate(item.investmentRange().initialDate())
+                .finalDate(item.investmentRange().finalDate())
+                .type(InvestmentType.valueOf(item.investmentType().name()))
+                .rate(item.baseRate().rate().ratePercentage().floatValue())
             ).toList();
     }
 }

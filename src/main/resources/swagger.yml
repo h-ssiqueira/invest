@@ -294,8 +294,8 @@ components:
       description: Order of investment response
       schema:
         type: string
-        pattern: "^(initialDate|finalDate|bank|aliquot|investmentType),(asc|desc)$"
-        example: 'initialDate,desc'
+        pattern: "^(investmentRange\.initialDate|investmentRange\.finalDate|bank|baseRate\.aliquot|investmentType),(asc|desc)$"
+        example: 'bank,desc'
     InvestmentType:
       name: type
       in: query

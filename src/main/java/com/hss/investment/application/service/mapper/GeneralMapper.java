@@ -10,6 +10,11 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface GeneralMapper {
 
-    @Mapping(target = "rate", expression = "java(item.getRate().floatValue())")
     List<RateResponseWrapperDataItemsInner> toRateResponseWrapperDataItemsInner(List<RateQueryResultDTO> dto);
+
+
+    @Mapping(expression = "java(dto.rate().floatValue())", target = "rate")
+    @Mapping(expression = "java(dto.initialDate())", target = "initialDate")
+    @Mapping(expression = "java(dto.finalDate())", target = "finalDate")
+    RateResponseWrapperDataItemsInner toRateResponseWrapperDataItem(RateQueryResultDTO dto);
 }

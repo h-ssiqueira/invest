@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static com.hss.investment.util.InvestmentDTOsMock.getInvestmentRequestList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 

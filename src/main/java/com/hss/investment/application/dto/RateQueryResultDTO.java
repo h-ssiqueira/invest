@@ -2,11 +2,13 @@ package com.hss.investment.application.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
+@Accessors(fluent = true)
 @AllArgsConstructor
 public class RateQueryResultDTO {
     private BigDecimal rate;

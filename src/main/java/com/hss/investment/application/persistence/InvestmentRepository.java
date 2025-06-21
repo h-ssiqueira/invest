@@ -13,11 +13,11 @@ import java.util.UUID;
 public interface InvestmentRepository extends JpaRepository<Investment, UUID> {
 
     @Query("""
-            SELECT i FROM Investment i
-            WHERE (:#{#dto.type} IS NULL OR :#{#dto.type} = i.investmentType) AND
-            (:#{#dto.bank} IS NULL OR :#{#dto.bank} = i.bank) AND
-            (:#{#dto.initialDate} IS NULL OR :#{#dto.initialDate} >= i.investmentRange.initialDate) AND
-            (:#{#dto.finalDate} IS NULL OR :#{#dto.finalDate} <= i.investmentRange.finalDate) AND
-            (:#{#dto.aliquot} IS NULL OR :#{#dto.aliquot} = i.baseRate.aliquot)""")
+    SELECT i FROM Investment i
+    WHERE (:#{#dto.type} IS NULL OR i.investmentType = :#{#dto.type})
+      AND (:#{#dto.bank} IS NULL OR i.bank = :#{#dto.bank})
+      AND (i.investmentRange.initialDate <= COALESCE(:#{#dto.initialDate}, i.investmentRange.initialDate))
+      AND (i.investmentRange.finalDate >= COALESCE(:#{#dto.finalDate}, i.investmentRange.finalDate))
+      AND (:#{#dto.aliquot} IS NULL OR i.baseRate.aliquot = :#{#dto.aliquot})""")
     List<Investment> findByParameters(@Param("dto") InvestmentQueryDTO dto, Pageable page);
 }

@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.security.MessageDigest;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static ch.qos.logback.core.encoder.ByteArrayUtil.toHexString;
 import static com.hss.investment.application.exception.ErrorMessages.INV_005;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Component
 @Slf4j
@@ -30,14 +30,14 @@ public class IdempotencyInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if(!request.getMethod().equals(POST.name())) {
+        if(Arrays.stream(Idempotency.HttpMethod.values()).noneMatch(x -> x.equals(request.getMethod()))) {
             return true;
         }
         var idempotency = Optional.ofNullable(request.getHeader("idempotency-Id")).orElse(calculate(request));
         // TODO: set path + method
-        var found = idempotencyRepository.findByIdempotencyValue(idempotency);
+        var found = idempotencyRepository.findByIdempotencyValueAndUrlAndMethod(idempotency, request.getRequestURI(), Idempotency.HttpMethod.valueOf(request.getMethod()));
         if(found.isPresent()) {
-            log.warn("Request already executed! id: {}", found.get().getId());
+            log.warn("Request already executed! id: {}", found.get().id());
             return false;
         }
         idempotencyRepository.save(Idempotency.of(idempotency));

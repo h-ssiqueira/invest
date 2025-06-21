@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface IpcaRepository extends JpaRepository<Ipca, Integer> {
 
@@ -18,8 +19,8 @@ public interface IpcaRepository extends JpaRepository<Ipca, Integer> {
         (:initialDate IS NULL AND :finalDate IS NULL) OR
         (:initialDate IS NULL AND i.referenceDate <= :finalDate) OR
         (:finalDate IS NULL AND i.referenceDate >= :initialDate)
-        """)
+        ORDER BY i.referenceDate DESC""")
     List<RateQueryResultDTO> findByReferenceDateBetween(@Param("initialDate") LocalDate initialDate, @Param("finalDate") LocalDate finalDate);
 
-    Ipca findFirstByOrderByReferenceDateDesc();
+    Optional<Ipca> findFirstByOrderByReferenceDateDesc();
 }

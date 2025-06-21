@@ -8,5 +8,5 @@ import java.util.UUID;
 
 public interface IdempotencyRepository extends JpaRepository<Idempotency, UUID> {
 
-    Optional<Idempotency> findByIdempotencyValue(String idempotency);
+    Optional<Idempotency> findByIdempotencyValueAndUrlAndMethod(String idempotency, String url, Idempotency.HttpMethod method);
 }

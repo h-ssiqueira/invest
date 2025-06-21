@@ -4,7 +4,6 @@ import com.hss.investment.application.exception.ControllerExceptionAdvice;
 import com.hss.investment.application.persistence.InvestmentRepository;
 import com.hss.investment.application.service.RateServiceImpl;
 import com.hss.investment.config.IdempotencyInterceptor;
-import com.hss.investment.util.URLConstants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -12,8 +11,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -26,8 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @EnableAutoConfiguration(exclude = {LiquibaseAutoConfiguration.class, DataSourceAutoConfiguration.class})
 @AutoConfigureMockMvc
-@Import(ControllerExceptionAdvice.class)
-@SpringBootTest(classes = RateController.class)
+@SpringBootTest(classes = {RateController.class, ControllerExceptionAdvice.class})
 class RateControllerTest {
 
     @Autowired

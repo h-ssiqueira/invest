@@ -75,6 +75,12 @@
             <column name="CREATED_AT" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
+            <column name="URL" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="METHOD" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
             <column name="IDEMPOTENCY" type="VARCHAR(100)">
                 <constraints nullable="false" unique="true"/>
             </column>

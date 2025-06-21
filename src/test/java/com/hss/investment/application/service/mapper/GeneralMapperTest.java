@@ -19,6 +19,6 @@ class GeneralMapperTest {
             .isNotEmpty()
             .hasSize(1)
             .extracting(item -> Tuple.tuple(item.getRate(), item.getInitialDate(), item.getFinalDate()))
-            .containsExactly(Tuple.tuple(dto.get(0).getRate().floatValue(), dto.get(0).getInitialDate(), dto.get(0).getFinalDate()));
+            .containsExactly(Tuple.tuple(dto.get(0).rate().floatValue(), dto.get(0).initialDate(), dto.get(0).finalDate()));
     }
 }

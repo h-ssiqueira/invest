@@ -6,7 +6,12 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
         logicalFilePath="fillTables.xml">
 
-    <changeSet id="Holiday_table_fill" author="${author}" labels="1.0.0" runOnChange="true">
+    <changeSet id="Holiday_table_fill" author="${author}" labels="1.0.0">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(1) FROM HOLIDAY
+            </sqlCheck>
+        </preConditions>
         <loadUpdateData commentLineStartsWith="//"
                         encoding="UTF-8"
                         file="holidays.csv"
