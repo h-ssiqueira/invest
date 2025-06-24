@@ -20,4 +20,4 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build & Test
-      run: ./mvnw verify
+      run: mvn -B verify
