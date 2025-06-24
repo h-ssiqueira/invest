@@ -72,7 +72,7 @@ class InvestmentControllerTest {
             .queryParam("finalDate", "2022-03-13")
             .queryParam("type", "LCA")
             .queryParam("aliquot", "POSTFIXED")
-            .queryParam("sort", "finalDate,asc")
+            .queryParam("sort", "investmentRange.finalDate,asc")
         ).andExpect(status().isOk());
     }
 
