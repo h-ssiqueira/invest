@@ -1,8 +1,6 @@
 package com.hss.investment.application.service;
 
 import com.hss.investment.application.exception.InvestmentException;
-import com.hss.investment.application.persistence.IpcaRepository;
-import com.hss.investment.application.persistence.SelicRepository;
 import com.hss.investment.application.persistence.entity.Ipca;
 import com.hss.investment.application.persistence.entity.Selic;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -42,23 +41,13 @@ import static org.apache.commons.csv.CSVFormat.DEFAULT;
 @RequiredArgsConstructor
 public class RateKaggleUpdater {
 
-    private static final RestTemplate client = new RestTemplate();
-    private final SelicRepository selicRepository;
-    private final IpcaRepository ipcaRepository;
+    private final RestTemplate client = new RestTemplate();
+    private final RateService rateService;
     @Value("${investments.kaggle.username}")
     private String username;
 
     @Value("${investments.kaggle.key}")
     private String key;
-
-    private static byte[] getCsvBytes(ZipInputStream zis) throws IOException {
-        var baos = new ByteArrayOutputStream();
-        var buffer = new byte[4096];
-        int len;
-        while ((len = zis.read(buffer)) > 0)
-            baos.write(buffer, 0, len);
-        return baos.toByteArray();
-    }
 
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
@@ -97,6 +86,15 @@ public class RateKaggleUpdater {
         }
     }
 
+    private static byte[] getCsvBytes(ZipInputStream zis) throws IOException {
+        var baos = new ByteArrayOutputStream();
+        var buffer = new byte[4096];
+        int len;
+        while ((len = zis.read(buffer)) > 0)
+            baos.write(buffer, 0, len);
+        return baos.toByteArray();
+    }
+
     private void processCSV(byte[] csvBytes, String filename) throws IOException {
         try (
             var csvParser = CSVParser.builder()
@@ -107,54 +105,23 @@ public class RateKaggleUpdater {
             log.debug("CSV Headers: " + csvParser.getHeaderNames());
             if (filename.equals("IBGE_IPCA.csv")) {
                 log.info("Processing IPCA rates...");
-                processIpca(csvParser);
+                rateService.processIpca(new ArrayList<>(csvParser.stream()
+                    .map(row -> Ipca.of(
+                        YearMonth.parse(row.get(0), DateTimeFormatter.ofPattern("MM/yyyy")).atDay(1),
+                        BigDecimal.valueOf(Double.parseDouble(row.get(1))))
+                    ).toList()));
             } else if (filename.equals("BACEN_SELIC.csv")) {
                 log.info("Processing SELIC rates...");
-                processSelic(csvParser);
+                rateService.processSelic(new ArrayList<>(csvParser.stream()
+                    .map(row -> Selic.of(
+                        toLocalDate(row.get(5)),
+                        toLocalDate(row.get(6)),
+                        BigDecimal.valueOf(Double.parseDouble(row.get(7))))
+                    ).toList()));
+            } else {
+                log.warn("Unknown filename, skipping...");
             }
         }
-    }
-
-    private void processIpca(CSVParser csvParser) {
-        var lastIPCAOpt = ipcaRepository.findFirstByOrderByReferenceDateDesc();
-        var list = new java.util.ArrayList<>(csvParser.stream()
-            .map(row -> Ipca.of(
-                YearMonth.parse(row.get(0), DateTimeFormatter.ofPattern("MM/yyyy")).atDay(1),
-                BigDecimal.valueOf(Double.parseDouble(row.get(1))))
-            ).toList());
-        if (lastIPCAOpt.isPresent()) {
-            var lastIPCA = lastIPCAOpt.get();
-            list.removeIf(ipca ->
-                ipca.referenceDate().isBefore(lastIPCA.referenceDate()) ||
-                ipca.referenceDate().isEqual(lastIPCA.referenceDate())
-            );
-        }
-        log.debug("Saved {} new registers into database", list.size());
-        ipcaRepository.saveAllAndFlush(list);
-    }
-
-    private void processSelic(CSVParser csvParser) {
-        var lastSELICOpt = selicRepository.findFirstByOrderByRangeInitialDateDesc();
-        var list = new java.util.ArrayList<>(csvParser.stream()
-            .map(row -> Selic.of(
-                toLocalDate(row.get(5)),
-                toLocalDate(row.get(6)),
-                BigDecimal.valueOf(Double.parseDouble(row.get(7))))
-            ).toList());
-        if (lastSELICOpt.isPresent()) {
-            var lastSELIC = lastSELICOpt.get();
-            var second = list.get(1);
-            list.removeIf(selic ->
-                selic.range().initialDate().isBefore(lastSELIC.range().initialDate()) ||
-                selic.range().initialDate().isEqual(lastSELIC.range().initialDate())
-            );
-            if (lastSELIC.range().initialDate().equals(second.range().initialDate()) && nonNull(second.range().finalDate())) {
-                lastSELIC.range().finalDate(second.range().finalDate());
-                list.add(lastSELIC);
-            }
-        }
-        log.debug("Saved {} registers into database", list.size());
-        selicRepository.saveAllAndFlush(list);
     }
 
     private LocalDate toLocalDate(String date) {

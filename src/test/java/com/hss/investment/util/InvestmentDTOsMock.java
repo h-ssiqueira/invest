@@ -2,6 +2,8 @@ package com.hss.investment.util;
 
 import com.hss.investment.application.dto.RateQueryDTO;
 import com.hss.investment.application.dto.RateQueryResultDTO;
+import com.hss.investment.application.persistence.entity.Ipca;
+import com.hss.investment.application.persistence.entity.Selic;
 import com.hss.openapi.model.InvestmentAliquot;
 import com.hss.openapi.model.InvestmentErrorResponseDTO;
 import com.hss.openapi.model.InvestmentErrorResponseDTOErrorsInner;
@@ -11,10 +13,13 @@ import com.hss.openapi.model.InvestmentType;
 import com.hss.openapi.model.PartialInvestmentResultData;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.junit.jupiter.params.provider.Arguments;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class InvestmentDTOsMock {
@@ -73,6 +78,33 @@ public final class InvestmentDTOsMock {
             getInvestmentRequest(),
             getInvestmentErrorResponseDTO()
         ));
+    }
+
+    public static Ipca getIpca() {
+        return Ipca.of(LocalDate.of(2000,8,31),BigDecimal.TEN);
+    }
+
+    public static Selic getSelic() {
+        return Selic.of(LocalDate.of(2000,8,31),LocalDate.of(2022,2,5),BigDecimal.ONE);
+    }
+
+    public static Selic getSelicWithoutfinalDate() {
+        return Selic.of(LocalDate.of(2000,8,31),null,BigDecimal.ONE);
+    }
+
+    public static Stream<Arguments> getProcessingSelicLists() {
+        var same = new ArrayList<Selic>();
+        var selic = getSelic();
+        same.add(selic);
+        same.add(selic);
+        var nextSelic = getSelicWithoutfinalDate();
+        var selics = new ArrayList<Selic>();
+        selics.add(nextSelic);
+        selics.add(selic);
+        return Stream.of(
+            Arguments.of(same),
+            Arguments.of(selics)
+        );
     }
 
     public static RateQueryDTO getIpcaQueryDTO() {

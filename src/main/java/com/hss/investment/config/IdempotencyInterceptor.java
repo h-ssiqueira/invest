@@ -5,8 +5,8 @@ import com.hss.investment.application.persistence.IdempotencyRepository;
 import com.hss.investment.application.persistence.entity.Idempotency;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -18,15 +18,11 @@ import static ch.qos.logback.core.encoder.ByteArrayUtil.toHexString;
 import static com.hss.investment.application.exception.ErrorMessages.INV_005;
 
 @Component
+@RequiredArgsConstructor
 @Slf4j
 public class IdempotencyInterceptor implements HandlerInterceptor {
 
     private final IdempotencyRepository idempotencyRepository;
-
-    @Autowired
-    public IdempotencyInterceptor(IdempotencyRepository idempotencyRepository) {
-        this.idempotencyRepository = idempotencyRepository;
-    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -34,7 +30,6 @@ public class IdempotencyInterceptor implements HandlerInterceptor {
             return true;
         }
         var idempotency = Optional.ofNullable(request.getHeader("idempotency-Id")).orElse(calculate(request));
-        // TODO: set path + method
         var found = idempotencyRepository.findByIdempotencyValueAndUrlAndMethod(idempotency, request.getRequestURI(), Idempotency.HttpMethod.valueOf(request.getMethod()));
         if(found.isPresent()) {
             log.warn("Request already executed! id: {}", found.get().id());

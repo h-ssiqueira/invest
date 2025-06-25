@@ -2,9 +2,13 @@ package com.hss.investment.application.service;
 
 import com.hss.investment.application.persistence.IpcaRepository;
 import com.hss.investment.application.persistence.SelicRepository;
+import com.hss.investment.application.persistence.entity.Ipca;
+import com.hss.investment.application.persistence.entity.Selic;
 import com.hss.investment.application.service.mapper.GeneralMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -12,9 +16,14 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import static com.hss.investment.util.InvestmentDTOsMock.getIpca;
 import static com.hss.investment.util.InvestmentDTOsMock.getIpcaQueryDTO;
 import static com.hss.investment.util.InvestmentDTOsMock.getRateQueryResultList;
+import static com.hss.investment.util.InvestmentDTOsMock.getSelic;
 import static com.hss.investment.util.InvestmentDTOsMock.getSelicQueryDTO;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -76,6 +85,62 @@ class RateServiceImplTest {
             () -> verify(ipcaRepository).findByReferenceDateBetween(any(), any()),
             () -> verify(mapper).toRateResponseWrapperDataItemsInner(any()),
             () -> verifyNoInteractions(selicRepository)
+        );
+    }
+
+    @Test
+    void shouldInsertNewIPCAList() {
+        when(ipcaRepository.findFirstByOrderByReferenceDateDesc()).thenReturn(Optional.empty());
+
+        service.processIpca(List.of(getIpca()));
+
+        assertAll(
+            () -> verify(ipcaRepository).findFirstByOrderByReferenceDateDesc(),
+            () -> verify(ipcaRepository).saveAllAndFlush(any()),
+            () -> verifyNoInteractions(selicRepository)
+        );
+    }
+
+    @Test
+    void shouldValidateExistingIPCAList() {
+        var ipca = getIpca();
+        when(ipcaRepository.findFirstByOrderByReferenceDateDesc()).thenReturn(Optional.of(ipca));
+        var list = new ArrayList<Ipca>();
+        list.add(ipca);
+
+        service.processIpca(list);
+
+        assertAll(
+            () -> verify(ipcaRepository).findFirstByOrderByReferenceDateDesc(),
+            () -> verify(ipcaRepository).saveAllAndFlush(any()),
+            () -> verifyNoInteractions(selicRepository)
+        );
+    }
+
+    @Test
+    void shouldInsertNewSelicRates() {
+        when(selicRepository.findFirstByOrderByRangeInitialDateDesc()).thenReturn(Optional.empty());
+
+        service.processSelic(List.of(getSelic()));
+
+        assertAll(
+            () -> verify(selicRepository).findFirstByOrderByRangeInitialDateDesc(),
+            () -> verify(selicRepository).saveAllAndFlush(any()),
+            () -> verifyNoInteractions(ipcaRepository)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("com.hss.investment.util.InvestmentDTOsMock#getProcessingSelicLists")
+    void shouldValidateExistingSelicRates(List<Selic> list) {
+        when(selicRepository.findFirstByOrderByRangeInitialDateDesc()).thenReturn(Optional.of(getSelic()));
+
+        service.processSelic(list);
+
+        assertAll(
+            () -> verify(selicRepository).findFirstByOrderByRangeInitialDateDesc(),
+            () -> verify(selicRepository).saveAllAndFlush(any()),
+            () -> verifyNoInteractions(ipcaRepository)
         );
     }
 }
