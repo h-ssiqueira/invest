@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRESQL_HOST:172.17.0.2}:5432/investment
+    username: ${POSTGRESQL_USERNAME:postgres}
+    password: ${POSTGRESQL_PASSWORD:admin}
+    hikari.connectionTimeout: 5000
+    hikari.idleTimeout: 10000
+    hikari.minimumIdle: 1
+    hikari.maximumPoolSize: 3
+    hikari.healthCheck-properties.alive-test-query: SELECT 1
+  jpa:
+    open-in-view: false
+    show-sql: true
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/changelog.xml
+  mvc:
+    problemdetails:
+      enabled: true
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-binding-errors: always
+    include-message: always
+
+logging.level.com.hss.investment: DEBUG
+
+investments:
+  kaggle:
+    username: ${KAGGLE_USER}
+    key: ${KAGGLE_KEY}

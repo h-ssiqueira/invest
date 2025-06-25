@@ -1,0 +1,23 @@
+package com.hss.investment.application.persistence;
+
+import com.hss.investment.application.dto.InvestmentQueryDTO;
+import com.hss.investment.application.persistence.entity.Investment;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+import java.util.UUID;
+
+public interface InvestmentRepository extends JpaRepository<Investment, UUID> {
+
+    @Query("""
+    SELECT i FROM Investment i
+    WHERE (:#{#dto.type} IS NULL OR i.investmentType = :#{#dto.type})
+      AND (:#{#dto.bank} IS NULL OR i.bank = :#{#dto.bank})
+      AND (i.investmentRange.initialDate <= COALESCE(:#{#dto.initialDate}, i.investmentRange.initialDate))
+      AND (i.investmentRange.finalDate >= COALESCE(:#{#dto.finalDate}, i.investmentRange.finalDate))
+      AND (:#{#dto.aliquot} IS NULL OR i.baseRate.aliquot = :#{#dto.aliquot})""")
+    List<Investment> findByParameters(@Param("dto") InvestmentQueryDTO dto, Pageable page);
+}

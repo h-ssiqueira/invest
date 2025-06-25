@@ -1,0 +1,358 @@
+openapi: 3.0.3
+info:
+  title: Swagger Investment
+  description: |-
+    Simple invest management application
+  contact:
+    email: hss@outlook.com.br
+  license:
+    name: MIT
+  version: 1.0.0
+servers:
+  - url: https://localhost
+tags:
+  - name: Investment
+    description: Investment APIs
+  - name: Rate
+    description: Rate APIs
+paths:
+  /api/v1/investments:
+    post:
+      tags:
+        - Investment
+      summary: Add a new investment list
+      description: Adds new investments to the application
+      operationId: addInvestments
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyId'
+      requestBody:
+        description: Create new investments to the application
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvestmentRequestWrapper'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+        '207':
+          description: Partial successful operation - some items have fail in validations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartialInvestmentResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+        - Investment
+      summary: Find investment by query parameters
+      description: Returns investments by parameters
+      operationId: getInvestments
+      parameters:
+        - $ref: '#/components/parameters/InvestmentType'
+        - $ref: '#/components/parameters/Bank'
+        - $ref: '#/components/parameters/InitialDate'
+        - $ref: '#/components/parameters/FinalDate'
+        - $ref: '#/components/parameters/Aliquot'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/InvestmentSort'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestmentResultResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/v1/rates/{rateType}:
+    get:
+      tags: 
+        - Rate
+      summary: Retrieve tax rates
+      description: Retrieve tax rates over the time
+      operationId: getRate
+      parameters:
+        - $ref: '#/components/parameters/RateType'
+        - $ref: '#/components/parameters/InitialDate'
+        - $ref: '#/components/parameters/FinalDate'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateResponseWrapper'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+          example: "https://example.com/probs/invalid-date"
+        title:
+          type: string
+          example: "Invalid date"
+        status:
+          type: integer
+          example: 400
+        detail:
+          type: string
+          example: "The initial date cannot be after the final date."
+        instance:
+          type: string
+          example: "/investment"
+    InvestmentType:
+      type: string
+      enum: ['CDB','RDB','LCA','LCI','CRA','CRI']
+    InvestmentAliquot:
+      type: string
+      enum: ['PREFIXED','INFLATION','POSTFIXED']
+    InvestmentRequestWrapper:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvestmentRequest'
+    InvestmentRequest:
+      type: object
+      required: [bank, type, aliquot, rate, initialDate, finalDate, amount]
+      properties:
+        bank:
+          type: string
+          example: National Bank
+        type:
+          $ref: '#/components/schemas/InvestmentType'
+        aliquot:
+          $ref: '#/components/schemas/InvestmentAliquot'
+        rate:
+          type: number
+          format: float
+          example: 10.55
+          minimum: 0.001
+        initialDate:
+          type: string
+          format: date
+          example: 2000-08-31
+        finalDate:
+          type: string
+          format: date
+          example: 2025-08-31
+        amount:
+          type: number
+          format: double
+          example: 1000.19
+          minimum: 0.01
+    InvestmentResultResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/InvestmentResultResponseDTO'
+    PartialInvestmentResult:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/InvestmentRequest'
+                  - $ref: '#/components/schemas/InvestmentErrorResponseDTO'
+    InvestmentErrorResponseDTO:
+      type: object
+      properties:
+        type:
+          type: string
+          example: '/invalidAmount'
+        title:
+          type: string
+          example: Business validation
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: invalid Enum
+              pointer:
+                type: string
+                example: '#/type'
+    InvestmentResultResponseDTO:
+      type: object
+      properties:
+        bank:
+          type: string
+          example: National Bank
+        type:
+          $ref: '#/components/schemas/InvestmentType'
+        rate:
+          type: number
+          format: float
+          example: 15.45
+        tax:
+          type: number
+          format: float
+          example: 17.5
+        initialDate:
+          type: string
+          format: date
+          example: 2020-01-31
+        finalDate:
+          type: string
+          format: date
+          example: 2023-01-31
+        amount:
+          type: number
+          format: double
+          example: 500.00
+        expectedFinalAmount:
+          type: number
+          format: double
+          example: 5000.00
+        earnedAmount:
+          type: number
+          format: double
+          example: 3500.00
+        profit:
+          type: number
+          format: double
+          example: 3000.00
+    RateResponseWrapper:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                type: object
+                properties:
+                  rate:
+                    type: number
+                    format: float
+                    example: 14.75
+                  initialDate:
+                    type: string
+                    format: date
+                    example: 2025-02-02
+                  finalDate:
+                    type: string
+                    format: date
+                    example: 2026-01-01
+  parameters:
+    IdempotencyId:
+      name: idempotency-id
+      in: header
+      description: Idempotency identifier header, in case no value is informed, the server calculates based on the input informed
+      required: false
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      description: Page number
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+        example: 1
+    Size:
+      name: size
+      in: query
+      description: Number of items per page
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+        example: 10
+    InvestmentSort:
+      name: sort
+      in: query
+      description: Order of investment response
+      schema:
+        type: string
+        pattern: "^(investmentRange\\.initialDate|investmentRange\\.finalDate|bank|baseRate\\.aliquot|investmentType),(asc|desc)$"
+        example: 'bank,desc'
+    InvestmentType:
+      name: type
+      in: query
+      description: Type of the investment
+      schema:
+        type: string
+        enum: ['CDB','RDB','LCA','LCI','CRA','CRI']
+        example: CDB
+    Bank:
+      name: bank
+      in: query
+      description: Bank of investment
+      schema:
+        type: string
+        example: National Bank
+    InitialDate:
+      name: initialDate
+      in: query
+      description: Initial date of investment
+      schema:
+        type: string
+        format: date
+        example: 2000-01-01
+    FinalDate:
+      name: finalDate
+      in: query
+      description: Final date of investment
+      schema:
+        type: string
+        format: date
+        example: 2001-01-01
+    Aliquot:
+      name: aliquot
+      in: query
+      description: Final date of investment
+      schema:
+        type: string
+        enum: ['PREFIXED','INFLATION','POSTFIXED']
+        example: 'PREFIXED'
+    RateType:
+      name: rateType
+      in: path
+      schema:
+        type: string
+        enum: ['SELIC','IPCA']
+        example: 'SELIC'
+      required: true
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
