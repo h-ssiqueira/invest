@@ -19,5 +19,5 @@ jobs:
         java-version: '23'
         distribution: 'temurin'
         cache: maven
-    - name: Build & Test
-      run: mvn -B verify
+    - name: Build & Test & Generate Image
+      run: mvn -B verify -Pdocker
