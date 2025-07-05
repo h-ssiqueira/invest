@@ -4,5 +4,5 @@ public sealed interface RateKaggleUpdater permits RateKaggleUpdaterImpl {
 
     void processRates();
 
-    void retrieveAndUpdateRates()
+    void retrieveAndUpdateRates();
 }
