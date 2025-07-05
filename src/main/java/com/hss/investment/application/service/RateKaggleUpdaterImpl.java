@@ -69,7 +69,7 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
 
     @Override
     @Transactional
-    public retrieveAndUpdateRates() {
+    public void retrieveAndUpdateRates() {
         var request = RequestEntity.get("https://www.kaggle.com/api/v1/datasets/download/hssiqueira/brazil-interest-rate-history-selic")
             .header("Authorization", Base64.getEncoder().encodeToString((username + ":" + key).getBytes(UTF_8)))
             .build();
