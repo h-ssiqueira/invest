@@ -26,7 +26,7 @@ public class ConfigurationDao {
     }
 
     public void save(ZonedDateTime lastRateUpdate) {
-        if (getLastUpdatedTimestamp().ifPresent()) {
+        if (getLastUpdatedTimestamp().isPresent()) {
             update(lastRateUpdate);
         } else {
             insert(lastRateUpdate);
