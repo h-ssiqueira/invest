@@ -53,7 +53,7 @@ class RateKaggleUpdaterImplTest {
     void shouldGetDatasetSuccessfully() {
         byte[] content = new byte[0];
         try {
-            content = readAllBytes(Paths.get(RateKaggleUpdaterTest.class.getClassLoader().getResource("brazil-interest-rate-history-selic.zip").toURI()));
+            content = readAllBytes(Paths.get(RateKaggleUpdaterImplTest.class.getClassLoader().getResource("brazil-interest-rate-history-selic.zip").toURI()));
         } catch (Exception e){
             // empty
         }
@@ -74,7 +74,7 @@ class RateKaggleUpdaterImplTest {
     void shouldThrowExceptionWhileUpdatingRates() {
         byte[] content = new byte[0];
         try {
-            content = readAllBytes(Paths.get(RateKaggleUpdaterTest.class.getClassLoader().getResource("brazil-interest-rate-history-selic.zip").toURI()));
+            content = readAllBytes(Paths.get(RateKaggleUpdaterImplTest.class.getClassLoader().getResource("brazil-interest-rate-history-selic.zip").toURI()));
         } catch (Exception e){
             // empty
         }
