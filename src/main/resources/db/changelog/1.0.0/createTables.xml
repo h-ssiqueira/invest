@@ -193,4 +193,22 @@
         <comment>Creating HOLIDAY table</comment>
     </changeSet>
 
+    <changeSet id="CONFIGURATION_table" author="${author}" labels="1.0.0">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="CONFIGURATION"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="CONFIGURATION">
+            <column name="LAST_RATE_UPDATE" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="CONFIGURATION"/>
+        </rollback>
+
+        <comment>Creating CONFIGURATION table</comment>
+    </changeSet>
+
 </databaseChangeLog>

@@ -1,6 +1,7 @@
 package com.hss.investment.application.service;
 
 import com.hss.investment.application.exception.InvestmentException;
+import com.hss.investment.application.persistence.ConfigurationDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @ExtendWith(SpringExtension.class)
-class RateKaggleUpdaterTest {
+class RateKaggleUpdaterImplTest {
 
     @Mock
     private RateServiceImpl rateService;
@@ -35,8 +36,11 @@ class RateKaggleUpdaterTest {
     @Mock
     private RestTemplate client;
 
+    @Mock
+    private ConfigurationDao configurationDao;
+
     @InjectMocks
-    private RateKaggleUpdater updater;
+    private RateKaggleUpdaterImpl updater;
 
     @BeforeEach
     void init() {
@@ -49,19 +53,20 @@ class RateKaggleUpdaterTest {
     void shouldGetDatasetSuccessfully() {
         byte[] content = new byte[0];
         try {
-            content = readAllBytes(Paths.get(RateKaggleUpdaterTest.class.getClassLoader().getResource("brazil-interest-rate-history-selic.zip").toURI()));
+            content = readAllBytes(Paths.get(RateKaggleUpdaterImplTest.class.getClassLoader().getResource("brazil-interest-rate-history-selic.zip").toURI()));
         } catch (Exception e){
             // empty
         }
 
         when(client.exchange(any(RequestEntity.class), any(Class.class))).thenReturn(ResponseEntity.ok(content));
 
-        updater.processRates();
+        updater.retrieveAndUpdateRates();
 
         assertAll(
             () -> verify(client).exchange(any(RequestEntity.class), any(Class.class)),
             () -> verify(rateService).processIpca(any()),
-            () -> verify(rateService).processSelic(any())
+            () -> verify(rateService).processSelic(any()),
+            () -> verify(configurationDao).save(any())
         );
     }
 
@@ -69,7 +74,7 @@ class RateKaggleUpdaterTest {
     void shouldThrowExceptionWhileUpdatingRates() {
         byte[] content = new byte[0];
         try {
-            content = readAllBytes(Paths.get(RateKaggleUpdaterTest.class.getClassLoader().getResource("brazil-interest-rate-history-selic.zip").toURI()));
+            content = readAllBytes(Paths.get(RateKaggleUpdaterImplTest.class.getClassLoader().getResource("brazil-interest-rate-history-selic.zip").toURI()));
         } catch (Exception e){
             // empty
         }
@@ -77,7 +82,7 @@ class RateKaggleUpdaterTest {
         when(client.exchange(any(RequestEntity.class), any(Class.class))).thenReturn(ResponseEntity.ok(content));
         doThrow(RuntimeException.class).when(rateService).processIpca(any());
 
-        assertThrows(InvestmentException.class, () -> updater.processRates());
+        assertThrows(InvestmentException.class, () -> updater.retrieveAndUpdateRates());
 
         assertAll(
             () -> verify(client).exchange(any(RequestEntity.class), any(Class.class)),
@@ -90,11 +95,11 @@ class RateKaggleUpdaterTest {
     void shouldReturnBadRequestWhenRetrievingDataset() {
         when(client.exchange(any(RequestEntity.class), any(Class.class))).thenReturn(ResponseEntity.badRequest().build());
 
-        updater.processRates();
+        updater.retrieveAndUpdateRates();
 
         assertAll(
             () -> verify(client).exchange(any(RequestEntity.class), any(Class.class)),
-            () -> verifyNoInteractions(rateService)
+            () -> verifyNoInteractions(rateService, configurationDao)
         );
     }
 
@@ -102,12 +107,12 @@ class RateKaggleUpdaterTest {
     void shouldReturnErrorWhenIntegratingWithKaggle() {
         when(client.exchange(any(RequestEntity.class), any(Class.class))).thenThrow(RuntimeException.class);
 
-        var ex = assertThrows(InvestmentException.class, () -> updater.processRates());
+        var ex = assertThrows(InvestmentException.class, () -> updater.retrieveAndUpdateRates());
 
         assertAll(
             () -> assertThat(ex.getMessage(), equalTo(INV_005.formatted(null))),
             () -> verify(client).exchange(any(RequestEntity.class), any(Class.class)),
-            () -> verifyNoInteractions(rateService)
+            () -> verifyNoInteractions(rateService, configurationDao)
         );
     }
 }
