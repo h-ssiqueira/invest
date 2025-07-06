@@ -26,6 +26,8 @@ import static com.hss.investment.application.service.validator.DateValidator.val
 public non-sealed class InvestmentServiceImpl implements InvestmentService {
 
     private final InvestmentRepository investmentRepository;
+    private final InvestmentCalculationService calculationService;
+    private final RateService rateService;
 
     @Override
     public PartialInvestmentResultData addInvestments(List<InvestmentRequest> dtoList) {
@@ -55,13 +57,37 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
         validateInitialAndFinalDates(dto.initialDate(), dto.finalDate());
         var result = investmentRepository.findByParameters(dto, dto.page());
         return result.stream()
-            .map(item -> new InvestmentResultResponseDTO()
+            .map(item -> {
+                var calculations = calculate(item);
+                return new InvestmentResultResponseDTO()
                 .bank(item.bank())
                 .amount(item.amount().doubleValue())
                 .initialDate(item.investmentRange().initialDate())
                 .finalDate(item.investmentRange().finalDate())
                 .type(InvestmentType.valueOf(item.investmentType().name()))
                 .rate(item.baseRate().rate().ratePercentage().floatValue())
-            ).toList();
+                .earnedAmount(calculations.earnedAmount().doubleValue())
+                .profit(calculations.profit().doubleValue())
+                .expectedEarnings(calculations.expectedEarnings().doubleValue())
+            }).toList();
+    }
+
+    private ProfitReturnDTO calculate(Investment item) {
+        return switch(item.rate.aliquotType()) {
+            case PREFIXED -> calculationService.calculateInvestment(new InvestmentCalculationSimple()
+                .rate(item.baseRate().rate())
+                .amount(item.amount()
+                .investmentRange(item.investmentRange())));
+            case POSTFIXED -> calculationService.calculateInvestment(new InvestmentCalculationSelic()
+                .rate(item.baseRate().rate())
+                .amount(item.amount()
+                .investmentRange(item.investmentRange()))
+                .selicRate(rateService.getSelicRate(item.investmentRange())));
+            case INFLATION -> calculationService.calculateInvestment(new InvestmentCalculationIPCA()
+                .rate(item.baseRate().rate())
+                .amount(item.amount()
+                .investmentRange(item.investmentRange()))
+                .ipcaRate(rateService.getIpcaRate(item.investmentRange())));
+        };
     }
 }

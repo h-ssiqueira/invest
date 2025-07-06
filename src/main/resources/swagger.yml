@@ -75,8 +75,8 @@ paths:
     get:
       tags: 
         - Rate
-      summary: Retrieve tax rates
-      description: Retrieve tax rates over the time
+      summary: Retrieve interest rates
+      description: Retrieve interest rates over the time
       operationId: getRate
       parameters:
         - $ref: '#/components/parameters/RateType'
@@ -89,6 +89,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RateResponseWrapper'
+          headers:
+            X-Last-Update:
+              schema:
+                type: string
+                format: date-time
+              description: Last rate timestamp update.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/v1/rates:
+    post:
+      tags: 
+        - Rate
+      summary: Update interest rates
+      description: Update interest rates
+      operationId: updateRates
+      responses:
+        '200':
+          description: Successful operation
+          headers:
+            X-Last-Update:
+              schema:
+                type: string
+                format: date-time
+              description: Last rate timestamp update.
         '400':
           $ref: '#/components/responses/BadRequest'
         '500':
@@ -226,7 +252,7 @@ components:
           type: number
           format: double
           example: 500.00
-        expectedFinalAmount:
+        expectedEarnings:
           type: number
           format: double
           example: 5000.00

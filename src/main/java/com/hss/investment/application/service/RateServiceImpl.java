@@ -36,6 +36,24 @@ public non-sealed class RateServiceImpl implements RateService {
     }
 
     @Override
+    public List<IPCATimeline> getIpcaTimeline(InvestmentRange investmentRange) {
+        var list = ipcaRepository.findByReferenceDateBetween(investmentRange.initialDate(), investmentRange.finalDate());
+
+        return list.stream()
+            .map(mapper::toIpcaTimeline)
+            .toList();
+    }
+
+    @Override
+    public List<SelicTimeline> getSelicTimeline(InvestmentRange investmentRange) {
+        var list = selicRepository.findByReferenceDateBetween(investmentRange.initialDate(), investmentRange.finalDate());
+
+        return list.stream()
+            .map(mapper::toSelicTimeline)
+            .toList();
+    }
+
+    @Override
     public void processIpca(List<Ipca> rateList) {
         var lastIPCAOpt = ipcaRepository.findFirstByOrderByReferenceDateDesc();
         if (lastIPCAOpt.isPresent()) {

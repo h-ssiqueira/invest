@@ -12,7 +12,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -57,7 +56,7 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
     @Override
     public void processRates() {
         log.info("Updating rates...");
-        var lastUpdatedRates = configurationDao.getLastUpdatedTimestamp();
+        var lastUpdatedRates = retrieveLastUpdateTimestamp();
 
         lastUpdatedRates.ifPresent(timestamp -> {
             if(ZonedDateTime.now().toLocalDate().equals(timestamp.toLocalDate())){
@@ -69,7 +68,11 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
     }
 
     @Override
-    @Transactional
+    public Optional<ZonedDateTime> retrieveLastUpdateTimestamp() {
+        return configurationDao.getLastUpdatedTimestamp();
+    }
+
+    @Override
     public void retrieveAndUpdateRates() {
         var request = RequestEntity.get("https://www.kaggle.com/api/v1/datasets/download/hssiqueira/brazil-interest-rate-history-selic")
             .header("Authorization", Base64.getEncoder().encodeToString((username + ":" + key).getBytes(UTF_8)))
