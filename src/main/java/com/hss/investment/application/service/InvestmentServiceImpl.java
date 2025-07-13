@@ -1,22 +1,26 @@
 package com.hss.investment.application.service;
 
 import com.hss.investment.application.dto.InvestmentQueryDTO;
+import com.hss.investment.application.dto.calculation.InvestmentCalculationIPCA;
+import com.hss.investment.application.dto.calculation.InvestmentCalculationSelic;
+import com.hss.investment.application.dto.calculation.InvestmentCalculationSimple;
+import com.hss.investment.application.dto.calculation.ProfitReturnDTO;
 import com.hss.investment.application.exception.InvestmentException;
 import com.hss.investment.application.persistence.InvestmentRepository;
 import com.hss.investment.application.persistence.entity.Investment;
+import com.hss.investment.application.service.calculation.InvestmentCalculationService;
 import com.hss.openapi.model.InvestmentErrorResponseDTO;
 import com.hss.openapi.model.InvestmentRequest;
 import com.hss.openapi.model.InvestmentResultResponseDTO;
 import com.hss.openapi.model.InvestmentType;
 import com.hss.openapi.model.PartialInvestmentResultData;
 import com.hss.openapi.model.PartialInvestmentResultDataItemsInner;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import static com.hss.investment.application.service.validator.DateValidator.validateInitialAndFinalDates;
 
@@ -66,28 +70,27 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
                 .finalDate(item.investmentRange().finalDate())
                 .type(InvestmentType.valueOf(item.investmentType().name()))
                 .rate(item.baseRate().rate().ratePercentage().floatValue())
-                .earnedAmount(calculations.earnedAmount().doubleValue())
                 .profit(calculations.profit().doubleValue())
-                .expectedEarnings(calculations.expectedEarnings().doubleValue())
+                .earnings(calculations.earnings().doubleValue());
             }).toList();
     }
 
     private ProfitReturnDTO calculate(Investment item) {
-        return switch(item.rate.aliquotType()) {
-            case PREFIXED -> calculationService.calculateInvestment(new InvestmentCalculationSimple()
-                .rate(item.baseRate().rate())
-                .amount(item.amount()
-                .investmentRange(item.investmentRange())));
-            case POSTFIXED -> calculationService.calculateInvestment(new InvestmentCalculationSelic()
-                .rate(item.baseRate().rate())
-                .amount(item.amount()
-                .investmentRange(item.investmentRange()))
-                .selicRate(rateService.getSelicRate(item.investmentRange())));
-            case INFLATION -> calculationService.calculateInvestment(new InvestmentCalculationIPCA()
-                .rate(item.baseRate().rate())
-                .amount(item.amount()
-                .investmentRange(item.investmentRange()))
-                .ipcaRate(rateService.getIpcaRate(item.investmentRange())));
+        return switch(item.baseRate().aliquot()) {
+            case PREFIXED -> calculationService.calculateInvestment(InvestmentCalculationSimple.builder()
+                .rate(item.baseRate().rate().rateCalculate())
+                .amount(item.amount())
+                .investmentRange(item.investmentRange()).build());
+            case POSTFIXED -> calculationService.calculateInvestment(InvestmentCalculationSelic.builder()
+                .selicTimeline(rateService.getSelicTimeline(item.investmentRange()))
+                .rate(item.baseRate().rate().rateCalculate())
+                .amount(item.amount())
+                .investmentRange(item.investmentRange()).build());
+            case INFLATION -> calculationService.calculateInvestment(InvestmentCalculationIPCA.builder()
+                .ipcaTimeline(rateService.getIpcaTimeline(item.investmentRange()))
+                .rate(item.baseRate().rate().rateCalculate())
+                .amount(item.amount())
+                .investmentRange(item.investmentRange()).build());
         };
     }
 }

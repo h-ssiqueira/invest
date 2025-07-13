@@ -2,6 +2,7 @@ package com.hss.investment.application.service;
 
 import com.hss.investment.application.exception.InvestmentException;
 import com.hss.investment.application.persistence.ConfigurationDao;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,8 +12,6 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestTemplate;
-
-import java.nio.file.Paths;
 
 import static com.hss.investment.application.exception.ErrorMessages.INV_005;
 import static java.nio.file.Files.readAllBytes;

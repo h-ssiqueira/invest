@@ -252,14 +252,10 @@ components:
           type: number
           format: double
           example: 500.00
-        expectedEarnings:
+        earnings:
           type: number
           format: double
           example: 5000.00
-        earnedAmount:
-          type: number
-          format: double
-          example: 3500.00
         profit:
           type: number
           format: double

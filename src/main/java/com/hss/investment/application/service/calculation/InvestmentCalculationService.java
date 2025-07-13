@@ -1,15 +1,27 @@
 package com.hss.investment.application.service.calculation;
 
+import com.hss.investment.application.dto.calculation.InvestmentCalculationBase;
+import com.hss.investment.application.dto.calculation.ProfitReturnDTO;
+import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@RequiredArgsConstructor
+@Service
 public abstract class InvestmentCalculationService<T extends InvestmentCalculationBase> {
 
-    private final HolidayRepository holidayRepository;
-
     public ProfitReturnDTO calculateInvestment(T investment) {
-        // search for holidays in the database
-        var holidays = holidayRepository.findByReferenceDateBetween(investment.getStartDate(), investment.getEndDate());
-        // Idaily = (1+anual rate)^(1/252)-1
-        return calculateProfitReturn(investment, holidays);
+        var finalAmount = calculateProfitReturn(investment);
+        var taxes = calculateTaxes(investment, finalAmount);
+        return new ProfitReturnDTO(finalAmount,finalAmount.subtract(investment.amount()).subtract(taxes));
     }
 
-    public abstract ProfitReturnDTO calculateProfitReturn(T investment, List<LocalDate> holidays);
+    private BigDecimal calculateTaxes(T investment, BigDecimal finalAmount) {
+        return investment.type().hasTaxes() ? finalAmount.subtract(investment.amount())
+            .multiply(investment.investmentRange().getTax()) : BigDecimal.ZERO;
+    }
+
+    public abstract BigDecimal calculateProfitReturn(T investment);
+
+
 }

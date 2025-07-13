@@ -11,6 +11,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -18,11 +22,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.util.UUID;
 
 import static com.hss.investment.application.exception.ErrorMessages.INV_002;
 import static java.util.Objects.nonNull;
@@ -69,7 +68,7 @@ public class Investment {
         this.baseRate = rate;
         this.amount = amount;
         this.createdAt = ZonedDateTime.now();
-        this.completed = false;
+        this.completed = investmentRange.isCompleted();
     }
 
     public static Investment create(String bank, InvestmentType type, InvestmentRange range, BaseRate rate, BigDecimal amount) {
@@ -119,6 +118,21 @@ public class Investment {
 
         public Integer getInvestmentDays() {
             return initialDate.until(finalDate).getDays();
+        }
+
+        public BigDecimal getTax() {
+            var daysInvested = getInvestmentDays();
+            if(daysInvested <= 180)
+                return BigDecimal.valueOf(.225);
+            if (daysInvested <= 360)
+                return BigDecimal.valueOf(.2);
+            if (daysInvested <= 720)
+                return BigDecimal.valueOf(.175);
+            return BigDecimal.valueOf(.15);
+        }
+
+        public boolean isCompleted() {
+            return nonNull(finalDate) && finalDate.isBefore(LocalDate.now());
         }
     }
 

@@ -11,15 +11,14 @@ import com.hss.openapi.model.InvestmentRequest;
 import com.hss.openapi.model.InvestmentRequestWrapper;
 import com.hss.openapi.model.InvestmentType;
 import com.hss.openapi.model.PartialInvestmentResultData;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import org.junit.jupiter.params.provider.Arguments;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.junit.jupiter.params.provider.Arguments;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class InvestmentDTOsMock {

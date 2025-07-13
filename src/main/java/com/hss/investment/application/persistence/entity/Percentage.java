@@ -3,12 +3,11 @@ package com.hss.investment.application.persistence.entity;
 import com.hss.investment.application.exception.InvestmentException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import java.math.BigDecimal;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
 
 import static com.hss.investment.application.exception.ErrorMessages.INV_003;
 

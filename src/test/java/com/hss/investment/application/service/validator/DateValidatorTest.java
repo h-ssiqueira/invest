@@ -1,9 +1,8 @@
 package com.hss.investment.application.service.validator;
 
 import com.hss.investment.application.exception.InvestmentException;
-import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
+import org.junit.jupiter.api.Test;
 
 import static com.hss.investment.application.exception.ErrorMessages.INV_002;
 import static com.hss.investment.application.service.validator.DateValidator.validateInitialAndFinalDates;

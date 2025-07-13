@@ -1,19 +1,9 @@
 package com.hss.investment.application.service;
 
 import com.hss.investment.application.exception.InvestmentException;
+import com.hss.investment.application.persistence.ConfigurationDao;
 import com.hss.investment.application.persistence.entity.Ipca;
 import com.hss.investment.application.persistence.entity.Selic;
-import com.hss.investment.application.persistence.ConfigurationDao;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.csv.CSVParser;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.http.RequestEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,14 +13,24 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.csv.CSVParser;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.http.RequestEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import static com.hss.investment.application.exception.ErrorMessages.INV_005;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -58,12 +58,10 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
         log.info("Updating rates...");
         var lastUpdatedRates = retrieveLastUpdateTimestamp();
 
-        lastUpdatedRates.ifPresent(timestamp -> {
-            if(ZonedDateTime.now().toLocalDate().equals(timestamp.toLocalDate())){
-                log.info("Rates already processed today");
-                return;
-            }
-        });
+        if(lastUpdatedRates.isPresent() && ZonedDateTime.now().toLocalDate().equals(lastUpdatedRates.get().toLocalDate())){
+            log.info("Rates already processed today");
+            return;
+        }
         retrieveAndUpdateRates();
     }
 

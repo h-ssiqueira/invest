@@ -1,14 +1,16 @@
 package com.hss.investment.application.dto.calculation;
 
-import lombok.Builder;
+import java.time.YearMonth;
 import lombok.Data;
-import java.time.MonthYear;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @Accessors(chain = true, fluent = true)
 public final class IPCATimeline extends InvestmentCalculationSimple {
 
-    private MonthYear month;
+    private YearMonth month;
 }

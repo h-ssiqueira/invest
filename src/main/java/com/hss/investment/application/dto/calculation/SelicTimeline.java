@@ -1,14 +1,16 @@
 package com.hss.investment.application.dto.calculation;
 
-import lombok.Builder;
+import com.hss.investment.application.persistence.entity.Investment.InvestmentRange;
 import lombok.Data;
-import com.hss.investment.application.entity.Investment;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @Accessors(chain = true, fluent = true)
 public final class SelicTimeline extends InvestmentCalculationSimple {
 
-    private Investment.InvestmentRange investmentRange;
+    private InvestmentRange investmentRange;
 }

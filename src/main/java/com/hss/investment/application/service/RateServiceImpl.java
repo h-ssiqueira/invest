@@ -1,17 +1,21 @@
 package com.hss.investment.application.service;
 
 import com.hss.investment.application.dto.RateQueryDTO;
+import com.hss.investment.application.dto.RateQueryResultDTO;
+import com.hss.investment.application.dto.calculation.IPCATimeline;
+import com.hss.investment.application.dto.calculation.SelicTimeline;
 import com.hss.investment.application.persistence.IpcaRepository;
 import com.hss.investment.application.persistence.SelicRepository;
+import com.hss.investment.application.persistence.entity.Investment;
 import com.hss.investment.application.persistence.entity.Ipca;
 import com.hss.investment.application.persistence.entity.Selic;
 import com.hss.investment.application.service.mapper.GeneralMapper;
 import com.hss.openapi.model.RateResponseWrapperDataItemsInner;
+import java.time.YearMonth;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import static com.hss.investment.application.service.validator.DateValidator.validateInitialAndFinalDates;
 import static java.util.Objects.nonNull;
@@ -36,33 +40,32 @@ public non-sealed class RateServiceImpl implements RateService {
     }
 
     @Override
-    public List<IPCATimeline> getIpcaTimeline(InvestmentRange investmentRange) {
+    public List<IPCATimeline> getIpcaTimeline(Investment.InvestmentRange investmentRange) {
         var list = ipcaRepository.findByReferenceDateBetween(investmentRange.initialDate(), investmentRange.finalDate());
 
         return list.stream()
-            .map(mapper::toIpcaTimeline)
+            .map(this::toIpcaTimeline)
             .toList();
     }
 
+
+
     @Override
-    public List<SelicTimeline> getSelicTimeline(InvestmentRange investmentRange) {
+    public List<SelicTimeline> getSelicTimeline(Investment.InvestmentRange investmentRange) {
         var list = selicRepository.findByReferenceDateBetween(investmentRange.initialDate(), investmentRange.finalDate());
 
         return list.stream()
-            .map(mapper::toSelicTimeline)
+            .map(this::toSelicTimeline)
             .toList();
     }
 
     @Override
     public void processIpca(List<Ipca> rateList) {
         var lastIPCAOpt = ipcaRepository.findFirstByOrderByReferenceDateDesc();
-        if (lastIPCAOpt.isPresent()) {
-            var lastIPCA = lastIPCAOpt.get();
-            rateList.removeIf(ipca ->
-                ipca.referenceDate().isBefore(lastIPCA.referenceDate()) ||
-                ipca.referenceDate().isEqual(lastIPCA.referenceDate())
-            );
-        }
+        lastIPCAOpt.ifPresent(lastIPCA -> rateList.removeIf(ipca ->
+            ipca.referenceDate().isBefore(lastIPCA.referenceDate()) ||
+            ipca.referenceDate().isEqual(lastIPCA.referenceDate())
+        ));
         log.debug("Saved {} new registers into database", rateList.size());
         ipcaRepository.saveAllAndFlush(rateList);
     }
@@ -86,5 +89,19 @@ public non-sealed class RateServiceImpl implements RateService {
         }
         log.debug("Saved {} registers into database", rateList.size());
         selicRepository.saveAllAndFlush(rateList);
+    }
+
+    private IPCATimeline toIpcaTimeline(RateQueryResultDTO resultDTO) {
+        return IPCATimeline.builder()
+            .month(YearMonth.of(resultDTO.initialDate().getYear(),resultDTO.initialDate().getMonth()))
+            .rate(resultDTO.rate())
+            .build();
+    }
+
+    private SelicTimeline toSelicTimeline(RateQueryResultDTO resultDTO) {
+        return SelicTimeline.builder()
+            .investmentRange(Investment.InvestmentRange.of(resultDTO.initialDate(), resultDTO.finalDate()))
+            .rate(resultDTO.rate())
+            .build();
     }
 }
