@@ -1,10 +1,11 @@
-package com.hss.investment.application.service.calculation;
+package com.hss.investment.application.service.calculation.service;
 
 import com.hss.investment.application.dto.calculation.InvestmentCalculationIPCA;
 import java.math.BigDecimal;
+import org.springframework.stereotype.Service;
 
-//@Service
-public class InvestmentInflationCalculationService extends InvestmentCalculationService<InvestmentCalculationIPCA> {
+@Service
+public final class InvestmentInflationCalculationService extends InvestmentCalculationService<InvestmentCalculationIPCA> {
 
     // IPCA → taxa de maio é divulgada em junho e somente é aplicada em julho
     // Idaily = (1+anual rate)^(1/360)-1

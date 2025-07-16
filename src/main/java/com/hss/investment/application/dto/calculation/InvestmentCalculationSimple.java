@@ -10,8 +10,9 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @Accessors(chain = true, fluent = true)
-public sealed class InvestmentCalculationSimple extends InvestmentCalculationBase
-permits InvestmentCalculationSelic, InvestmentCalculationIPCA, SelicTimeline, IPCATimeline {
+public sealed class InvestmentCalculationSimple
+    extends InvestmentCalculationBase
+    permits InvestmentCalculationSelic, InvestmentCalculationIPCA, SelicTimeline, IPCATimeline {
 
     private BigDecimal rate;
 }

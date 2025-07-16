@@ -12,6 +12,6 @@ public interface HolidayRepository extends JpaRepository<Holiday, Integer> {
     @Query("""
         SELECT DISTINCT referenceDate FROM Holiday
         WHERE referenceDate BETWEEN :initialDate AND :finalDate
-        ORDER BY referenceDate DESC;""")
+        ORDER BY referenceDate DESC""")
     List<LocalDate> findByReferenceDateBetween(@Param("initialDate") LocalDate initialDate, @Param("finalDate") LocalDate finalDate);
 }

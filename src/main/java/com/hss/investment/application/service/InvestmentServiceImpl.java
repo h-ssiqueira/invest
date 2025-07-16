@@ -1,14 +1,14 @@
 package com.hss.investment.application.service;
 
 import com.hss.investment.application.dto.InvestmentQueryDTO;
+import com.hss.investment.application.dto.calculation.InvestmentCalculationBase;
 import com.hss.investment.application.dto.calculation.InvestmentCalculationIPCA;
 import com.hss.investment.application.dto.calculation.InvestmentCalculationSelic;
 import com.hss.investment.application.dto.calculation.InvestmentCalculationSimple;
-import com.hss.investment.application.dto.calculation.ProfitReturnDTO;
 import com.hss.investment.application.exception.InvestmentException;
 import com.hss.investment.application.persistence.InvestmentRepository;
 import com.hss.investment.application.persistence.entity.Investment;
-import com.hss.investment.application.service.calculation.InvestmentCalculationService;
+import com.hss.investment.application.service.calculation.InvestmentCalculationDelegator;
 import com.hss.openapi.model.InvestmentErrorResponseDTO;
 import com.hss.openapi.model.InvestmentRequest;
 import com.hss.openapi.model.InvestmentResultResponseDTO;
@@ -30,7 +30,7 @@ import static com.hss.investment.application.service.validator.DateValidator.val
 public non-sealed class InvestmentServiceImpl implements InvestmentService {
 
     private final InvestmentRepository investmentRepository;
-    private final InvestmentCalculationService calculationService;
+    private final InvestmentCalculationDelegator<InvestmentCalculationBase> delegator;
     private final RateService rateService;
 
     @Override
@@ -62,7 +62,7 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
         var result = investmentRepository.findByParameters(dto, dto.page());
         return result.stream()
             .map(item -> {
-                var calculations = calculate(item);
+                var calculations = delegator.delegate(retrieveDTO(item));
                 return new InvestmentResultResponseDTO()
                 .bank(item.bank())
                 .amount(item.amount().doubleValue())
@@ -75,22 +75,22 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
             }).toList();
     }
 
-    private ProfitReturnDTO calculate(Investment item) {
+    private InvestmentCalculationBase retrieveDTO(Investment item) {
         return switch(item.baseRate().aliquot()) {
-            case PREFIXED -> calculationService.calculateInvestment(InvestmentCalculationSimple.builder()
+            case PREFIXED -> InvestmentCalculationSimple.builder()
                 .rate(item.baseRate().rate().rateCalculate())
                 .amount(item.amount())
-                .investmentRange(item.investmentRange()).build());
-            case POSTFIXED -> calculationService.calculateInvestment(InvestmentCalculationSelic.builder()
+                .investmentRange(item.investmentRange()).build();
+            case POSTFIXED -> InvestmentCalculationSelic.builder()
                 .selicTimeline(rateService.getSelicTimeline(item.investmentRange()))
                 .rate(item.baseRate().rate().rateCalculate())
                 .amount(item.amount())
-                .investmentRange(item.investmentRange()).build());
-            case INFLATION -> calculationService.calculateInvestment(InvestmentCalculationIPCA.builder()
+                .investmentRange(item.investmentRange()).build();
+            case INFLATION -> InvestmentCalculationIPCA.builder()
                 .ipcaTimeline(rateService.getIpcaTimeline(item.investmentRange()))
                 .rate(item.baseRate().rate().rateCalculate())
                 .amount(item.amount())
-                .investmentRange(item.investmentRange()).build());
+                .investmentRange(item.investmentRange()).build();
         };
     }
 }

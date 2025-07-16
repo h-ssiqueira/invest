@@ -1,12 +1,14 @@
-package com.hss.investment.application.service.calculation;
+package com.hss.investment.application.service.calculation.service;
 
 import com.hss.investment.application.dto.calculation.InvestmentCalculationSelic;
 import com.hss.investment.application.persistence.HolidayRepository;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
-public class InvestmentPostfixedCalculationService extends InvestmentCalculationService<InvestmentCalculationSelic> {
+@Service
+public final class InvestmentPostfixedCalculationService extends InvestmentCalculationService<InvestmentCalculationSelic> {
 
     private final HolidayRepository holidayRepository;
 

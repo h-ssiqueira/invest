@@ -1,14 +1,13 @@
-package com.hss.investment.application.service.calculation;
+package com.hss.investment.application.service.calculation.service;
 
 import com.hss.investment.application.dto.calculation.InvestmentCalculationBase;
 import com.hss.investment.application.dto.calculation.ProfitReturnDTO;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
-@Service
-public abstract class InvestmentCalculationService<T extends InvestmentCalculationBase> {
+public abstract sealed class InvestmentCalculationService<T extends InvestmentCalculationBase>
+    permits InvestmentInflationCalculationService, InvestmentPostfixedCalculationService, InvestmentPrefixedCalculationService {
 
     public ProfitReturnDTO calculateInvestment(T investment) {
         var finalAmount = calculateProfitReturn(investment);
@@ -22,6 +21,4 @@ public abstract class InvestmentCalculationService<T extends InvestmentCalculati
     }
 
     public abstract BigDecimal calculateProfitReturn(T investment);
-
-
 }
