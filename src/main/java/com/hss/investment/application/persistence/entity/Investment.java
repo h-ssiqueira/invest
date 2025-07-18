@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -24,6 +25,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import static com.hss.investment.application.exception.ErrorMessages.INV_002;
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Table(name = "INVESTMENT")
@@ -133,6 +135,17 @@ public class Investment {
 
         public boolean isCompleted() {
             return nonNull(finalDate) && finalDate.isBefore(LocalDate.now());
+        }
+
+        public int retrieveDaysFromMonth(YearMonth month) {
+            if(month.equals(YearMonth.of(initialDate().getYear(),initialDate().getMonth()))) {
+                return initialDate().lengthOfMonth() - initialDate().getDayOfMonth() + 1;
+            }
+            var finalDate = isNull(finalDate()) ? LocalDate.now() : finalDate();
+            if(month.equals(YearMonth.of(finalDate.getYear(),finalDate.getMonth()))) {
+                return finalDate.getDayOfMonth();
+            }
+            return month.lengthOfMonth();
         }
     }
 

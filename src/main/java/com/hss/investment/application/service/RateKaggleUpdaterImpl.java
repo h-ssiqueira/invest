@@ -79,7 +79,7 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
             log.info("Downloading dataset...");
             var response = client.exchange(request, byte[].class);
             if (!response.getStatusCode().is2xxSuccessful()) {
-                log.error("Failed to download: " + response);
+                log.error("Failed to download: {}", response);
                 return;
             }
             log.info("Download complete!");
@@ -97,7 +97,7 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
             ZipEntry entry;
             while (nonNull(entry = zis.getNextEntry())) {
                 var filename = entry.getName();
-                log.debug("Found file in ZIP: " + entry.getName());
+                log.debug("Found file in ZIP: {}", entry.getName());
                 if (filename.endsWith(".csv")) {
                     processCSV(getCsvBytes(zis), filename);
                 }
@@ -122,7 +122,7 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
                 .setReader(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvBytes), UTF_8)))
                 .get()
         ) {
-            log.debug("CSV Headers: " + csvParser.getHeaderNames());
+            log.debug("CSV Headers: {}", csvParser.getHeaderNames());
             if (filename.equals("IBGE_IPCA.csv")) {
                 log.info("Processing IPCA rates...");
                 rateService.processIpca(new ArrayList<>(csvParser.stream()

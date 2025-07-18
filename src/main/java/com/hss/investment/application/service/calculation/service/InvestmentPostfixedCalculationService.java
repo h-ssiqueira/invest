@@ -12,10 +12,14 @@ public final class InvestmentPostfixedCalculationService extends InvestmentCalcu
 
     private final HolidayRepository holidayRepository;
 
-    // Idaily = (1+anual rate)^(1/252)-1
     @Override
     public BigDecimal calculateProfitReturn(InvestmentCalculationSelic investment) {
         var holidays = holidayRepository.findByReferenceDateBetween(investment.investmentRange().initialDate(), investment.investmentRange().finalDate());
+        investment.selicTimeline().forEach(selic -> {
+            var selicRate = calculateDailyRate(selic.rate(), CalculationType.BUSINESS_DAYS);
+        });
+        //var days = calculateBusinessDaysOfMonth(holidays,investment.investmentRange());
+
         return null;
     }
 }

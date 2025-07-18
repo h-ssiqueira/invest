@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -24,17 +25,16 @@ public class IdempotencyInterceptor implements HandlerInterceptor {
     private final IdempotencyRepository idempotencyRepository;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if(Arrays.stream(Idempotency.HttpMethod.values()).noneMatch(x -> x.equals(request.getMethod()))) {
-            return true;
+    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
+        if(Arrays.stream(Idempotency.HttpMethod.values()).anyMatch(x -> x.equals(Idempotency.HttpMethod.valueOf(request.getMethod())))) {
+            var idempotency = Optional.ofNullable(request.getHeader("idempotency-Id")).orElse(calculate(request));
+            var found = idempotencyRepository.findByIdempotencyValueAndUrlAndMethod(idempotency, request.getRequestURI(), Idempotency.HttpMethod.valueOf(request.getMethod()));
+            if (found.isPresent()) {
+                log.warn("Request already executed! id: {}", found.get().id());
+                return false;
+            }
+            idempotencyRepository.save(Idempotency.of(idempotency));
         }
-        var idempotency = Optional.ofNullable(request.getHeader("idempotency-Id")).orElse(calculate(request));
-        var found = idempotencyRepository.findByIdempotencyValueAndUrlAndMethod(idempotency, request.getRequestURI(), Idempotency.HttpMethod.valueOf(request.getMethod()));
-        if(found.isPresent()) {
-            log.warn("Request already executed! id: {}", found.get().id());
-            return false;
-        }
-        idempotencyRepository.save(Idempotency.of(idempotency));
         return true;
     }
 

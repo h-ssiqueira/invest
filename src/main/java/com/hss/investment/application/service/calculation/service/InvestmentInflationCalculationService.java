@@ -8,11 +8,18 @@ import org.springframework.stereotype.Service;
 public final class InvestmentInflationCalculationService extends InvestmentCalculationService<InvestmentCalculationIPCA> {
 
     // IPCA → taxa de maio é divulgada em junho e somente é aplicada em julho
-    // Idaily = (1+anual rate)^(1/360)-1
-    // Assim como o cálculo é feito:
-    // (1+IPCA) * (1+prefixado) -1
     @Override
     public BigDecimal calculateProfitReturn(InvestmentCalculationIPCA investment) {
-        return null;
+        var fixedDailyRate = calculateDailyRate(investment.rate(), CalculationType.STRAIGHT);
+        var amount = investment.amount();
+        for (var ipca : investment.ipcaTimeline()) {
+            // (1 + IPCA) * (1 + prefixado) - 1
+            var ipcaDailyRate = BigDecimal.ONE.add(calculateDailyRate(ipca.rate(), CalculationType.STRAIGHT))
+                .multiply(BigDecimal.ONE.add(fixedDailyRate))
+                .subtract(BigDecimal.ONE);
+            var period = investment.investmentRange().retrieveDaysFromMonth(ipca.month().plusMonths(2));
+            amount = calculatePeriodAmount(amount, ipcaDailyRate, period);
+        }
+        return amount;
     }
 }

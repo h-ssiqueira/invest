@@ -41,7 +41,10 @@ public non-sealed class RateServiceImpl implements RateService {
 
     @Override
     public List<IPCATimeline> getIpcaTimeline(Investment.InvestmentRange investmentRange) {
-        var list = ipcaRepository.findByReferenceDateBetween(investmentRange.initialDate(), investmentRange.finalDate());
+        var list = ipcaRepository.findByReferenceDateBetween(
+            investmentRange.initialDate().minusMonths(2),
+            investmentRange.finalDate().minusMonths(2)
+        );
 
         return list.stream()
             .map(this::toIpcaTimeline)
@@ -66,7 +69,7 @@ public non-sealed class RateServiceImpl implements RateService {
             ipca.referenceDate().isBefore(lastIPCA.referenceDate()) ||
             ipca.referenceDate().isEqual(lastIPCA.referenceDate())
         ));
-        log.debug("Saved {} new registers into database", rateList.size());
+        logSuccess(rateList.size());
         ipcaRepository.saveAllAndFlush(rateList);
     }
 
@@ -76,7 +79,8 @@ public non-sealed class RateServiceImpl implements RateService {
         if (lastSELICOpt.isPresent()) {
             var lastSELIC = lastSELICOpt.get();
             var finalDateUpdated = rateList.stream()
-                .filter(item -> item.range().initialDate().equals(lastSELIC.range().initialDate()) && nonNull(item.range().finalDate()))
+                .filter(item -> item.range().initialDate()
+                    .equals(lastSELIC.range().initialDate()) && nonNull(item.range().finalDate()))
                 .findFirst();
             rateList.removeIf(selic ->
                 selic.range().initialDate().isBefore(lastSELIC.range().initialDate()) ||
@@ -87,8 +91,12 @@ public non-sealed class RateServiceImpl implements RateService {
                 rateList.add(lastSELIC);
             }
         }
-        log.debug("Saved {} registers into database", rateList.size());
+        logSuccess(rateList.size());
         selicRepository.saveAllAndFlush(rateList);
+    }
+
+    private void logSuccess(int size) {
+        log.debug("Saved {} new registers into database", size);
     }
 
     private IPCATimeline toIpcaTimeline(RateQueryResultDTO resultDTO) {

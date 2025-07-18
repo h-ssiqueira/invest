@@ -11,10 +11,9 @@ public final class InvestmentPrefixedCalculationService extends InvestmentCalcul
 
     @Override
     public BigDecimal calculateProfitReturn(InvestmentCalculationSimple investment) {
-        var days = investment.investmentRange().getInvestmentDays();
-        // (1 + annual rate) ^ (1 / 360) - 1
-        var dailyRate = investment.rate().plus().add(BigDecimal.ONE).pow(1/360).subtract(BigDecimal.ONE);
-        // amount * (1 + daily rate) ^ period
-        return investment.amount().multiply(dailyRate.add(BigDecimal.ONE).pow(days));
+        return calculatePeriodAmount(
+            investment.amount(),
+            calculateDailyRate(investment.rate(), CalculationType.STRAIGHT),
+            investment.investmentRange().getInvestmentDays());
     }
 }

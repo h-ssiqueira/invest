@@ -4,6 +4,7 @@ import com.hss.investment.application.exception.InvestmentException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -32,7 +33,7 @@ public class Percentage {
     }
 
     public BigDecimal rateCalculate() {
-        return rate.divide(BigDecimal.valueOf(100));
+        return rate.divide(BigDecimal.valueOf(100), RoundingMode.HALF_EVEN);
     }
 
     @Override
