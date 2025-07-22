@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import static com.hss.investment.application.exception.ErrorMessages.INV_002;
+import static java.time.DayOfWeek.SATURDAY;
+import static java.time.DayOfWeek.SUNDAY;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
@@ -118,7 +121,14 @@ public class Investment {
             return new InvestmentRange(initialDate, finalDate);
         }
 
-        public Integer getInvestmentDays() {
+        public List<LocalDate> getInvestmentBusinessDays(List<LocalDate> holiday) {
+            return initialDate.datesUntil(finalDate)
+                .filter(day ->
+                    !SATURDAY.equals(day.getDayOfWeek()) && !SUNDAY.equals(day.getDayOfWeek()) && !holiday.contains(day)
+                ).toList();
+        }
+
+        public int getInvestmentDays() {
             return initialDate.until(finalDate).getDays();
         }
 
