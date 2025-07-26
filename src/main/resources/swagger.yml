@@ -67,6 +67,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvestmentResultResponse'
+        '204':
+          description: No content found
         '400':
           $ref: '#/components/responses/BadRequest'
         '500':
@@ -107,7 +109,7 @@ paths:
       description: Update interest rates
       operationId: updateRates
       responses:
-        '200':
+        '204':
           description: Successful operation
           headers:
             X-Last-Update:

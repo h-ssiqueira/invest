@@ -62,8 +62,10 @@ public class InvestmentController implements InvestmentApi {
             bank,
             initialDate, finalDate,
             nonNull(aliquot) ? Investment.AliquotType.valueOf(aliquot) : null,
-            PageRequest.of(page, size, extractSort(nonNull(sort) ? sort : "initialDate,desc")))
+            PageRequest.of(page, size, extractSort(nonNull(sort) ? sort : "investmentRange.initialDate,desc")))
         );
-        return ResponseEntity.ok(new GenericResponseDTO<>(new InvestmentResultResponseData().items(result)));
+        return result.isEmpty() ?
+            ResponseEntity.noContent().build() :
+            ResponseEntity.ok(new GenericResponseDTO<>(new InvestmentResultResponseData().items(result)));
     }
 }

@@ -3,6 +3,8 @@ package com.hss.investment.application.service.calculation.service;
 import com.hss.investment.application.dto.calculation.InvestmentCalculationBase;
 import com.hss.investment.application.dto.calculation.ProfitReturnDTO;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import org.nevec.rjm.BigDecimalMath;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -18,8 +20,10 @@ public abstract sealed class InvestmentCalculationService<T extends InvestmentCa
     }
 
     private BigDecimal calculateTaxes(T investment, BigDecimal finalAmount) {
-        return investment.type().hasTaxes() ? finalAmount.subtract(investment.amount())
-            .multiply(investment.investmentRange().getTax()) : BigDecimal.ZERO;
+        return investment.type().hasTaxes() ?
+            finalAmount.subtract(investment.amount())
+            .multiply(investment.investmentRange().getTax())
+            : BigDecimal.ZERO;
     }
 
     /**
@@ -29,9 +33,8 @@ public abstract sealed class InvestmentCalculationService<T extends InvestmentCa
      * @return the investment daily rate within the period
      */
     protected BigDecimal calculateDailyRate(BigDecimal rate, CalculationType type) {
-        return BigDecimal.ONE.add(rate)
-            .pow(1/type.days())
-            .subtract(BigDecimal.ONE);
+        var result = BigDecimalMath.pow(BigDecimal.ONE.add(rate), BigDecimal.ONE.divide(BigDecimal.valueOf(type.days()), 10, RoundingMode.HALF_EVEN));
+        return result.subtract(BigDecimal.ONE);
     }
 
     /**

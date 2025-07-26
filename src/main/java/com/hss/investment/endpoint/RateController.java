@@ -38,9 +38,8 @@ public class RateController implements RateApi {
     public ResponseEntity<GenericResponseDTO<?>> updateRates(HttpServletRequest request,
                                                              HttpServletResponse response) {
         rateKaggleUpdater.retrieveAndUpdateRates();
-        return ResponseEntity.ok()
-            .headers(buildHeader())
-            .body(new GenericResponseDTO<>(null));
+        return ResponseEntity.noContent()
+            .headers(buildHeader()).build();
     }
 
     private HttpHeaders buildHeader() {

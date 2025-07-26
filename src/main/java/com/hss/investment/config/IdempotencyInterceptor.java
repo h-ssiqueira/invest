@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +25,16 @@ public class IdempotencyInterceptor implements HandlerInterceptor {
 
     private final IdempotencyRepository idempotencyRepository;
 
+    private static final List<String> apis = List.of("/api/v1/investments");
+
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
-        if(Arrays.stream(Idempotency.HttpMethod.values()).anyMatch(x -> x.equals(Idempotency.HttpMethod.valueOf(request.getMethod())))) {
+        try {
+            Idempotency.HttpMethod.valueOf(request.getMethod());
+        } catch (IllegalArgumentException ex) {
+            return true;
+        }
+        if(apis.contains(request.getRequestURI())) {
             var idempotency = Optional.ofNullable(request.getHeader("idempotency-Id")).orElse(calculate(request));
             var found = idempotencyRepository.findByIdempotencyValueAndUrlAndMethod(idempotency, request.getRequestURI(), Idempotency.HttpMethod.valueOf(request.getMethod()));
             if (found.isPresent()) {

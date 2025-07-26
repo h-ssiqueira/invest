@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -129,7 +130,7 @@ public class Investment {
         }
 
         public int getInvestmentDays() {
-            return initialDate.until(finalDate).getDays();
+            return Math.toIntExact(initialDate.until(finalDate, ChronoUnit.DAYS));
         }
 
         public BigDecimal getTax() {

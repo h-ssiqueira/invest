@@ -3,10 +3,14 @@ package com.hss.investment.application.service;
 import com.hss.investment.application.exception.InvestmentException;
 import com.hss.investment.application.persistence.ConfigurationDao;
 import java.nio.file.Paths;
+import java.time.ZonedDateTime;
 import java.util.Objects;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.RequestEntity;
@@ -48,6 +52,42 @@ class RateKaggleUpdaterImplTest {
         setField(updater, "client", client);
         setField(updater, "username", "user");
         setField(updater, "key", "key");
+    }
+
+    @Test
+    void shouldNotDatasetSuccessfullyWhenApplicationStarts() {
+        when(configurationDao.getLastUpdatedTimestamp()).thenReturn(Optional.of(ZonedDateTime.now()));
+
+        updater.processRates();
+
+        assertAll(
+            () -> verifyNoInteractions(client, rateService),
+            () -> verify(configurationDao).getLastUpdatedTimestamp()
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("com.hss.investment.util.InvestmentDTOsMock#getLastUpdates")
+    void shouldGetDatasetSuccessfullyWhenApplicationStarts(Optional<ZonedDateTime> lastUpdate) {
+        byte[] content = new byte[0];
+        try {
+            content = readAllBytes(Paths.get(Objects.requireNonNull(RateKaggleUpdaterImplTest.class.getClassLoader().getResource("brazil-interest-rate-history-selic.zip")).toURI()));
+        } catch (Exception e){
+            // empty
+        }
+
+        when(configurationDao.getLastUpdatedTimestamp()).thenReturn(lastUpdate);
+        when(client.exchange(any(RequestEntity.class), eq(byte[].class))).thenReturn(ResponseEntity.ok(content));
+
+        updater.processRates();
+
+        assertAll(
+            () -> verify(client).exchange(any(RequestEntity.class), eq(byte[].class)),
+            () -> verify(rateService).processIpca(any()),
+            () -> verify(rateService).processSelic(any()),
+            () -> verify(configurationDao).save(any()),
+            () -> verify(configurationDao).getLastUpdatedTimestamp()
+        );
     }
 
     @Test

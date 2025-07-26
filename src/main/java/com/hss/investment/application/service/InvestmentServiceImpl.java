@@ -67,6 +67,7 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
                 .bank(item.bank())
                 .amount(item.amount().doubleValue())
                 .initialDate(item.investmentRange().initialDate())
+                .tax(item.investmentRange().getTax().floatValue() * 100)
                 .finalDate(item.investmentRange().finalDate())
                 .type(InvestmentType.valueOf(item.investmentType().name()))
                 .rate(item.baseRate().rate().ratePercentage().floatValue())
@@ -78,15 +79,18 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
     private InvestmentCalculationBase retrieveDTO(Investment item) {
         return switch(item.baseRate().aliquot()) {
             case PREFIXED -> InvestmentCalculationSimple.builder()
+                .type(item.investmentType())
                 .rate(item.baseRate().rate().rateCalculate())
                 .amount(item.amount())
                 .investmentRange(item.investmentRange()).build();
             case POSTFIXED -> InvestmentCalculationSelic.builder()
+                .type(item.investmentType())
                 .selicTimeline(rateService.getSelicTimeline(item.investmentRange()))
                 .rate(item.baseRate().rate().rateCalculate())
                 .amount(item.amount())
                 .investmentRange(item.investmentRange()).build();
             case INFLATION -> InvestmentCalculationIPCA.builder()
+                .type(item.investmentType())
                 .ipcaTimeline(rateService.getIpcaTimeline(item.investmentRange()))
                 .rate(item.baseRate().rate().rateCalculate())
                 .amount(item.amount())

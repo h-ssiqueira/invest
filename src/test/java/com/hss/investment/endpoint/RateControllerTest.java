@@ -84,6 +84,6 @@ class RateControllerTest {
     @Test
     void shouldUpdateRates() throws Exception {
         mvc.perform(post(UPDATE_RATE_API_URL)
-        ).andExpect(status().isOk());
+        ).andExpect(status().isNoContent());
     }
 }

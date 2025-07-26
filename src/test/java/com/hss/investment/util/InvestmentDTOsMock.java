@@ -13,8 +13,10 @@ import com.hss.openapi.model.InvestmentType;
 import com.hss.openapi.model.PartialInvestmentResultData;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -103,6 +105,13 @@ public final class InvestmentDTOsMock {
         return Stream.of(
             Arguments.of(same),
             Arguments.of(selics)
+        );
+    }
+
+    public static Stream<Arguments> getLastUpdates() {
+        return Stream.of(
+            Arguments.of(Optional.empty()),
+            Arguments.of(Optional.of(ZonedDateTime.now().minusDays(1)))
         );
     }
 

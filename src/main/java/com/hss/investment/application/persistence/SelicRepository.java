@@ -14,9 +14,8 @@ public interface SelicRepository extends JpaRepository<Selic, Integer> {
     @Query("""
         SELECT new com.hss.investment.application.dto.RateQueryResultDTO(s.rate.rate,s.range.initialDate,s.range.finalDate)
         FROM Selic s
-        WHERE (:initialDate IS NULL AND :finalDate IS NULL) OR
-        (:initialDate IS NULL AND s.range.finalDate <= :finalDate) OR
-        (:finalDate IS NULL AND s.range.initialDate >= :initialDate)
+        WHERE (s.range.initialDate <= COALESCE(:finalDate, s.range.initialDate))
+          AND (s.range.finalDate >= COALESCE(:initialDate, s.range.finalDate))
         ORDER BY s.range.initialDate DESC""")
     List<RateQueryResultDTO> findByReferenceDateBetween(@Param("initialDate") LocalDate initialDate, @Param("finalDate") LocalDate finalDate);
 
