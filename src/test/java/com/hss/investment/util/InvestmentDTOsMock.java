@@ -32,7 +32,7 @@ public final class InvestmentDTOsMock {
     public static List<InvestmentRequest> getInvestmentRequestList() {
         return List.of(getInvestmentRequest(),
             new InvestmentRequest()
-                .rate(0.01F)
+                .rate(0.01D)
                 .type(InvestmentType.LCA)
                 .bank("National")
                 .aliquot(InvestmentAliquot.POSTFIXED)
@@ -51,7 +51,7 @@ public final class InvestmentDTOsMock {
 
     public static InvestmentRequest getInvestmentRequest() {
         return new InvestmentRequest()
-            .rate(0.1F)
+            .rate(0.1D)
             .type(InvestmentType.CDB)
             .bank("National")
             .aliquot(InvestmentAliquot.PREFIXED)

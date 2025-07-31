@@ -168,7 +168,7 @@ components:
           $ref: '#/components/schemas/InvestmentAliquot'
         rate:
           type: number
-          format: float
+          format: double
           example: 10.55
           minimum: 0.001
         initialDate:
@@ -236,12 +236,14 @@ components:
           $ref: '#/components/schemas/InvestmentType'
         rate:
           type: number
-          format: float
+          format: double
           example: 15.45
+          multipleOf: 0.01
         tax:
           type: number
-          format: float
+          format: double
           example: 17.5
+          multipleOf: 0.01
         initialDate:
           type: string
           format: date
@@ -254,14 +256,17 @@ components:
           type: number
           format: double
           example: 500.00
+          multipleOf: 0.01
         earnings:
           type: number
           format: double
           example: 5000.00
+          multipleOf: 0.01
         profit:
           type: number
           format: double
           example: 3000.00
+          multipleOf: 0.01
     RateResponseWrapper:
       type: object
       properties:
@@ -275,7 +280,7 @@ components:
                 properties:
                   rate:
                     type: number
-                    format: float
+                    format: double
                     example: 14.75
                   initialDate:
                     type: string

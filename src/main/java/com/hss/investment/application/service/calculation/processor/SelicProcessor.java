@@ -20,6 +20,6 @@ public final class SelicProcessor implements InvestmentCalculationProcessor<Inve
 
     @Override
     public boolean accepts(InvestmentCalculationBase dto) {
-        return dto instanceof InvestmentCalculationSelic;
+        return dto.getClass() == InvestmentCalculationSelic.class;
     }
 }

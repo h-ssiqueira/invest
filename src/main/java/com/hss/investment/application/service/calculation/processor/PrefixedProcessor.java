@@ -20,6 +20,6 @@ public final class PrefixedProcessor implements InvestmentCalculationProcessor<I
 
     @Override
     public boolean accepts(InvestmentCalculationBase dto) {
-        return dto instanceof InvestmentCalculationSimple;
+        return dto.getClass() == InvestmentCalculationSimple.class;
     }
 }

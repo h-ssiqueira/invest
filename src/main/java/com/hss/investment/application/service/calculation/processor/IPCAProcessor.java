@@ -20,6 +20,6 @@ public final class IPCAProcessor implements InvestmentCalculationProcessor<Inves
 
     @Override
     public boolean accepts(InvestmentCalculationBase dto) {
-        return dto instanceof InvestmentCalculationIPCA;
+        return dto.getClass() == InvestmentCalculationIPCA.class;
     }
 }

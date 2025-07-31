@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
@@ -142,6 +143,10 @@ public class Investment {
             if (daysInvested <= 720)
                 return BigDecimal.valueOf(.175);
             return BigDecimal.valueOf(.15);
+        }
+
+        public Double getTaxFormatted() {
+            return getTax().setScale(4, RoundingMode.HALF_EVEN).doubleValue() * 100;
         }
 
         public boolean isCompleted() {

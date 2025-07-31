@@ -60,7 +60,7 @@ class RateServiceImplTest {
         assertAll(
             () -> assertThat(response, hasSize(1)),
             () -> assertThat(response, hasItem(allOf(
-                hasProperty("rate", equalTo(1.0F)),
+                hasProperty("rate", equalTo(1.0D)),
                 hasProperty("initialDate", equalTo(LocalDate.of(2025,8,31))),
                 hasProperty("finalDate", equalTo(null))))),
             () -> verify(selicRepository).findByReferenceDateBetween(any(), any()),
@@ -78,7 +78,7 @@ class RateServiceImplTest {
         assertAll(
             () -> assertThat(response, hasSize(1)),
             () -> assertThat(response, hasItem(allOf(
-                hasProperty("rate", equalTo(1.0F)),
+                hasProperty("rate", equalTo(1.0D)),
                 hasProperty("initialDate", equalTo(LocalDate.of(2025,8,31))),
                 hasProperty("finalDate", equalTo(null))))),
             () -> verify(ipcaRepository).findByReferenceDateBetween(any(), any()),

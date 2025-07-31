@@ -16,6 +16,7 @@ import com.hss.openapi.model.InvestmentType;
 import com.hss.openapi.model.PartialInvestmentResultData;
 import com.hss.openapi.model.PartialInvestmentResultDataItemsInner;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -65,14 +66,14 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
                 var calculations = delegator.delegate(retrieveDTO(item));
                 return new InvestmentResultResponseDTO()
                 .bank(item.bank())
-                .amount(item.amount().doubleValue())
+                .amount(item.amount().setScale(2, RoundingMode.HALF_EVEN).doubleValue())
                 .initialDate(item.investmentRange().initialDate())
-                .tax(item.investmentRange().getTax().floatValue() * 100)
+                .tax(item.investmentRange().getTaxFormatted())
                 .finalDate(item.investmentRange().finalDate())
                 .type(InvestmentType.valueOf(item.investmentType().name()))
-                .rate(item.baseRate().rate().ratePercentage().floatValue())
-                .profit(calculations.profit().doubleValue())
-                .earnings(calculations.earnings().doubleValue());
+                .rate(item.baseRate().rate().ratePercentage().setScale(2, RoundingMode.HALF_EVEN).doubleValue())
+                .profit(calculations.profit().setScale(2, RoundingMode.HALF_EVEN).doubleValue())
+                .earnings(calculations.earnings().setScale(2, RoundingMode.HALF_EVEN).doubleValue());
             }).toList();
     }
 

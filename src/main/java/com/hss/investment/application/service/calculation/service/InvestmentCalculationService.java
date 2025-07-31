@@ -33,8 +33,9 @@ public abstract sealed class InvestmentCalculationService<T extends InvestmentCa
      * @return the investment daily rate within the period
      */
     protected BigDecimal calculateDailyRate(BigDecimal rate, CalculationType type) {
-        var result = BigDecimalMath.pow(BigDecimal.ONE.add(rate), BigDecimal.ONE.divide(BigDecimal.valueOf(type.days()), 10, RoundingMode.HALF_EVEN));
-        return result.subtract(BigDecimal.ONE);
+        return BigDecimalMath.pow(BigDecimal.ONE.add(rate),
+                BigDecimal.ONE.divide(BigDecimal.valueOf(type.days()), 10, RoundingMode.HALF_EVEN)
+            ).subtract(BigDecimal.ONE);
     }
 
     /**
