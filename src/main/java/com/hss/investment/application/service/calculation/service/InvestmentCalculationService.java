@@ -4,10 +4,10 @@ import com.hss.investment.application.dto.calculation.InvestmentCalculationBase;
 import com.hss.investment.application.dto.calculation.ProfitReturnDTO;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import org.nevec.rjm.BigDecimalMath;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
+import org.nevec.rjm.BigDecimalMath;
 
 @RequiredArgsConstructor
 public abstract sealed class InvestmentCalculationService<T extends InvestmentCalculationBase>

@@ -82,6 +82,14 @@ public class Investment {
         return new Investment(bank,type,range,rate,amount);
     }
 
+    public double amountFormatted() {
+        return amount().setScale(2, RoundingMode.HALF_EVEN).doubleValue();
+    }
+
+    public Double getTaxFormatted() {
+        return investmentType().hasTaxes() ? investmentRange().getTaxFormatted() : null;
+    }
+
     @Getter
     @Accessors(fluent = true)
     @AllArgsConstructor
@@ -123,6 +131,14 @@ public class Investment {
             return new InvestmentRange(initialDate, finalDate);
         }
 
+        public YearMonth finalDateYearMonth() {
+            return YearMonth.of(finalDate().getYear(),finalDate().getMonth());
+        }
+
+        public YearMonth initialDateYearMonth() {
+            return YearMonth.of(initialDate().getYear(),initialDate().getMonth());
+        }
+
         public List<LocalDate> getInvestmentBusinessDays(List<LocalDate> holiday) {
             return initialDate.datesUntil(finalDate)
                 .filter(day ->
@@ -145,7 +161,7 @@ public class Investment {
             return BigDecimal.valueOf(.15);
         }
 
-        public Double getTaxFormatted() {
+        protected Double getTaxFormatted() {
             return getTax().setScale(4, RoundingMode.HALF_EVEN).doubleValue() * 100;
         }
 
@@ -154,14 +170,18 @@ public class Investment {
         }
 
         public int retrieveDaysFromMonth(YearMonth month) {
-            if(month.equals(YearMonth.of(initialDate().getYear(),initialDate().getMonth()))) {
+            if(month.equals(initialDateYearMonth())) {
                 return initialDate().lengthOfMonth() - initialDate().getDayOfMonth() + 1;
             }
             var finalDate = isNull(finalDate()) ? LocalDate.now() : finalDate();
-            if(month.equals(YearMonth.of(finalDate.getYear(),finalDate.getMonth()))) {
+            if(month.equals(finalDateYearMonth())) {
                 return finalDate.getDayOfMonth();
             }
             return month.lengthOfMonth();
+        }
+
+        public int retrieveDaysFromPeriod(YearMonth month) {
+            return Math.toIntExact(month.atDay(1).until(finalDate(), ChronoUnit.DAYS));
         }
     }
 

@@ -6,7 +6,6 @@ import com.hss.investment.application.persistence.entity.Idempotency;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.security.MessageDigest;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ public class IdempotencyInterceptor implements HandlerInterceptor {
 
     private final IdempotencyRepository idempotencyRepository;
 
-    private static final List<String> apis = List.of("/api/v1/investments");
+    private static final List<String> APIS = List.of("/api/v1/investments");
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
@@ -34,7 +33,7 @@ public class IdempotencyInterceptor implements HandlerInterceptor {
         } catch (IllegalArgumentException ex) {
             return true;
         }
-        if(apis.contains(request.getRequestURI())) {
+        if(APIS.contains(request.getRequestURI())) {
             var idempotency = Optional.ofNullable(request.getHeader("idempotency-Id")).orElse(calculate(request));
             var found = idempotencyRepository.findByIdempotencyValueAndUrlAndMethod(idempotency, request.getRequestURI(), Idempotency.HttpMethod.valueOf(request.getMethod()));
             if (found.isPresent()) {

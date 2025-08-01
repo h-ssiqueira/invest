@@ -28,12 +28,12 @@ public class Percentage {
         return new Percentage(rate);
     }
 
-    public BigDecimal ratePercentage() {
-        return rate;
+    public double ratePercentage() {
+        return rate.setScale(2, RoundingMode.HALF_EVEN).doubleValue();
     }
 
     public BigDecimal rateCalculate() {
-        return rate.divide(BigDecimal.valueOf(100), RoundingMode.HALF_EVEN);
+        return rate.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_EVEN);
     }
 
     @Override
