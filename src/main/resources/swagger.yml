@@ -73,6 +73,31 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /api/v1/investments/simulate:
+    post:
+      tags:
+        - Investment
+      summary: Simulates an investment
+      description: Simulates new investments
+      operationId: simulateInvestment
+      requestBody:
+        description: Simulate investments
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulationInvestmentRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestmentSimulationResultResponseWrapper'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /api/v1/rates/{rateType}:
     get:
       tags: 
@@ -184,6 +209,32 @@ components:
           format: double
           example: 1000.19
           minimum: 0.01
+    SimulationInvestmentRequest:
+      type: object
+      required: [type, aliquot, rate, initialDate, finalDate, amount]
+      properties:
+        type:
+          $ref: '#/components/schemas/InvestmentType'
+        aliquot:
+          $ref: '#/components/schemas/InvestmentAliquot'
+        rate:
+          type: number
+          format: double
+          example: 10.55
+          minimum: 0.001
+        initialDate:
+          type: string
+          format: date
+          example: 2000-08-31
+        finalDate:
+          type: string
+          format: date
+          example: 2025-08-31
+        amount:
+          type: number
+          format: double
+          example: 1000.19
+          minimum: 0.01
     InvestmentResultResponse:
       type: object
       properties:
@@ -232,6 +283,49 @@ components:
         bank:
           type: string
           example: National Bank
+        type:
+          $ref: '#/components/schemas/InvestmentType'
+        rate:
+          type: number
+          format: double
+          example: 15.45
+          multipleOf: 0.01
+        tax:
+          type: number
+          format: double
+          example: 17.5
+          multipleOf: 0.01
+        initialDate:
+          type: string
+          format: date
+          example: 2020-01-31
+        finalDate:
+          type: string
+          format: date
+          example: 2023-01-31
+        amount:
+          type: number
+          format: double
+          example: 500.00
+          multipleOf: 0.01
+        earnings:
+          type: number
+          format: double
+          example: 5000.00
+          multipleOf: 0.01
+        profit:
+          type: number
+          format: double
+          example: 3000.00
+          multipleOf: 0.01
+    InvestmentSimulationResultResponseWrapper:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/InvestmentSimulationResultResponseDTO'
+    InvestmentSimulationResultResponseDTO:
+      type: object
+      properties:
         type:
           $ref: '#/components/schemas/InvestmentType'
         rate:

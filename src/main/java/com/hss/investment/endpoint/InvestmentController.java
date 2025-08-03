@@ -68,4 +68,11 @@ public class InvestmentController implements InvestmentApi {
             ResponseEntity.noContent().build() :
             ResponseEntity.ok(new GenericResponseDTO<>(new InvestmentResultResponseData().items(result)));
     }
+
+    @Override
+    public ResponseEntity<GenericResponseDTO<?>> simulateInvestment(HttpServletRequest request,
+                                                                HttpServletResponse response,
+                                                                SimulationInvestmentRequest simulationInvestmentRequest) {
+        return ResponseEntity.ok(new GenericResponseDTO<>(investmentService.simulateInvestment(simulationInvestmentRequest)));
+    }
 }

@@ -76,6 +76,11 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
             }).toList();
     }
 
+    @Override
+    public InvestmentSimulationResultResponseDTO simulateInvestment(SimulationInvestmentRequest dto) {
+        return null;
+    }
+
     private InvestmentCalculationBase retrieveDTO(Investment item) {
         return switch(item.baseRate().aliquot()) {
             case PREFIXED -> InvestmentCalculationSimple.builder()

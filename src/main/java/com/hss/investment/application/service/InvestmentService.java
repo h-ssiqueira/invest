@@ -15,4 +15,7 @@ public sealed interface InvestmentService permits InvestmentServiceImpl {
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     PartialInvestmentResultData addInvestments(List<InvestmentRequest> dtoList);
+
+    @Transactional(readOnly = true)
+    InvestmentSimulationResultResponseDTO simulateInvestment(SimulationInvestmentRequest dto);
 }
