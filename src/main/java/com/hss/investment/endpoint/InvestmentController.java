@@ -9,6 +9,7 @@ import com.hss.openapi.api.InvestmentApi;
 import com.hss.openapi.model.InvestmentErrorResponseDTO;
 import com.hss.openapi.model.InvestmentRequestWrapper;
 import com.hss.openapi.model.InvestmentResultResponseData;
+import com.hss.openapi.model.SimulationInvestmentRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;

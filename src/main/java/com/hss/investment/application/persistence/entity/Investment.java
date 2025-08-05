@@ -161,7 +161,7 @@ public class Investment {
             return BigDecimal.valueOf(.15);
         }
 
-        protected Double getTaxFormatted() {
+        public Double getTaxFormatted() {
             return getTax().setScale(4, RoundingMode.HALF_EVEN).doubleValue() * 100;
         }
 

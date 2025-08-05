@@ -173,6 +173,32 @@ components:
     InvestmentAliquot:
       type: string
       enum: ['PREFIXED','INFLATION','POSTFIXED']
+    InvestmentRate:
+      type: number
+      format: double
+      example: 10.55
+      multipleOf: 0.01
+    InvestmentTax:
+      type: number
+      format: double
+      example: 17.5
+      multipleOf: 0.01
+    InvestmentInitialDate:
+      type: string
+      format: date
+      example: 2000-08-31
+    InvestmentFinalDate:
+      type: string
+      format: date
+      example: 2025-08-31
+    InvestmentAmount:
+      type: number
+      format: double
+      example: 1000.19
+      multipleOf: 0.01
+    InvestmentBank:
+      type: string
+      example: National Bank
     InvestmentRequestWrapper:
       type: object
       properties:
@@ -185,30 +211,19 @@ components:
       required: [bank, type, aliquot, rate, initialDate, finalDate, amount]
       properties:
         bank:
-          type: string
-          example: National Bank
+          $ref: '#/components/schemas/InvestmentBank'
         type:
           $ref: '#/components/schemas/InvestmentType'
         aliquot:
           $ref: '#/components/schemas/InvestmentAliquot'
         rate:
-          type: number
-          format: double
-          example: 10.55
-          minimum: 0.001
+          $ref: '#/components/schemas/InvestmentRate'
         initialDate:
-          type: string
-          format: date
-          example: 2000-08-31
+          $ref: '#/components/schemas/InvestmentInitialDate'
         finalDate:
-          type: string
-          format: date
-          example: 2025-08-31
+          $ref: '#/components/schemas/InvestmentFinalDate'
         amount:
-          type: number
-          format: double
-          example: 1000.19
-          minimum: 0.01
+          $ref: '#/components/schemas/InvestmentAmount'
     SimulationInvestmentRequest:
       type: object
       required: [type, aliquot, rate, initialDate, finalDate, amount]
@@ -218,23 +233,13 @@ components:
         aliquot:
           $ref: '#/components/schemas/InvestmentAliquot'
         rate:
-          type: number
-          format: double
-          example: 10.55
-          minimum: 0.001
+          $ref: '#/components/schemas/InvestmentRate'
         initialDate:
-          type: string
-          format: date
-          example: 2000-08-31
+          $ref: '#/components/schemas/InvestmentInitialDate'
         finalDate:
-          type: string
-          format: date
-          example: 2025-08-31
+          $ref: '#/components/schemas/InvestmentFinalDate'
         amount:
-          type: number
-          format: double
-          example: 1000.19
-          minimum: 0.01
+          $ref: '#/components/schemas/InvestmentAmount'
     InvestmentResultResponse:
       type: object
       properties:
@@ -281,43 +286,25 @@ components:
       type: object
       properties:
         bank:
-          type: string
-          example: National Bank
+          $ref: '#/components/schemas/InvestmentBank'
         type:
           $ref: '#/components/schemas/InvestmentType'
         rate:
-          type: number
-          format: double
-          example: 15.45
-          multipleOf: 0.01
+          $ref: '#/components/schemas/InvestmentRate'
+        aliquot:
+          $ref: '#/components/schemas/InvestmentAliquot'
         tax:
-          type: number
-          format: double
-          example: 17.5
-          multipleOf: 0.01
+          $ref: '#/components/schemas/InvestmentTax'
         initialDate:
-          type: string
-          format: date
-          example: 2020-01-31
+          $ref: '#/components/schemas/InvestmentInitialDate'
         finalDate:
-          type: string
-          format: date
-          example: 2023-01-31
+          $ref: '#/components/schemas/InvestmentFinalDate'
         amount:
-          type: number
-          format: double
-          example: 500.00
-          multipleOf: 0.01
+          $ref: '#/components/schemas/InvestmentAmount'
         earnings:
-          type: number
-          format: double
-          example: 5000.00
-          multipleOf: 0.01
+          $ref: '#/components/schemas/InvestmentAmount'
         profit:
-          type: number
-          format: double
-          example: 3000.00
-          multipleOf: 0.01
+          $ref: '#/components/schemas/InvestmentAmount'
     InvestmentSimulationResultResponseWrapper:
       type: object
       properties:
@@ -329,38 +316,21 @@ components:
         type:
           $ref: '#/components/schemas/InvestmentType'
         rate:
-          type: number
-          format: double
-          example: 15.45
-          multipleOf: 0.01
+          $ref: '#/components/schemas/InvestmentRate'
+        aliquot:
+          $ref: '#/components/schemas/InvestmentAliquot'
         tax:
-          type: number
-          format: double
-          example: 17.5
-          multipleOf: 0.01
+          $ref: '#/components/schemas/InvestmentTax'
         initialDate:
-          type: string
-          format: date
-          example: 2020-01-31
+          $ref: '#/components/schemas/InvestmentInitialDate'
         finalDate:
-          type: string
-          format: date
-          example: 2023-01-31
+          $ref: '#/components/schemas/InvestmentFinalDate'
         amount:
-          type: number
-          format: double
-          example: 500.00
-          multipleOf: 0.01
+          $ref: '#/components/schemas/InvestmentAmount'
         earnings:
-          type: number
-          format: double
-          example: 5000.00
-          multipleOf: 0.01
+          $ref: '#/components/schemas/InvestmentAmount'
         profit:
-          type: number
-          format: double
-          example: 3000.00
-          multipleOf: 0.01
+          $ref: '#/components/schemas/InvestmentAmount'
     RateResponseWrapper:
       type: object
       properties:
@@ -377,13 +347,9 @@ components:
                     format: double
                     example: 14.75
                   initialDate:
-                    type: string
-                    format: date
-                    example: 2025-02-02
+                    $ref: '#/components/schemas/InvestmentInitialDate'
                   finalDate:
-                    type: string
-                    format: date
-                    example: 2026-01-01
+                    $ref: '#/components/schemas/InvestmentFinalDate'
   parameters:
     IdempotencyId:
       name: idempotency-id
