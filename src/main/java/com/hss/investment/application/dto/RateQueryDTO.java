@@ -4,9 +4,9 @@ import java.time.LocalDate;
 import java.util.Arrays;
 
 public record RateQueryDTO(RateType type, LocalDate initialDate, LocalDate finalDate) {
+
     public enum RateType {
         SELIC,IPCA;
-
 
         public static RateType fromValue(String value) {
             return Arrays.stream(RateType.values())

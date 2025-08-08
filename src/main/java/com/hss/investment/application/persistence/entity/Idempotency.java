@@ -8,13 +8,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 import static com.hss.investment.application.exception.ErrorMessages.INV_001;
 import static java.util.Objects.isNull;

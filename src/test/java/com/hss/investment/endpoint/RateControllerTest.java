@@ -2,6 +2,7 @@ package com.hss.investment.endpoint;
 
 import com.hss.investment.application.exception.ControllerExceptionAdvice;
 import com.hss.investment.application.persistence.InvestmentRepository;
+import com.hss.investment.application.service.RateKaggleUpdaterImpl;
 import com.hss.investment.application.service.RateServiceImpl;
 import com.hss.investment.config.IdempotencyInterceptor;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.hss.investment.util.URLConstants.RATE_API_URL;
+import static com.hss.investment.util.URLConstants.UPDATE_RATE_API_URL;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_XML;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,6 +33,9 @@ class RateControllerTest {
 
     @MockitoBean
     private RateServiceImpl rateService;
+
+    @MockitoBean
+    private RateKaggleUpdaterImpl kaggleUpdater;
 
     @MockitoBean
     private InvestmentRepository repository;
@@ -74,5 +79,11 @@ class RateControllerTest {
             .accept(APPLICATION_JSON)
             .queryParam("initialDate", "13-03-2020")
         ).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldUpdateRates() throws Exception {
+        mvc.perform(post(UPDATE_RATE_API_URL)
+        ).andExpect(status().isNoContent());
     }
 }

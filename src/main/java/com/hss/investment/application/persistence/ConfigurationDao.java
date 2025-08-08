@@ -1,12 +1,13 @@
 package com.hss.investment.application.persistence;
 
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.dao.EmptyResultDataAccessException;
-import java.util.Optional;
-import java.sql.Timestamp;
-import lombok.RequiredArgsConstructor;
-import java.time.ZonedDateTime;
 
 @Repository
 @RequiredArgsConstructor
@@ -16,10 +17,13 @@ public class ConfigurationDao {
 
     public Optional<ZonedDateTime> getLastUpdatedTimestamp() {
         try {
-            var result = jdbcTemplate.queryForObject(
+            var result = jdbcTemplate.query(
                 "SELECT last_rate_update FROM configuration LIMIT 1",
-                ZonedDateTime.class);
-            return Optional.ofNullable(result);
+                ((rs, rowNum) -> {
+                    var odt = rs.getObject("last_rate_update", OffsetDateTime.class);
+                    return odt != null ? odt.toZonedDateTime() : null;
+                }));
+            return Optional.ofNullable(result.getFirst());
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

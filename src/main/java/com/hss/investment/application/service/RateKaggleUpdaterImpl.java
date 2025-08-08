@@ -1,20 +1,9 @@
 package com.hss.investment.application.service;
 
 import com.hss.investment.application.exception.InvestmentException;
+import com.hss.investment.application.persistence.ConfigurationDao;
 import com.hss.investment.application.persistence.entity.Ipca;
 import com.hss.investment.application.persistence.entity.Selic;
-import com.hss.investment.application.persistence.ConfigurationDao;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.csv.CSVParser;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.http.RequestEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,14 +13,24 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.csv.CSVParser;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.http.RequestEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import static com.hss.investment.application.exception.ErrorMessages.INV_005;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -57,19 +56,21 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
     @Override
     public void processRates() {
         log.info("Updating rates...");
-        var lastUpdatedRates = configurationDao.getLastUpdatedTimestamp();
+        var lastUpdatedRates = retrieveLastUpdateTimestamp();
 
-        lastUpdatedRates.ifPresent(timestamp -> {
-            if(ZonedDateTime.now().toLocalDate().equals(timestamp.toLocalDate())){
-                log.info("Rates already processed today");
-                return;
-            }
-        });
+        if(lastUpdatedRates.isPresent() && ZonedDateTime.now().toLocalDate().equals(lastUpdatedRates.get().toLocalDate())){
+            log.info("Rates already processed today");
+            return;
+        }
         retrieveAndUpdateRates();
     }
 
     @Override
-    @Transactional
+    public Optional<ZonedDateTime> retrieveLastUpdateTimestamp() {
+        return configurationDao.getLastUpdatedTimestamp();
+    }
+
+    @Override
     public void retrieveAndUpdateRates() {
         var request = RequestEntity.get("https://www.kaggle.com/api/v1/datasets/download/hssiqueira/brazil-interest-rate-history-selic")
             .header("Authorization", Base64.getEncoder().encodeToString((username + ":" + key).getBytes(UTF_8)))
@@ -78,7 +79,7 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
             log.info("Downloading dataset...");
             var response = client.exchange(request, byte[].class);
             if (!response.getStatusCode().is2xxSuccessful()) {
-                log.error("Failed to download: " + response);
+                log.error("Failed to download: {}", response);
                 return;
             }
             log.info("Download complete!");
@@ -96,7 +97,7 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
             ZipEntry entry;
             while (nonNull(entry = zis.getNextEntry())) {
                 var filename = entry.getName();
-                log.debug("Found file in ZIP: " + entry.getName());
+                log.debug("Found file in ZIP: {}", entry.getName());
                 if (filename.endsWith(".csv")) {
                     processCSV(getCsvBytes(zis), filename);
                 }
@@ -121,15 +122,15 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
                 .setReader(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvBytes), UTF_8)))
                 .get()
         ) {
-            log.debug("CSV Headers: " + csvParser.getHeaderNames());
-            if (filename.equals("IBGE_IPCA.csv")) {
+            log.debug("CSV Headers: {}", csvParser.getHeaderNames());
+            if ("IBGE_IPCA.csv".equals(filename)) {
                 log.info("Processing IPCA rates...");
                 rateService.processIpca(new ArrayList<>(csvParser.stream()
                     .map(row -> Ipca.of(
                         YearMonth.parse(row.get(0), DateTimeFormatter.ofPattern("MM/yyyy")).atDay(1),
                         BigDecimal.valueOf(Double.parseDouble(row.get(1))))
                     ).toList()));
-            } else if (filename.equals("BACEN_SELIC.csv")) {
+            } else if ("BACEN_SELIC.csv".equals(filename)) {
                 log.info("Processing SELIC rates...");
                 rateService.processSelic(new ArrayList<>(csvParser.stream()
                     .map(row -> Selic.of(

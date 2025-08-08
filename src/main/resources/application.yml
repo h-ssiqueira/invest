@@ -4,20 +4,21 @@ spring:
     url: jdbc:postgresql://${POSTGRESQL_HOST:172.17.0.2}:5432/investment
     username: ${POSTGRESQL_USERNAME:postgres}
     password: ${POSTGRESQL_PASSWORD:admin}
-    hikari.connectionTimeout: 5000
-    hikari.idleTimeout: 10000
-    hikari.minimumIdle: 1
-    hikari.maximumPoolSize: 3
-    hikari.healthCheck-properties.alive-test-query: SELECT 1
+    hikari:
+      connection-timeout: 5000
+      idle-timeout: 10000
+      minimum-idle: 1
+      maximum-pool-size: 3
+      connection-test-query: SELECT 1
   jpa:
     open-in-view: false
-    show-sql: true
+    show-sql: false
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/changelog.xml
-  mvc:
-    problemdetails:
-      enabled: true
+  mvc.problemdetails.enabled: true
+
+management.endpoints.web.exposure.include: "*"
 
 server:
   port: ${SERVER_PORT:8080}
@@ -27,7 +28,6 @@ server:
 
 logging.level.com.hss.investment: DEBUG
 
-investments:
-  kaggle:
-    username: ${KAGGLE_USER}
-    key: ${KAGGLE_KEY}
+investments.kaggle:
+  username: ${KAGGLE_USER}
+  key: ${KAGGLE_KEY}

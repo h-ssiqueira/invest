@@ -11,6 +11,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -19,12 +27,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.util.UUID;
-
 import static com.hss.investment.application.exception.ErrorMessages.INV_002;
+import static java.time.DayOfWeek.SATURDAY;
+import static java.time.DayOfWeek.SUNDAY;
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Table(name = "INVESTMENT")
@@ -69,11 +75,19 @@ public class Investment {
         this.baseRate = rate;
         this.amount = amount;
         this.createdAt = ZonedDateTime.now();
-        this.completed = false;
+        this.completed = investmentRange.isCompleted();
     }
 
     public static Investment create(String bank, InvestmentType type, InvestmentRange range, BaseRate rate, BigDecimal amount) {
         return new Investment(bank,type,range,rate,amount);
+    }
+
+    public double amountFormatted() {
+        return amount().setScale(2, RoundingMode.HALF_EVEN).doubleValue();
+    }
+
+    public Double getTaxFormatted() {
+        return investmentType().hasTaxes() ? investmentRange().getTaxFormatted() : null;
     }
 
     @Getter
@@ -117,8 +131,57 @@ public class Investment {
             return new InvestmentRange(initialDate, finalDate);
         }
 
-        public Integer getInvestmentDays() {
-            return initialDate.until(finalDate).getDays();
+        public YearMonth finalDateYearMonth() {
+            return YearMonth.of(finalDate().getYear(),finalDate().getMonth());
+        }
+
+        public YearMonth initialDateYearMonth() {
+            return YearMonth.of(initialDate().getYear(),initialDate().getMonth());
+        }
+
+        public List<LocalDate> getInvestmentBusinessDays(List<LocalDate> holiday) {
+            return initialDate.datesUntil(finalDate)
+                .filter(day ->
+                    !SATURDAY.equals(day.getDayOfWeek()) && !SUNDAY.equals(day.getDayOfWeek()) && !holiday.contains(day)
+                ).toList();
+        }
+
+        public int getInvestmentDays() {
+            return Math.toIntExact(initialDate.until(finalDate, ChronoUnit.DAYS));
+        }
+
+        public BigDecimal getTax() {
+            var daysInvested = getInvestmentDays();
+            if(daysInvested <= 180)
+                return BigDecimal.valueOf(.225);
+            if (daysInvested <= 360)
+                return BigDecimal.valueOf(.2);
+            if (daysInvested <= 720)
+                return BigDecimal.valueOf(.175);
+            return BigDecimal.valueOf(.15);
+        }
+
+        public Double getTaxFormatted() {
+            return getTax().setScale(4, RoundingMode.HALF_EVEN).doubleValue() * 100;
+        }
+
+        public boolean isCompleted() {
+            return nonNull(finalDate) && finalDate.isBefore(LocalDate.now());
+        }
+
+        public int retrieveDaysFromMonth(YearMonth month) {
+            if(month.equals(initialDateYearMonth())) {
+                return initialDate().lengthOfMonth() - initialDate().getDayOfMonth() + 1;
+            }
+            var finalDate = isNull(finalDate()) ? LocalDate.now() : finalDate();
+            if(month.equals(finalDateYearMonth())) {
+                return finalDate.getDayOfMonth();
+            }
+            return month.lengthOfMonth();
+        }
+
+        public int retrieveDaysFromPeriod(YearMonth month) {
+            return Math.toIntExact(month.atDay(1).until(finalDate(), ChronoUnit.DAYS));
         }
     }
 

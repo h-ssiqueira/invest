@@ -11,5 +11,6 @@ public final class ErrorMessages {
     public static final String INV_003 = "Rate must not be lower than zero";
     public static final String INV_004 = "No items were processable";
     public static final String INV_005 = "Unexpected error: %s";
+    public static final String INV_006 = "Processor not found";
 
 }

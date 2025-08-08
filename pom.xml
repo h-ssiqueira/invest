@@ -29,8 +29,8 @@
         <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <openapi.generator.maven.version>7.13.0</openapi.generator.maven.version>
-        <spring.version>6.2.7</spring.version>
-        <spring.boot.version>3.4.5</spring.boot.version>
+        <spring.version>6.2.8</spring.version>
+        <spring.boot.version>3.4.7</spring.boot.version>
 
         <image.name>hssiqueira/${project.artifactId}:${project.version}</image.name>
         <builder.image>urn:cnb:builder:paketo-buildpacks/java</builder.image>
@@ -52,14 +52,13 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-indexer</artifactId>
-            <version>${spring.version}</version>
-            <optional>true</optional>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -250,6 +249,18 @@
                                 <interfaceOnly>true</interfaceOnly>
                             </configOptions>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
