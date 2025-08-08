@@ -123,14 +123,14 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
                 .get()
         ) {
             log.debug("CSV Headers: {}", csvParser.getHeaderNames());
-            if (filename.equals("IBGE_IPCA.csv")) {
+            if ("IBGE_IPCA.csv".equals(filename)) {
                 log.info("Processing IPCA rates...");
                 rateService.processIpca(new ArrayList<>(csvParser.stream()
                     .map(row -> Ipca.of(
                         YearMonth.parse(row.get(0), DateTimeFormatter.ofPattern("MM/yyyy")).atDay(1),
                         BigDecimal.valueOf(Double.parseDouble(row.get(1))))
                     ).toList()));
-            } else if (filename.equals("BACEN_SELIC.csv")) {
+            } else if ("BACEN_SELIC.csv".equals(filename)) {
                 log.info("Processing SELIC rates...");
                 rateService.processSelic(new ArrayList<>(csvParser.stream()
                     .map(row -> Selic.of(

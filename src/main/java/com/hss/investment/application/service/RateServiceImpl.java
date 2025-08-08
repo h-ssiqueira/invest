@@ -51,8 +51,6 @@ public non-sealed class RateServiceImpl implements RateService {
             .toList();
     }
 
-
-
     @Override
     public List<SelicTimeline> getSelicTimeline(Investment.InvestmentRange investmentRange) {
         var list = selicRepository.findByReferenceDateBetween(investmentRange.initialDate(), investmentRange.finalDate());

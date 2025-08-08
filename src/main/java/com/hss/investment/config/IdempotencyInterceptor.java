@@ -22,9 +22,9 @@ import static com.hss.investment.application.exception.ErrorMessages.INV_005;
 @Slf4j
 public class IdempotencyInterceptor implements HandlerInterceptor {
 
-    private final IdempotencyRepository idempotencyRepository;
-
     private static final List<String> APIS = List.of("/api/v1/investments");
+
+    private final IdempotencyRepository idempotencyRepository;
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {

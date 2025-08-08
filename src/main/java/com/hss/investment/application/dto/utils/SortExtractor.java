@@ -8,6 +8,6 @@ public class SortExtractor {
 
     public static Sort extractSort(String sort) {
         var split = sort.split(",");
-        return Sort.by(split[1].equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, split[0]);
+        return Sort.by("asc".equals(split[1]) ? Sort.Direction.ASC : Sort.Direction.DESC, split[0]);
     }
 }

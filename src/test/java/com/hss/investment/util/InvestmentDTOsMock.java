@@ -1,11 +1,13 @@
 package com.hss.investment.util;
 
+import com.hss.investment.application.dto.InvestmentQueryDTO;
 import com.hss.investment.application.dto.RateQueryDTO;
 import com.hss.investment.application.dto.RateQueryResultDTO;
 import com.hss.investment.application.dto.calculation.IPCATimeline;
 import com.hss.investment.application.dto.calculation.InvestmentCalculationIPCA;
 import com.hss.investment.application.dto.calculation.InvestmentCalculationSelic;
 import com.hss.investment.application.dto.calculation.InvestmentCalculationSimple;
+import com.hss.investment.application.dto.calculation.ProfitReturnDTO;
 import com.hss.investment.application.dto.calculation.SelicTimeline;
 import com.hss.investment.application.persistence.entity.Investment;
 import com.hss.investment.application.persistence.entity.Ipca;
@@ -30,6 +32,7 @@ import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.junit.jupiter.params.provider.Arguments;
+import org.springframework.data.domain.Pageable;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class InvestmentDTOsMock {
@@ -124,22 +127,14 @@ public final class InvestmentDTOsMock {
                 .investmentRange(Investment.InvestmentRange.of(LocalDate.of(2020,5,5),LocalDate.of(2020,10,25)))
                 .amount(BigDecimal.valueOf(500))
                 .rate(BigDecimal.valueOf(13.55D))
-                .ipcaTimeline(List.of(IPCATimeline.builder().rate(BigDecimal.valueOf(0.5D)).month(YearMonth.of(2020,3)).build(),
-                    IPCATimeline.builder().rate(BigDecimal.ONE).month(YearMonth.of(2020,4)).build(),
-                    IPCATimeline.builder().rate(BigDecimal.valueOf(2)).month(YearMonth.of(2020,5)).build(),
-                    IPCATimeline.builder().rate(BigDecimal.valueOf(3)).month(YearMonth.of(2020,6)).build(),
-                    IPCATimeline.builder().rate(BigDecimal.valueOf(4)).month(YearMonth.of(2020,7)).build()))
+                .ipcaTimeline(getIpcaTimelineList())
                 .build()),
             Arguments.of(InvestmentCalculationSelic.builder()
                 .type(Investment.InvestmentType.CRI)
                 .investmentRange(Investment.InvestmentRange.of(LocalDate.of(2020,5,5),LocalDate.of(2030,10,25)))
                 .amount(BigDecimal.valueOf(500))
                 .rate(BigDecimal.valueOf(13.55D))
-                    .selicTimeline(List.of(
-                        SelicTimeline.builder().rate(BigDecimal.valueOf(12.5)).investmentRange(Investment.InvestmentRange.of(LocalDate.of(2018,8,22),LocalDate.of(2022,10,25))).build(),
-                        SelicTimeline.builder().rate(BigDecimal.TEN).investmentRange(Investment.InvestmentRange.of(LocalDate.of(2022,10,26),LocalDate.of(2028,12,25))).build(),
-                        SelicTimeline.builder().rate(BigDecimal.valueOf(8D)).investmentRange(Investment.InvestmentRange.of(LocalDate.of(2028,12,26),LocalDate.of(2035,10,25))).build()
-                    ))
+                    .selicTimeline(getSelicTimelineList())
                 .build())
         );
     }
@@ -155,6 +150,10 @@ public final class InvestmentDTOsMock {
         ));
     }
 
+    public static Investment.InvestmentRange getInvestmentRange() {
+        return Investment.InvestmentRange.of(LocalDate.of(2020,1,1), LocalDate.of(2020,12,1));
+    }
+
     public static Ipca getIpca() {
         return Ipca.of(LocalDate.of(2000,8,31),BigDecimal.TEN);
     }
@@ -163,7 +162,27 @@ public final class InvestmentDTOsMock {
         return Selic.of(LocalDate.of(2000,8,31),LocalDate.of(2022,2,5),BigDecimal.ONE);
     }
 
-    public static Selic getSelicWithoutfinalDate() {
+    public static ProfitReturnDTO getProfitReturnDTO() {
+        return new ProfitReturnDTO(BigDecimal.ONE,BigDecimal.TEN);
+    }
+
+    public static List<IPCATimeline> getIpcaTimelineList() {
+        return List.of(IPCATimeline.builder().rate(BigDecimal.valueOf(0.5D)).month(YearMonth.of(2020,3)).build(),
+            IPCATimeline.builder().rate(BigDecimal.ONE).month(YearMonth.of(2020,4)).build(),
+            IPCATimeline.builder().rate(BigDecimal.valueOf(2)).month(YearMonth.of(2020,5)).build(),
+            IPCATimeline.builder().rate(BigDecimal.valueOf(3)).month(YearMonth.of(2020,6)).build(),
+            IPCATimeline.builder().rate(BigDecimal.valueOf(4)).month(YearMonth.of(2020,7)).build());
+    }
+
+    public static List<SelicTimeline> getSelicTimelineList() {
+        return List.of(
+            SelicTimeline.builder().rate(BigDecimal.valueOf(12.5)).investmentRange(Investment.InvestmentRange.of(LocalDate.of(2018,8,22),LocalDate.of(2022,10,25))).build(),
+            SelicTimeline.builder().rate(BigDecimal.TEN).investmentRange(Investment.InvestmentRange.of(LocalDate.of(2022,10,26),LocalDate.of(2028,12,25))).build(),
+            SelicTimeline.builder().rate(BigDecimal.valueOf(8D)).investmentRange(Investment.InvestmentRange.of(LocalDate.of(2028,12,26),LocalDate.of(2035,10,25))).build()
+        );
+    }
+
+    public static Selic getSelicWithoutFinalDate() {
         return Selic.of(LocalDate.of(2000,8,31),null,BigDecimal.ONE);
     }
 
@@ -172,7 +191,7 @@ public final class InvestmentDTOsMock {
         var selic = getSelic();
         same.add(selic);
         same.add(selic);
-        var nextSelic = getSelicWithoutfinalDate();
+        var nextSelic = getSelicWithoutFinalDate();
         var selics = new ArrayList<Selic>();
         selics.add(nextSelic);
         selics.add(selic);
@@ -186,6 +205,26 @@ public final class InvestmentDTOsMock {
         return Stream.of(
             Arguments.of(Optional.empty()),
             Arguments.of(Optional.of(ZonedDateTime.now().minusDays(1)))
+        );
+    }
+
+    public static InvestmentQueryDTO getInvestmentQueryDTO() {
+        return new InvestmentQueryDTO(Investment.InvestmentType.LCA, "bank", LocalDate.of(2020,12,12),LocalDate.of(2025,2,2), Investment.AliquotType.POSTFIXED, Pageable.unpaged());
+    }
+
+    public static Stream<Arguments> getSimulationInvestmentRequestArgs() {
+        return Stream.of(
+            Arguments.of(new SimulationInvestmentRequest(InvestmentType.LCA, InvestmentAliquot.POSTFIXED, 95D, LocalDate.of(2020,12,12),LocalDate.of(2025,2,2), 100D)),
+            Arguments.of(new SimulationInvestmentRequest(InvestmentType.CDB, InvestmentAliquot.PREFIXED, 95D, LocalDate.of(2020,12,12),LocalDate.of(2025,2,2), 100D)),
+            Arguments.of(new SimulationInvestmentRequest(InvestmentType.LCA, InvestmentAliquot.INFLATION, 95D, LocalDate.of(2020,12,12),LocalDate.of(2025,2,2), 100D))
+        );
+    }
+
+    public static List<Investment> getInvestmentList() {
+        return List.of(
+            Investment.create("bank", Investment.InvestmentType.CRI,Investment.InvestmentRange.of(LocalDate.of(2021,1,1),LocalDate.of(2022,8,31)), Investment.BaseRate.of(Investment.AliquotType.POSTFIXED,BigDecimal.TEN),BigDecimal.ONE),
+            Investment.create("bank", Investment.InvestmentType.CRI,Investment.InvestmentRange.of(LocalDate.of(2021,1,1),LocalDate.of(2022,8,31)), Investment.BaseRate.of(Investment.AliquotType.PREFIXED,BigDecimal.TEN),BigDecimal.ONE),
+            Investment.create("bank", Investment.InvestmentType.CRI,Investment.InvestmentRange.of(LocalDate.of(2021,1,1),LocalDate.of(2022,8,31)), Investment.BaseRate.of(Investment.AliquotType.INFLATION,BigDecimal.TEN),BigDecimal.ONE)
         );
     }
 

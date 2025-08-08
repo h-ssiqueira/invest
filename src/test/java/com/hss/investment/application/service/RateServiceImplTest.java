@@ -2,6 +2,7 @@ package com.hss.investment.application.service;
 
 import com.hss.investment.application.persistence.IpcaRepository;
 import com.hss.investment.application.persistence.SelicRepository;
+import com.hss.investment.application.persistence.entity.Investment;
 import com.hss.investment.application.persistence.entity.Ipca;
 import com.hss.investment.application.persistence.entity.Selic;
 import com.hss.investment.application.service.mapper.GeneralMapper;
@@ -19,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static com.hss.investment.util.InvestmentDTOsMock.getInvestmentRange;
 import static com.hss.investment.util.InvestmentDTOsMock.getIpca;
 import static com.hss.investment.util.InvestmentDTOsMock.getIpcaQueryDTO;
 import static com.hss.investment.util.InvestmentDTOsMock.getRateQueryResultList;
@@ -140,6 +142,32 @@ class RateServiceImplTest {
             () -> verify(selicRepository).findFirstByOrderByRangeInitialDateDesc(),
             () -> verify(selicRepository).saveAllAndFlush(any()),
             () -> verifyNoInteractions(ipcaRepository)
+        );
+    }
+
+    @Test
+    void shouldRetrieveIpcaTimeline() {
+        when(ipcaRepository.findByReferenceDateBetween(any(), any())).thenReturn(getRateQueryResultList());
+
+        var timeline = service.getIpcaTimeline(getInvestmentRange());
+
+        assertAll(
+            () -> verifyNoInteractions(selicRepository),
+            () -> verify(ipcaRepository).findByReferenceDateBetween(any(), any()),
+            () -> assertThat(timeline, hasSize(1))
+        );
+    }
+
+    @Test
+    void shouldRetrieveSelicTimeline() {
+        when(selicRepository.findByReferenceDateBetween(any(), any())).thenReturn(getRateQueryResultList());
+
+        var timeline = service.getSelicTimeline(getInvestmentRange());
+
+        assertAll(
+            () -> verifyNoInteractions(ipcaRepository),
+            () -> verify(selicRepository).findByReferenceDateBetween(any(), any()),
+            () -> assertThat(timeline, hasSize(1))
         );
     }
 }
