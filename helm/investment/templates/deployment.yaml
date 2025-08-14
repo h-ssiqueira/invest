@@ -44,6 +44,19 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          env:
+            - name: POSTGRESQL_HOST
+              value: {{ .Values.env.POSTGRESQL_HOST | quote }}
+            - name: POSTGRESQL_USERNAME
+              value: {{ .Values.env.POSTGRESQL_USERNAME | quote }}
+            - name: POSTGRESQL_PASSWORD
+              value: {{ .Values.env.POSTGRESQL_PASSWORD | quote }}
+            - name: SERVER_PORT
+              value: {{ .Values.env.SERVER_PORT | quote }}
+            - name: KAGGLE_USER
+              value: {{ .Values.env.KAGGLE_USER | quote }}
+            - name: KAGGLE_KEY
+              value: {{ .Values.env.KAGGLE_KEY | quote }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -60,6 +73,7 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      restartPolicy: Always
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}

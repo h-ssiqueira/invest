@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "investment.fullname" . }}
+  labels:
+    {{- include "investment.labels" . | nindent 4 }}
+data:
+  POSTGRESQL_HOST: "{{ .Values.env.POSTGRESQL_HOST | default "172.17.0.2" }}"
+  POSTGRESQL_USERNAME: "{{ .Values.env.POSTGRESQL_USERNAME | default "postgres" }}"
+  POSTGRESQL_PASSWORD: "{{ .Values.env.POSTGRESQL_PASSWORD | default "" }}"
+  SERVER_PORT: "{{ .Values.env.SERVER_PORT | default "8080" }}"
+  KAGGLE_USER: "{{ .Values.env.KAGGLE_USER | default "" }}"
+  KAGGLE_KEY: "{{ .Values.env.KAGGLE_KEY | default "" }}"
