@@ -23,7 +23,7 @@ public class ConfigurationDao {
                     var odt = rs.getObject("last_rate_update", OffsetDateTime.class);
                     return odt != null ? odt.toZonedDateTime() : null;
                 }));
-            return Optional.ofNullable(result.getFirst());
+            return result.stream().findFirst();
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

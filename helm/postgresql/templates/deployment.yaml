@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "postgresql.fullname" . }}
+  labels:
+    app: {{ include "postgresql.name" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "postgresql.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "postgresql.name" . }}
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: postgresql
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.postgresql.port }}
+          env:
+            - name: POSTGRES_DB
+              value: {{ .Values.postgresql.database | quote }}
+            - name: POSTGRES_USER
+              value: {{ .Values.postgresql.username | quote }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.postgresql.password | quote }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+            - name: initdb
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "postgresql.fullname" . }}-pvc
+        - name: initdb
+          configMap:
+            name: {{ include "postgresql.fullname" . }}-initdb
+
