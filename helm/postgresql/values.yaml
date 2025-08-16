@@ -1,0 +1,21 @@
+image:
+  repository: postgres
+  tag: "17"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+postgresql:
+  username: postgres
+  password: admin
+  database: investment
+  extraDatabases:
+    - keycloak
+  port: 5432
+  storageSize: 1Gi
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

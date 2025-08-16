@@ -45,6 +45,10 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xmx128M -Xms64M -Xss256k -XX:MaxMetaspaceSize=128M -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
+            - name: SERVER_TOMCAT_MAX_THREADS
+              value: "25"
             - name: POSTGRESQL_HOST
               value: {{ .Values.env.POSTGRESQL_HOST | quote }}
             - name: POSTGRESQL_USERNAME
