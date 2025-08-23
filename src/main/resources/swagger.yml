@@ -73,6 +73,22 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /api/v1/investments/complete/{id}:
+    post:
+      tags:
+        - Investment
+      summary: Complete an existing investment
+      description: Terminate an active investment and retrieve the amount
+      operationId: completeInvestment
+      parameters:
+        - $ref: '#/components/parameters/InvestmentId'
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /api/v1/investments/simulate:
     post:
       tags:
@@ -100,7 +116,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
   /api/v1/rates/{rateType}:
     get:
-      tags: 
+      tags:
         - Rate
       summary: Retrieve interest rates
       description: Retrieve interest rates over the time
@@ -128,7 +144,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
   /api/v1/rates:
     post:
-      tags: 
+      tags:
         - Rate
       summary: Update interest rates
       description: Update interest rates
@@ -431,6 +447,13 @@ components:
         type: string
         enum: ['SELIC','IPCA']
         example: 'SELIC'
+      required: true
+    InvestmentId:
+      name: id
+      in: path
+      schema:
+        type: string
+        format: uuid
       required: true
   responses:
     BadRequest:

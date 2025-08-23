@@ -13,6 +13,7 @@ import com.hss.openapi.model.SimulationInvestmentRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +69,14 @@ public class InvestmentController implements InvestmentApi {
         return result.isEmpty() ?
             ResponseEntity.noContent().build() :
             ResponseEntity.ok(new GenericResponseDTO<>(new InvestmentResultResponseData().items(result)));
+    }
+
+    @Override
+    public ResponseEntity<GenericResponseDTO<?>> completeInvestment(HttpServletRequest request,
+                                                                    HttpServletResponse response,
+                                                                    UUID id) {
+        investmentService.completeInvestment(id);
+        return ResponseEntity.ok().build();
     }
 
     @Override
