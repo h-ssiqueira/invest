@@ -5,10 +5,11 @@ kind load docker-image <image>:<label> --name <name>
 ```
 # Helm
 ## Installing
+* Check the credentials related to Kaggle and database before applying these commands.
 ```shell
 helm dependency update .
 
-helm install bank .
+helm install <name> .
 ```
 ### Checking
 ```shell
@@ -16,9 +17,9 @@ helm template <deployment> --values <deployment>/values.yaml > test.yml
 ```
 ## Upgrading
 ```shell
-helm upgrade bank .
+helm upgrade <deployment> .
 ```
 ## Uninstalling
 ```shell
-helm uninstall bank
+helm uninstall <deployment>
 ```
