@@ -21,5 +21,6 @@ public interface InvestmentRepository extends JpaRepository<Investment, UUID> {
       AND (:#{#dto.aliquot} IS NULL OR i.baseRate.aliquot = :#{#dto.aliquot})""")
     List<Investment> findByParameters(@Param("dto") InvestmentQueryDTO dto, Pageable page);
 
+    @Query("SELECT i FROM Investment i WHERE i.completed IS FALSE")
     Page<Investment> findByIncompleted(Pageable page);
 }

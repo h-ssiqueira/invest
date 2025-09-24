@@ -22,7 +22,7 @@ public class ConfigurationDao {
                 "SELECT last_rate_update FROM configuration LIMIT 1",
                 ((rs, rowNum) -> {
                     var odt = rs.getObject("last_rate_update", OffsetDateTime.class);
-                    return odt != null ? odt.toZonedDateTime() : null;
+                    return odt != null ? odt.toZonedDateTime() : ZonedDateTime.now().minusDays(5);
                 }));
             return result.stream().findFirst();
         } catch (EmptyResultDataAccessException e) {
