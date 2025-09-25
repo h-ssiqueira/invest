@@ -2,7 +2,6 @@ package com.hss.investment.application.service;
 
 import com.hss.investment.application.persistence.IpcaRepository;
 import com.hss.investment.application.persistence.SelicRepository;
-import com.hss.investment.application.persistence.entity.Investment;
 import com.hss.investment.application.persistence.entity.Ipca;
 import com.hss.investment.application.persistence.entity.Selic;
 import com.hss.investment.application.service.mapper.GeneralMapper;

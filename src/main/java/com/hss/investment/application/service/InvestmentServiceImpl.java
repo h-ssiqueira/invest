@@ -27,10 +27,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import static com.hss.investment.application.exception.ErrorMessages.INV_006;
@@ -126,9 +123,11 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
         if (lastDate.isPresent() && lastDate.get().equals(LocalDate.now())) {
             return;
         }
+        log.info("Finding completed investments...");
         var page = PageRequest.of(0,20);
         var list = investmentRepository.findByIncompleted(page);
-        while (list.hasNext()) {
+        log.info("{} completed investments found", list.getTotalElements());
+        while (list.hasContent()) {
             list.forEach(this::completeInvestment);
             page = page.next();
             list = investmentRepository.findByIncompleted(page);
