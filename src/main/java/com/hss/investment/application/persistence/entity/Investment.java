@@ -68,6 +68,9 @@ public class Investment {
     @Column(name = "COMPLETED", nullable = false)
     private boolean completed;
 
+    @Embedded
+    private ProfitResult profitResult;
+
     private Investment(String bank, InvestmentType type, InvestmentRange range, BaseRate rate, BigDecimal amount) {
         this.bank = bank;
         this.investmentType = type;
@@ -80,6 +83,14 @@ public class Investment {
 
     public static Investment create(String bank, InvestmentType type, InvestmentRange range, BaseRate rate, BigDecimal amount) {
         return new Investment(bank,type,range,rate,amount);
+    }
+
+    public void terminateInvestment(ProfitResult profitResult) {
+        if(isNull(investmentRange().finalDate())) {
+            this.investmentRange.finalDate = LocalDate.now();
+        }
+        this.profitResult = profitResult;
+        this.completed = true;
     }
 
     public double amountFormatted() {
@@ -131,8 +142,13 @@ public class Investment {
             return new InvestmentRange(initialDate, finalDate);
         }
 
+        private LocalDate retrieveFinalDate() {
+            return isNull(finalDate()) ? LocalDate.now() : finalDate();
+        }
+
         public YearMonth finalDateYearMonth() {
-            return YearMonth.of(finalDate().getYear(),finalDate().getMonth());
+            var finalDate = retrieveFinalDate();
+            return YearMonth.of(finalDate.getYear(),finalDate.getMonth());
         }
 
         public YearMonth initialDateYearMonth() {
@@ -140,14 +156,14 @@ public class Investment {
         }
 
         public List<LocalDate> getInvestmentBusinessDays(List<LocalDate> holiday) {
-            return initialDate.datesUntil(finalDate)
+            return initialDate().datesUntil(retrieveFinalDate())
                 .filter(day ->
                     !SATURDAY.equals(day.getDayOfWeek()) && !SUNDAY.equals(day.getDayOfWeek()) && !holiday.contains(day)
                 ).toList();
         }
 
         public int getInvestmentDays() {
-            return Math.toIntExact(initialDate.until(finalDate, ChronoUnit.DAYS));
+            return Math.toIntExact(initialDate().until(retrieveFinalDate(), ChronoUnit.DAYS));
         }
 
         public BigDecimal getTax() {
@@ -166,22 +182,21 @@ public class Investment {
         }
 
         public boolean isCompleted() {
-            return nonNull(finalDate) && finalDate.isBefore(LocalDate.now());
+            return nonNull(finalDate()) && finalDate().isBefore(LocalDate.now());
         }
 
         public int retrieveDaysFromMonth(YearMonth month) {
             if(month.equals(initialDateYearMonth())) {
                 return initialDate().lengthOfMonth() - initialDate().getDayOfMonth() + 1;
             }
-            var finalDate = isNull(finalDate()) ? LocalDate.now() : finalDate();
             if(month.equals(finalDateYearMonth())) {
-                return finalDate.getDayOfMonth();
+                return retrieveFinalDate().getDayOfMonth();
             }
             return month.lengthOfMonth();
         }
 
         public int retrieveDaysFromPeriod(YearMonth month) {
-            return Math.toIntExact(month.atDay(1).until(finalDate(), ChronoUnit.DAYS));
+            return Math.toIntExact(month.atDay(1).until(retrieveFinalDate(), ChronoUnit.DAYS));
         }
     }
 
@@ -202,6 +217,28 @@ public class Investment {
 
         public static BaseRate of(AliquotType type, BigDecimal rate) {
             return new BaseRate(type, Percentage.of(rate));
+        }
+    }
+
+    @Getter
+    @Accessors(fluent = true)
+    @Embeddable
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @EqualsAndHashCode
+    public static class ProfitResult {
+
+        @Column(name = "EARNING_AMOUNT")
+        private BigDecimal earningAmount;
+
+        @Column(name = "PROFIT_AMOUNT")
+        private BigDecimal profitAmount;
+
+        @Column(name = "TAX_AMOUNT")
+        private BigDecimal taxAmount;
+
+        public static ProfitResult of(BigDecimal earned, BigDecimal profit) {
+            return new ProfitResult(earned, profit, earned.subtract(profit));
         }
     }
 }

@@ -11,6 +11,7 @@ import com.hss.investment.application.persistence.SelicRepository;
 import com.hss.investment.application.service.InvestmentServiceImpl;
 import com.hss.openapi.model.InvestmentResultResponseDTO;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -35,6 +36,7 @@ import static com.hss.investment.util.InvestmentDTOsMock.getPartialInvestmentRes
 import static com.hss.investment.util.InvestmentDTOsMock.getSimulationInvestmentRequest;
 import static com.hss.investment.util.InvestmentDTOsMock.getSimulationInvestmentRequestError;
 import static com.hss.investment.util.URLConstants.INVESTMENTS_API_URL;
+import static com.hss.investment.util.URLConstants.INVESTMENTS_COMPLETE_API_URL;
 import static com.hss.investment.util.URLConstants.INVESTMENTS_SIMULATION_API_URL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -80,8 +82,8 @@ class InvestmentControllerTest {
             .queryParam("finalDate", "2022-03-13")
             .queryParam("type", "LCA")
             .queryParam("aliquot", "POSTFIXED")
-            .queryParam("sort", "investmentRange.finalDate,asc")
-        ).andExpect(status().isNoContent());
+            .queryParam("sort", "investmentRange.finalDate,asc"))
+            .andExpect(status().isNoContent());
     }
 
     @Test
@@ -93,8 +95,8 @@ class InvestmentControllerTest {
             .queryParam("finalDate", "2022-03-13")
             .queryParam("type", "LCA")
             .queryParam("aliquot", "POSTFIXED")
-            .queryParam("sort", "investmentRange.finalDate,asc")
-        ).andExpect(status().isOk());
+            .queryParam("sort", "investmentRange.finalDate,asc"))
+            .andExpect(status().isOk());
 
         verify(service).retrieveInvestments(any());
     }
@@ -102,15 +104,15 @@ class InvestmentControllerTest {
     @Test
     void shouldValidateAcceptanceWhileRetrievingInvestments() throws Exception {
         mvc.perform(get(INVESTMENTS_API_URL)
-            .accept(MediaType.APPLICATION_XML)
-        ).andExpect(status().isNotAcceptable());
+            .accept(MediaType.APPLICATION_XML))
+            .andExpect(status().isNotAcceptable());
     }
 
     @Test
     void shouldValidateMethodWhileRetrievingInvestments() throws Exception {
         mvc.perform(put(INVESTMENTS_API_URL)
-            .accept(APPLICATION_JSON)
-        ).andExpect(status().isMethodNotAllowed());
+            .accept(APPLICATION_JSON))
+            .andExpect(status().isMethodNotAllowed());
     }
 
     @ParameterizedTest
@@ -118,24 +120,24 @@ class InvestmentControllerTest {
     void shouldValidateTypeWhileRetrievingInvestments(String query) throws Exception {
         mvc.perform(get(INVESTMENTS_API_URL)
             .accept(MediaType.APPLICATION_PROBLEM_JSON)
-            .queryParam(query, query)
-        ).andExpect(status().isBadRequest());
+            .queryParam(query, query))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
     void shouldValidateAcceptanceWhileCreatingInvestments() throws Exception {
         mvc.perform(post(INVESTMENTS_API_URL)
             .contentType(APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_XML)
-        ).andExpect(status().isNotAcceptable());
+            .accept(MediaType.APPLICATION_XML))
+            .andExpect(status().isNotAcceptable());
     }
 
     @Test
     void shouldValidateContentTypeWhileCreatingInvestments() throws Exception {
         mvc.perform(post(INVESTMENTS_API_URL)
             .contentType(MediaType.APPLICATION_XML)
-            .accept(APPLICATION_JSON)
-        ).andExpect(status().isUnsupportedMediaType());
+            .accept(APPLICATION_JSON))
+            .andExpect(status().isUnsupportedMediaType());
     }
 
     @Test
@@ -145,8 +147,8 @@ class InvestmentControllerTest {
         mvc.perform(post(INVESTMENTS_API_URL)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(getInvestmentRequestWrapperError()))
-            .accept(MediaType.APPLICATION_PROBLEM_JSON)
-        ).andExpect(status().isBadRequest());
+            .accept(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(status().isBadRequest());
 
         verify(service).addInvestments(any());
     }
@@ -158,8 +160,8 @@ class InvestmentControllerTest {
         mvc.perform(post(INVESTMENTS_API_URL)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(getInvestmentRequestWrapper()))
-            .accept(APPLICATION_JSON)
-        ).andExpect(status().isMultiStatus());
+            .accept(APPLICATION_JSON))
+            .andExpect(status().isMultiStatus());
 
         verify(service).addInvestments(any());
     }
@@ -171,8 +173,8 @@ class InvestmentControllerTest {
         mvc.perform(post(INVESTMENTS_API_URL)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(getInvestmentRequestWrapper()))
-            .accept(APPLICATION_JSON)
-        ).andExpect(status().isCreated());
+            .accept(APPLICATION_JSON))
+            .andExpect(status().isCreated());
 
         verify(service).addInvestments(any());
     }
@@ -181,16 +183,16 @@ class InvestmentControllerTest {
     void shouldValidateAcceptanceWhileSimulatingInvestments() throws Exception {
         mvc.perform(post(INVESTMENTS_SIMULATION_API_URL)
             .contentType(APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_XML)
-        ).andExpect(status().isNotAcceptable());
+            .accept(MediaType.APPLICATION_XML))
+            .andExpect(status().isNotAcceptable());
     }
 
     @Test
     void shouldValidateContentTypeWhileSimulatingInvestments() throws Exception {
         mvc.perform(post(INVESTMENTS_SIMULATION_API_URL)
             .contentType(MediaType.APPLICATION_XML)
-            .accept(APPLICATION_JSON)
-        ).andExpect(status().isUnsupportedMediaType());
+            .accept(APPLICATION_JSON))
+            .andExpect(status().isUnsupportedMediaType());
     }
 
     @Test
@@ -200,8 +202,8 @@ class InvestmentControllerTest {
         mvc.perform(post(INVESTMENTS_SIMULATION_API_URL)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(getSimulationInvestmentRequestError()))
-            .accept(MediaType.APPLICATION_PROBLEM_JSON)
-        ).andExpect(status().isBadRequest());
+            .accept(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(status().isBadRequest());
 
         verify(service).simulateInvestment(any());
     }
@@ -213,9 +215,27 @@ class InvestmentControllerTest {
         mvc.perform(post(INVESTMENTS_SIMULATION_API_URL)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(getSimulationInvestmentRequest()))
-            .accept(APPLICATION_JSON)
-        ).andExpect(status().isOk());
+            .accept(APPLICATION_JSON))
+            .andExpect(status().isOk());
 
         verify(service).simulateInvestment(any());
+    }
+
+    @Test
+    void shouldCompleteInvestment() throws Exception {
+        mvc.perform(post(INVESTMENTS_COMPLETE_API_URL, UUID.randomUUID()))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldValidateMethodWhileCompletingInvestment() throws Exception {
+        mvc.perform(put(INVESTMENTS_COMPLETE_API_URL, UUID.randomUUID()))
+            .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    void shouldValidateUUIDWhileCompletingInvestment() throws Exception {
+        mvc.perform(post(INVESTMENTS_COMPLETE_API_URL, "UUID.randomUUID()"))
+            .andExpect(status().isBadRequest());
     }
 }

@@ -34,6 +34,9 @@ import lombok.NoArgsConstructor;
 import org.junit.jupiter.params.provider.Arguments;
 import org.springframework.data.domain.Pageable;
 
+import static com.hss.investment.application.exception.ErrorMessages.INV_006;
+import static com.hss.investment.application.exception.ErrorMessages.INV_007;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class InvestmentDTOsMock {
 
@@ -220,12 +223,27 @@ public final class InvestmentDTOsMock {
         );
     }
 
+    public static Stream<Arguments> getCompleteInvestmentRequestArgs() {
+        return Stream.<Arguments>builder()
+            .add(Arguments.of(Optional.of(getInvestment()), INV_007))
+            .add(Arguments.of(Optional.empty(), INV_006.formatted("Investment")))
+            .build();
+    }
+
     public static List<Investment> getInvestmentList() {
         return List.of(
+            getInvestment(),
             Investment.create("bank", Investment.InvestmentType.CRI,Investment.InvestmentRange.of(LocalDate.of(2021,1,1),LocalDate.of(2022,8,31)), Investment.BaseRate.of(Investment.AliquotType.POSTFIXED,BigDecimal.TEN),BigDecimal.ONE),
-            Investment.create("bank", Investment.InvestmentType.CRI,Investment.InvestmentRange.of(LocalDate.of(2021,1,1),LocalDate.of(2022,8,31)), Investment.BaseRate.of(Investment.AliquotType.PREFIXED,BigDecimal.TEN),BigDecimal.ONE),
             Investment.create("bank", Investment.InvestmentType.CRI,Investment.InvestmentRange.of(LocalDate.of(2021,1,1),LocalDate.of(2022,8,31)), Investment.BaseRate.of(Investment.AliquotType.INFLATION,BigDecimal.TEN),BigDecimal.ONE)
         );
+    }
+
+    public static Investment getInvestment() {
+        return Investment.create("bank", Investment.InvestmentType.CRI,Investment.InvestmentRange.of(LocalDate.of(2021,1,1),LocalDate.of(2022,8,31)), Investment.BaseRate.of(Investment.AliquotType.PREFIXED,BigDecimal.TEN),BigDecimal.ONE);
+    }
+
+    public static Optional<Investment> getFutureInvestment() {
+        return Optional.of(Investment.create("bank", Investment.InvestmentType.CRI,Investment.InvestmentRange.of(LocalDate.of(2021,1,1),LocalDate.now().plusWeeks(1)), Investment.BaseRate.of(Investment.AliquotType.PREFIXED,BigDecimal.TEN),BigDecimal.ONE));
     }
 
     public static RateQueryDTO getIpcaQueryDTO() {

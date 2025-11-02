@@ -85,7 +85,7 @@ class RateKaggleUpdaterImplTest {
             () -> verify(client).exchange(any(RequestEntity.class), eq(byte[].class)),
             () -> verify(rateService).processIpca(any()),
             () -> verify(rateService).processSelic(any()),
-            () -> verify(configurationDao).save(any()),
+            () -> verify(configurationDao).saveLastRateUpdate(any()),
             () -> verify(configurationDao).getLastUpdatedTimestamp()
         );
     }
@@ -107,7 +107,7 @@ class RateKaggleUpdaterImplTest {
             () -> verify(client).exchange(any(RequestEntity.class), eq(byte[].class)),
             () -> verify(rateService).processIpca(any()),
             () -> verify(rateService).processSelic(any()),
-            () -> verify(configurationDao).save(any())
+            () -> verify(configurationDao).saveLastRateUpdate(any())
         );
     }
 

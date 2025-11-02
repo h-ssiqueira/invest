@@ -85,7 +85,7 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
             log.info("Download complete!");
             processZipContents(response.getBody());
             log.info("All rates processed successfully!");
-            configurationDao.save(ZonedDateTime.now());
+            configurationDao.saveLastRateUpdate(ZonedDateTime.now());
         } catch (Exception ex) {
             log.error(ex.getMessage());
             throw new InvestmentException(INV_005.formatted(ex.getMessage()));

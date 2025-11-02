@@ -22,7 +22,7 @@ public class InvestmentCalculationDelegator<T extends InvestmentCalculationBase>
         return services.stream()
             .filter(service -> service.accepts(dto))
             .findFirst()
-            .orElseThrow(() -> new InvestmentException(INV_006))
+            .orElseThrow(() -> new InvestmentException(INV_006.formatted("Processor")))
             .process(dto);
     }
 }

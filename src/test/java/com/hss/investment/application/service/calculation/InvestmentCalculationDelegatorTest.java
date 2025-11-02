@@ -53,6 +53,6 @@ class InvestmentCalculationDelegatorTest {
     void shouldProcessCheckWrongClassType() {
         var ex = assertThrows(InvestmentException.class, () -> delegator.delegate(SelicTimeline.builder().build()));
 
-        assertThat(ex.getMessage()).isEqualTo(INV_006);
+        assertThat(ex.getMessage()).isEqualTo(INV_006.formatted("Processor"));
     }
 }

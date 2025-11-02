@@ -43,6 +43,9 @@
             <column name="AMOUNT" type="DECIMAL(18,2)">
                 <constraints nullable="false"/>
             </column>
+            <column name="EARNING_AMOUNT" type="DECIMAL(18,2)"/>
+            <column name="TAX_AMOUNT" type="DECIMAL(18,2)"/>
+            <column name="PROFIT_AMOUNT" type="DECIMAL(18,2)"/>
             <column name="COMPLETED" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
@@ -202,6 +205,7 @@
 
         <createTable tableName="CONFIGURATION">
             <column name="LAST_RATE_UPDATE" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="LAST_INVESTMENT_UPDATE" type="DATE"/>
         </createTable>
 
         <rollback>
