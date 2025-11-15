@@ -10,27 +10,29 @@
 
     <properties>
         <default.encoding>UTF-8</default.encoding>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>${default.encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${default.encoding}</project.reporting.outputEncoding>
 
-        <commons.csv.version>1.14.0</commons.csv.version>
+        <commons.csv.version>1.14.1</commons.csv.version>
         <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
         <postgresql.driver.version>42.7.5</postgresql.driver.version>
         <core.swagger.annotations.version>2.2.30</core.swagger.annotations.version>
         <swagger.annotations.version>1.6.14</swagger.annotations.version>
-        <jackson.databind.nullable.version>0.2.6</jackson.databind.nullable.version>
+        <jackson.version>2.20.1</jackson.version>
+        <jackson.databind.nullable.version>0.2.8</jackson.databind.nullable.version>
         <jakarta.validation.version>3.1.1</jakarta.validation.version>
-        <liquibase.version>4.31.1</liquibase.version>
-        <lombok.version>1.18.38</lombok.version>
+        <liquibase.version>5.0.1</liquibase.version>
+        <lombok.version>1.18.42</lombok.version>
         <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <openapi.generator.maven.version>7.13.0</openapi.generator.maven.version>
-        <spring.version>6.2.8</spring.version>
-        <spring.boot.version>3.4.7</spring.boot.version>
+        <spring.version>7.0.0-RC3</spring.version>
+        <spring.boot.version>4.0.0-RC2</spring.boot.version>
+        <mockito.version>5.20.0</mockito.version>
 
         <image.name>hssiqueira/${project.artifactId}:${project.version}</image.name>
         <builder.image>urn:cnb:builder:paketo-buildpacks/java</builder.image>
@@ -47,8 +49,20 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa-test</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -57,13 +71,42 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-actuator-test</artifactId>
             <version>${spring.boot.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-liquibase</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-liquibase-test</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
             <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation-test</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>test</scope>
         </dependency>
         <!-- Database -->
         <dependency>
@@ -93,6 +136,11 @@
             <version>${jackson.databind.nullable.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>${commons.csv.version}</version>
@@ -100,9 +148,10 @@
 
         <!-- Testing -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring.boot.version}</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <type>jar</type>
             <scope>test</scope>
         </dependency>
         <!-- Swagger -->
@@ -264,18 +313,18 @@
                     </execution>
                 </executions>
             </plugin>
-<plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <addClasspath>true</addClasspath>
-              <mainClass>com.hss.investment.InvestmentApplication</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                  <archive>
+                    <manifest>
+                      <addClasspath>true</addClasspath>
+                      <mainClass>com.hss.investment.InvestmentApplication</mainClass>
+                    </manifest>
+                  </archive>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
