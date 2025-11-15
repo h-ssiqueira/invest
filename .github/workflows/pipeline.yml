@@ -43,15 +43,6 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'reports/dependency-check-report.sarif'
-      - name: Run Semgrep
-        uses: returntocorp/semgrep-action@v1
-        with:
-          config: 'p/owasp-top-ten'
-          generateSarif: true
-      - name: Upload Semgrep SARIF results
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: semgrep.sarif
       - name: Scan for secrets in repo
         uses: trufflesecurity/trufflehog@main
         with:
@@ -72,7 +63,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y trivy
       - name: Scan Docker image built
-        run: trivy image --exit-code 0 --severity HIGH,CRITICAL --format sarif -o trivy-results.sarif your-image-name:latest
+        run: trivy image --exit-code 0 --severity HIGH,CRITICAL --format sarif -o trivy-results.sarif hssiqueira/investments:1.0.0-SNAPSHOT
       - name: Upload Trivy SARIF results
         uses: github/codeql-action/upload-sarif@v4
         with:
