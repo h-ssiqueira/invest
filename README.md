@@ -16,6 +16,7 @@
 
 ## Description
 Investment simulation and storage for different types of fixed income:
+
 Name | Description | Has taxes
 :---: | :---: | :---:
 CDB | *Certificado de Depósito Bancário* | **:heavy_check_mark:**
@@ -43,8 +44,12 @@ Generate the docker image with:
 mvn clean package -Pdocker
 ```
 * Adjust database connection and other properties to execute the application.
+### Docker Compose
+```bash
+docker compose up
+```
 ### Kubernetes
-Check [this README](/helm/README.md)
+Check [this README](/infra/helm/README.md)
 ### Architecture
 
 <img src="docs/architecture.svg" alt="architecture" />
