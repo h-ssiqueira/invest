@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run OWASP Dependency-Check
-        uses: dependency-check/Dependency-Check_Action@v5
+        uses: dependency-check/Dependency-Check_Action@main
         with:
           project: 'JavaApp'
           path: '.'
@@ -53,7 +53,7 @@ jobs:
         with:
           sarif_file: semgrep.sarif
       - name: Scan for secrets in repo
-        uses: trufflesecurity/trufflehog@v3
+        uses: trufflesecurity/trufflehog@main
         with:
           path: '.'
           output: 'trufflehog.json'
