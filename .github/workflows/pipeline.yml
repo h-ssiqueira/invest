@@ -40,7 +40,7 @@ jobs:
           format: 'SARIF'
           out: 'reports'
       - name: Upload Dependency-Check report to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'reports/dependency-check-report.sarif'
       - name: Run Semgrep
@@ -49,7 +49,7 @@ jobs:
           config: 'p/owasp-top-ten'
           generateSarif: true
       - name: Upload Semgrep SARIF results
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: semgrep.sarif
       - name: Scan for secrets in repo
@@ -74,6 +74,6 @@ jobs:
       - name: Scan Docker image built
         run: trivy image --exit-code 0 --severity HIGH,CRITICAL --format sarif -o trivy-results.sarif your-image-name:latest
       - name: Upload Trivy SARIF results
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-results.sarif
