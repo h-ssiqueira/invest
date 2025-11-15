@@ -38,6 +38,7 @@
         <builder.image>urn:cnb:builder:paketo-buildpacks/java</builder.image>
         <docker.username/>
         <docker.password/>
+        <argLine/>
     </properties>
 
     <dependencies>
@@ -323,6 +324,24 @@
                       <mainClass>com.hss.investment.InvestmentApplication</mainClass>
                     </manifest>
                   </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
                 </configuration>
             </plugin>
         </plugins>
