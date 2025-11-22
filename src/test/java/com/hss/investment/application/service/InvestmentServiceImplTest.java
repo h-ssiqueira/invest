@@ -82,7 +82,7 @@ class InvestmentServiceImplTest {
         var response = service.retrieveInvestments(getInvestmentQueryDTO());
 
         assertAll(
-            () -> assertThat(response, hasSize(3)),
+            () -> assertThat(response.getContent(), hasSize(3)),
             () -> verify(repository).findByParameters(any(), any()),
             () -> verify(rateService, atMost(1)).getIpcaTimeline(any()),
             () -> verify(rateService, atMost(1)).getSelicTimeline(any()),

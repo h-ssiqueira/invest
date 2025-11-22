@@ -43,6 +43,9 @@ public class Idempotency {
     @Column(name = "CREATED_AT", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "RESPONSE")
+    private String response;
+
     private Idempotency(String idempotency) {
         this.idempotencyValue = idempotency;
         this.createdAt = LocalDateTime.now();
@@ -53,6 +56,10 @@ public class Idempotency {
             throw new InvestmentException(INV_001);
         }
         return new Idempotency(idempotency);
+    }
+
+    public void concludeOperation(String json) {
+        this.response = json;
     }
 
     public enum HttpMethod {

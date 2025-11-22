@@ -21,6 +21,7 @@ import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.liquibase.autoconfigure.LiquibaseAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -45,6 +46,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @EnableAutoConfiguration(exclude = {LiquibaseAutoConfiguration.class, DataSourceAutoConfiguration.class})
@@ -76,6 +78,8 @@ class InvestmentControllerTest {
 
     @Test
     void shouldRetrieveEmptyInvestments() throws Exception {
+        when(service.retrieveInvestments(any())).thenReturn(new PageImpl<>(List.of()));
+
         mvc.perform(get(INVESTMENTS_API_URL)
             .accept(APPLICATION_JSON)
             .queryParam("initialDate", "2020-03-13")
@@ -84,11 +88,13 @@ class InvestmentControllerTest {
             .queryParam("aliquot", "POSTFIXED")
             .queryParam("sort", "investmentRange.finalDate,asc"))
             .andExpect(status().isNoContent());
+
+        verify(service).retrieveInvestments(any());
     }
 
     @Test
     void shouldRetrieveInvestments() throws Exception {
-        when(service.retrieveInvestments(any())).thenReturn(List.of(new InvestmentResultResponseDTO()));
+        when(service.retrieveInvestments(any())).thenReturn(new PageImpl<>(List.of(new InvestmentResultResponseDTO())));
         mvc.perform(get(INVESTMENTS_API_URL)
             .accept(APPLICATION_JSON)
             .queryParam("initialDate", "2020-03-13")
@@ -96,7 +102,12 @@ class InvestmentControllerTest {
             .queryParam("type", "LCA")
             .queryParam("aliquot", "POSTFIXED")
             .queryParam("sort", "investmentRange.finalDate,asc"))
-            .andExpect(status().isOk());
+            .andExpectAll(
+                status().isOk(),
+                header().exists("X-Has-Next"),
+                header().exists("X-Total-Elements"),
+                header().exists("X-Total-Pages")
+            );
 
         verify(service).retrieveInvestments(any());
     }

@@ -19,7 +19,7 @@
 
         <commons.csv.version>1.14.1</commons.csv.version>
         <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
-        <postgresql.driver.version>42.7.5</postgresql.driver.version>
+        <postgresql.driver.version>42.7.8</postgresql.driver.version>
         <core.swagger.annotations.version>2.2.30</core.swagger.annotations.version>
         <swagger.annotations.version>1.6.14</swagger.annotations.version>
         <jackson.version>2.20.1</jackson.version>
@@ -30,8 +30,8 @@
         <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <openapi.generator.maven.version>7.13.0</openapi.generator.maven.version>
-        <spring.version>7.0.0-RC3</spring.version>
-        <spring.boot.version>4.0.0-RC2</spring.boot.version>
+        <spring.version>7.0.0</spring.version>
+        <spring.boot.version>4.0.0</spring.boot.version>
         <mockito.version>5.20.0</mockito.version>
 
         <image.name>hssiqueira/${project.artifactId}:${project.version}</image.name>

@@ -13,9 +13,11 @@ import com.hss.openapi.model.SimulationInvestmentRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +26,7 @@ import static com.hss.investment.application.exception.ErrorMessages.INV_004;
 import static java.util.Objects.nonNull;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.MULTI_STATUS;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
@@ -66,9 +69,16 @@ public class InvestmentController implements InvestmentApi {
             nonNull(aliquot) ? Investment.AliquotType.valueOf(aliquot) : null,
             PageRequest.of(page, size, extractSort(nonNull(sort) ? sort : "investmentRange.initialDate,desc")))
         );
-        return result.isEmpty() ?
-            ResponseEntity.noContent().build() :
-            ResponseEntity.ok(new GenericResponseDTO<>(new InvestmentResultResponseData().items(result)));
+        if(result.isEmpty()) {
+             return ResponseEntity.noContent().build();
+        }
+        var headers = new HttpHeaders();
+        headers.setAll(Map.of("X-Has-Next", String.valueOf(result.hasNext()),
+                              "X-Total-Elements", String.valueOf(result.getTotalElements()),
+                              "X-Total-Pages", String.valueOf(result.getTotalPages())));
+        return ResponseEntity.status(OK)
+            .headers(headers)
+            .body(new GenericResponseDTO<>(new InvestmentResultResponseData().items(result.getContent())));
     }
 
     @Override

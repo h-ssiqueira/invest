@@ -35,12 +35,22 @@ paths:
       responses:
         '201':
           description: Successful operation
+          headers:
+            idempotency-id:
+              description: Indicates the idempotency identifier created for this request
+              schema:
+                type: string
         '207':
           description: Partial successful operation - some items have fail in validations
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PartialInvestmentResult'
+          headers:
+            idempotency-id:
+              description: Indicates the idempotency identifier created for this request
+              schema:
+                type: string
         '400':
           $ref: '#/components/responses/BadRequest'
         '500':
@@ -67,6 +77,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvestmentResultResponse'
+          headers:
+            X-Has-Next:
+              description: Indicates if has a next page of items.
+              schema:
+                type: boolean
+            X-Total-Elements:
+              description: Indicates the total number of elements according to filters provided.
+              schema:
+                type: integer
+            X-Total-Pages:
+              description: Indicates the total number of pages according to filters provided.
+              schema:
+                type: integer
         '204':
           description: No content found
         '400':
