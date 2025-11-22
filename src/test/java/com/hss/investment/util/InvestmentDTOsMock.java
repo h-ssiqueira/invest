@@ -9,6 +9,7 @@ import com.hss.investment.application.dto.calculation.InvestmentCalculationSelic
 import com.hss.investment.application.dto.calculation.InvestmentCalculationSimple;
 import com.hss.investment.application.dto.calculation.ProfitReturnDTO;
 import com.hss.investment.application.dto.calculation.SelicTimeline;
+import com.hss.investment.application.persistence.entity.Idempotency;
 import com.hss.investment.application.persistence.entity.Investment;
 import com.hss.investment.application.persistence.entity.Ipca;
 import com.hss.investment.application.persistence.entity.Selic;
@@ -28,10 +29,13 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.junit.jupiter.params.provider.Arguments;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import static com.hss.investment.application.exception.ErrorMessages.INV_006;
@@ -62,6 +66,16 @@ public final class InvestmentDTOsMock {
 
     public static InvestmentRequestWrapper getInvestmentRequestWrapperError() {
         return new InvestmentRequestWrapper().items(List.of(getInvestmentRequest()));
+    }
+
+    public static Idempotency getIdempotency() {
+        var entity = Idempotency.of("1");
+        try {
+            var field = Idempotency.class.getDeclaredField("id");
+            field.setAccessible(true);
+            field.set(entity, UUID.randomUUID());
+        } catch (Exception e) {}
+        return entity;
     }
 
     public static InvestmentRequest getInvestmentRequest() {
@@ -230,12 +244,12 @@ public final class InvestmentDTOsMock {
             .build();
     }
 
-    public static List<Investment> getInvestmentList() {
-        return List.of(
+    public static Page<Investment> getInvestmentList() {
+        return new PageImpl<>(List.of(
             getInvestment(),
             Investment.create("bank", Investment.InvestmentType.CRI,Investment.InvestmentRange.of(LocalDate.of(2021,1,1),LocalDate.of(2022,8,31)), Investment.BaseRate.of(Investment.AliquotType.POSTFIXED,BigDecimal.TEN),BigDecimal.ONE),
             Investment.create("bank", Investment.InvestmentType.CRI,Investment.InvestmentRange.of(LocalDate.of(2021,1,1),LocalDate.of(2022,8,31)), Investment.BaseRate.of(Investment.AliquotType.INFLATION,BigDecimal.TEN),BigDecimal.ONE)
-        );
+        ));
     }
 
     public static Investment getInvestment() {
