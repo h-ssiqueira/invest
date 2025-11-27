@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public sealed interface InvestmentService permits InvestmentServiceImpl {
 
     @Transactional(readOnly = true)
-    List<InvestmentResultResponseDTO> retrieveInvestments(InvestmentQueryDTO dto);
+    Page<InvestmentResultResponseDTO> retrieveInvestments(InvestmentQueryDTO dto);
 
     PartialInvestmentResultData addInvestments(List<InvestmentRequest> dtoList);
 
