@@ -99,9 +99,7 @@ class InvestmentControllerTest {
             .accept(APPLICATION_JSON)
             .queryParam("initialDate", "2020-03-13")
             .queryParam("finalDate", "2022-03-13")
-            .queryParam("type", "LCA")
-            .queryParam("aliquot", "POSTFIXED")
-            .queryParam("sort", "investmentRange.finalDate,asc"))
+            .queryParam("type", "LCA"))
             .andExpectAll(
                 status().isOk(),
                 header().exists("X-Has-Next"),
