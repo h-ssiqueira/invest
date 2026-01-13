@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -31,36 +32,36 @@ class ConfigurationDaoTest {
 
     @Test
     void getLastUpdatedTimestamp() {
-        when(jdbcTemplate.query(any(String.class), any(RowMapper.class))).thenReturn(singletonList(ZonedDateTime.now()));
+        when(jdbcTemplate.query(any(String.class), ArgumentMatchers.<RowMapper<ZonedDateTime>>any())).thenReturn(singletonList(ZonedDateTime.now()));
 
         var date = dao.getLastUpdatedTimestamp();
 
         assertAll(
-            () -> verify(jdbcTemplate).query(any(String.class), any(RowMapper.class)),
+            () -> verify(jdbcTemplate).query(any(String.class), ArgumentMatchers.<RowMapper<ZonedDateTime>>any()),
             () -> assertThat(date).isNotNull()
         );
     }
 
     @Test
     void getLastUpdatedTimestampWithException() {
-        when(jdbcTemplate.query(any(String.class), any(RowMapper.class))).thenThrow(EmptyResultDataAccessException.class);
+        when(jdbcTemplate.query(any(String.class), ArgumentMatchers.<RowMapper<ZonedDateTime>>any())).thenThrow(EmptyResultDataAccessException.class);
 
         var date = dao.getLastUpdatedTimestamp();
 
         assertAll(
-            () -> verify(jdbcTemplate).query(any(String.class), any(RowMapper.class)),
+            () -> verify(jdbcTemplate).query(any(String.class), ArgumentMatchers.<RowMapper<ZonedDateTime>>any()),
             () -> assertThat(date).isEmpty()
         );
     }
 
     @Test
     void saveLastRateUpdateWhenAlreadyExists() {
-        when(jdbcTemplate.query(any(String.class), any(RowMapper.class))).thenReturn(singletonList(ZonedDateTime.now()));
+        when(jdbcTemplate.query(any(String.class), ArgumentMatchers.<RowMapper<ZonedDateTime>>any())).thenReturn(singletonList(ZonedDateTime.now()));
 
         dao.saveLastRateUpdate(ZonedDateTime.now());
 
         assertAll(
-            () -> verify(jdbcTemplate).query(any(String.class), any(RowMapper.class)),
+            () -> verify(jdbcTemplate).query(any(String.class), ArgumentMatchers.<RowMapper<ZonedDateTime>>any()),
             () -> verify(jdbcTemplate).update(eq("UPDATE configuration SET last_rate_update = ?"), any(Timestamp.class))
         );
     }
@@ -70,43 +71,43 @@ class ConfigurationDaoTest {
         dao.saveLastRateUpdate(ZonedDateTime.now());
 
         assertAll(
-            () -> verify(jdbcTemplate).query(any(String.class), any(RowMapper.class)),
+            () -> verify(jdbcTemplate).query(any(String.class), ArgumentMatchers.<RowMapper<ZonedDateTime>>any()),
             () -> verify(jdbcTemplate).update(eq("INSERT INTO configuration (last_rate_update) VALUES (?)"), any(Timestamp.class))
         );
     }
 
     @Test
     void getLastInvestmentUpdated() {
-        when(jdbcTemplate.query(any(String.class), any(RowMapper.class))).thenReturn(singletonList(LocalDate.now()));
+        when(jdbcTemplate.query(any(String.class), ArgumentMatchers.<RowMapper<LocalDate>>any())).thenReturn(singletonList(LocalDate.now()));
 
         var date = dao.getLastInvestmentUpdated();
 
         assertAll(
-            () -> verify(jdbcTemplate).query(any(String.class), any(RowMapper.class)),
+            () -> verify(jdbcTemplate).query(any(String.class), ArgumentMatchers.<RowMapper<LocalDate>>any()),
             () -> assertThat(date).isNotNull()
         );
     }
 
     @Test
     void getLastInvestmentUpdatedWithException() {
-        when(jdbcTemplate.query(any(String.class), any(RowMapper.class))).thenThrow(EmptyResultDataAccessException.class);
+        when(jdbcTemplate.query(any(String.class), ArgumentMatchers.<RowMapper<ZonedDateTime>>any())).thenThrow(EmptyResultDataAccessException.class);
 
         var date = dao.getLastInvestmentUpdated();
 
         assertAll(
-            () -> verify(jdbcTemplate).query(any(String.class), any(RowMapper.class)),
+            () -> verify(jdbcTemplate).query(any(String.class), ArgumentMatchers.<RowMapper<ZonedDateTime>>any()),
             () -> assertThat(date).isEmpty()
         );
     }
 
     @Test
     void saveLastInvestmentUpdateWhenAlreadyExists() {
-        when(jdbcTemplate.query(any(String.class), any(RowMapper.class))).thenReturn(singletonList(LocalDate.now()));
+        when(jdbcTemplate.query(any(String.class), ArgumentMatchers.<RowMapper<LocalDate>>any())).thenReturn(singletonList(LocalDate.now()));
 
         dao.saveLastInvestmentUpdate(LocalDate.now());
 
         assertAll(
-            () -> verify(jdbcTemplate).query(any(String.class), any(RowMapper.class)),
+            () -> verify(jdbcTemplate).query(any(String.class), ArgumentMatchers.<RowMapper<LocalDate>>any()),
             () -> verify(jdbcTemplate).update(eq("UPDATE configuration SET last_investment_update = ?"), any(LocalDate.class))
         );
     }
@@ -116,7 +117,7 @@ class ConfigurationDaoTest {
         dao.saveLastInvestmentUpdate(LocalDate.now());
 
         assertAll(
-            () -> verify(jdbcTemplate).query(any(String.class), any(RowMapper.class)),
+            () -> verify(jdbcTemplate).query(any(String.class), ArgumentMatchers.<RowMapper<ZonedDateTime>>any()),
             () -> verify(jdbcTemplate).update(eq("INSERT INTO configuration (last_investment_update) VALUES (?)"), any(LocalDate.class))
         );
     }

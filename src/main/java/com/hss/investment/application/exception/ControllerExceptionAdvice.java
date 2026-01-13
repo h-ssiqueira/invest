@@ -12,6 +12,7 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 @RestControllerAdvice
 public class ControllerExceptionAdvice extends ResponseEntityExceptionHandler {
 
+    @SuppressWarnings("unused")
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleGenericException(Exception ex) {
         return ResponseEntity.badRequest()

@@ -37,6 +37,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.csv.CSVFormat.DEFAULT;
 
+@SuppressWarnings("unused")
 @Slf4j
 @Service
 @RequiredArgsConstructor

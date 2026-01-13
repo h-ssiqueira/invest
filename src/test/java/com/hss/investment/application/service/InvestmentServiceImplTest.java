@@ -155,7 +155,7 @@ class InvestmentServiceImplTest {
     @Test
     void shouldExecuteTwiceCompletedInvestmentsUpdate() {
         when(configurationDao.getLastInvestmentUpdated()).thenReturn(Optional.of(LocalDate.now().minusMonths(1)));
-        when(repository.findByIncompleted(any())).thenReturn(new PageImpl<>(singletonList(getInvestment())),Page.empty());
+        when(repository.findByIncompleted(any())).thenReturn(new PageImpl<>(singletonList(getInvestment())), Page.empty());
         when(delegator.delegate(any())).thenReturn(getProfitReturnDTO());
 
         service.updateInvestments();

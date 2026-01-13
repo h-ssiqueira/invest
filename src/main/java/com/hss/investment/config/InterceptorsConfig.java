@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
+@SuppressWarnings("unused")
 public class InterceptorsConfig implements WebMvcConfigurer {
 
     private final IdempotencyInterceptor idempotencyInterceptor;

@@ -74,7 +74,9 @@ public final class InvestmentDTOsMock {
             var field = Idempotency.class.getDeclaredField("id");
             field.setAccessible(true);
             field.set(entity, UUID.randomUUID());
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            // ignoring
+        }
         return entity;
     }
 

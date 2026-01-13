@@ -53,7 +53,7 @@ public class IdempotencyInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception {
+    public void postHandle(@NonNull HttpServletRequest request, HttpServletResponse response, @NonNull Object handler, @Nullable ModelAndView modelAndView) {
         var id = response.getHeader(IDEMPOTENCY_HEADER);
         if (id == null) {
             return;
