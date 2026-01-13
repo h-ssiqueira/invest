@@ -46,7 +46,7 @@ spec:
               protocol: TCP
           env:
             - name: JAVA_TOOL_OPTIONS
-              value: "-Xmx128M -Xms64M -Xss256k -XX:MaxMetaspaceSize=128M -XX:ReservedCodeCacheSize=32M -XX:MaxDirectMemorySize=16M -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
+              value: "-Xss256k -XX:MaxMetaspaceSize=128M -XX:ReservedCodeCacheSize=32M -XX:MaxDirectMemorySize=10M -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
             - name: SERVER_TOMCAT_MAX_THREADS
               value: "25"
             - name: POSTGRESQL_HOST
