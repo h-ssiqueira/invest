@@ -1,117 +1,142 @@
 replicaCount: 1
 
 image:
-  repository: hssiqueira/investments
+  repository: docker.io/hssiqueira/investments
   pullPolicy: IfNotPresent
   tag: "1.0.0-SNAPSHOT"
 
-# This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
-# This is to override the chart name.
+
 nameOverride: ""
 fullnameOverride: ""
 
-# This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
-  # Specifies whether a service account should be created
   create: false
-  # Automatically mount a ServiceAccount's API credentials?
   automount: true
-  # Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-# This is for setting Kubernetes Annotations to a Pod.
-# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
 podAnnotations: {}
-# This is for setting Kubernetes Labels to a Pod.
-# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-podLabels:
-  release: prometheus-stack
+
+podLabels: {}
 
 podSecurityContext: {}
-  # fsGroup: 2000
 
 securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 
-# This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
+deploymentStrategy:
+  type: Recreate
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+  terminationGracePeriodSeconds: 5
+
+environment:
+  # Minimum application necessary memory: Xss * 250 + metaSpace + codeCache + directMemory
+  javaToolOptionsExtra: "-Xss256k -XX:MaxMetaspaceSize=128M -XX:ReservedCodeCacheSize=32M -XX:MaxDirectMemorySize=10M -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
+  env:
+    - name: KAGGLE_USER
+      value: "hssiqueira"
+    - name: KAGGLE_KEY
+      value: ""
+
+initContainers: []
+
+sidecars: []
+
 service:
-  # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-  type: NodePort
-  # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
-  port: 8080
-  nodePort: 30080
+  type: ClusterIP
+  port: 8081
+  nodePort: ''
 
-# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
+#  className: ""
+#  annotations:
+#     kubernetes.io/ingress.class: nginx
+#     kubernetes.io/tls-acme: "true"
+#  hosts:
+#    - host: chart-example.local
+#      paths:
+#        - path: /
+#          pathType: ImplementationSpecific
+#  tls: []
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
 
-resources: {}
-  # limits:
-  #   cpu: 500m
-  #   memory: 512Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+deploy:
+  ports:
+    containerPort: 8081
+    managementPort: 8081
 
-# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+resources:
+  limits:
+    cpu: 2000m
+    memory: 1024Mi
+#  requests:
+#    cpu: 1000m
+#    memory: 512Mi
+
 livenessProbe:
   httpGet:
-    path: /actuator/health
-    port: http
-  initialDelaySeconds: 30
-  periodSeconds: 10
+    path: /actuator/health/liveness
+    port: 8081
+  periodSeconds: 5
   timeoutSeconds: 5
+  initialDelaySeconds: 90
+  failureThreshold: 5
+
 readinessProbe:
   httpGet:
-    path: /actuator/health
-    port: http
-  initialDelaySeconds: 10
+    path: /actuator/health/readiness
+    port: 8081
   periodSeconds: 5
-  timeoutSeconds: 2
+  timeoutSeconds: 5
+  initialDelaySeconds: 60
+  failureThreshold: 5
 
+startupProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: 8081
+  periodSeconds: 5
+  timeoutSeconds: 5
+  initialDelaySeconds: 30
+  failureThreshold: 50
 
-# This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:
   enabled: false
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 80
+  # minReplicas: 1
+  # maxReplicas: 10
+  # targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-# Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
+persistentVolumeClaim:
+  investment-volume:
+    enabled: false
+    mountPath: "/"
+    size: 1Gi
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: gp3
+    labels: {}
+    annotations: {}
 
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
+volumes:
+  - name: investment-properties
+    configMap:
+      name: investment-properties
+
+volumeMounts:
+  - name: investment-properties
+    mountPath: /properties
+  - name: investment-volume
+    mountPath: /logs
+
+extraConfigMaps: []
+
+extraSecrets: []
 
 nodeSelector: {}
 
@@ -119,18 +144,66 @@ tolerations: []
 
 affinity: {}
 
+configMap:
+  name: investment-properties
+  labels:
+    app: investment
+  data:
+    #######################################################################
+    application.properties:
+      # Application main port
+      server.port: "8081"
+
+      # Cors configuration
+      application.security.cors.allowedOrigins: "*"
+
+      # Datasource
+      spring.datasource.test-on-borrow: "true"
+      spring.datasource.driver-class-name: "org.postgresql.Driver"
+      spring.datasource.jdbc-url: "jdbc:postgresql://bank-postgresql:5432/investment"
+      spring.datasource.username: "postgres"
+      spring.datasource.password: "admin"
+      spring.datasource.hikari.connection-timeout: 5000
+      spring.datasource.hikari.idle-timeout: 10000
+      spring.datasource.hikari.minimum-idle: 1
+      spring.datasource.hikari.maximum-pool-size: 3
+      spring.datasource.hikari.connection-test-query: "SELECT 1"
+
+      # OAuth2 configuration for actuator
+      application.security.oauth.clientId: "hss"
+      application.security.oauth.secret: "hss"
+
+      # Maximum file and request sizes
+      spring.servlet.multipart.max-file-size: "10MB"
+      spring.servlet.multipart.max-request-size: "10MB"
+
+      # Identifier generation configuration
+      spring.jpa.properties.hibernate.id.generator.stored_last_used: "false"
+      spring.jpa.properties.hibernate.id.optimizer.pooled.prefer_lo: "true"
+
+      # Log configuration
+      #logging.config: "/logs/logback.xml"
+      #logging.file.name: "/logs/investment-server.log"
+      logging.pattern.console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %X{traceId:-} %-5level %logger{36} - %msg%n"
+      logging.pattern.file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %X{traceId:-} %-5level %logger{36} - %msg%n"
+      #logging.file.max-size: "1024MB"
+      #logging.file.max-history: "5"
+
+      # Timeout configuration
+      restTemplate.connect-timeout: "10000"
+      restTemplate.read-timeout: "1m"
+
+      # Tomcat configuration
+      server.tomcat.connection-timeout: "10000"
+
 serviceMonitor:
-  enabled: true
+  enabled: false
+  uri: /actuator/prometheus
+  interval: 10s
   port: http
-  path: actuator/prometheus
-  interval: 30s
   scheme: http
-
-
-env:
-  POSTGRESQL_HOST: bank-postgresql
-  POSTGRESQL_USERNAME: postgres
-  POSTGRESQL_PASSWORD: admin
-  SERVER_PORT: 8080
-  KAGGLE_USER: "hssiqueira"
-  KAGGLE_KEY: ""
+  basicAuth:
+    username: hss
+    password: hss
+  labels:
+    release: kube-prometheus-stack

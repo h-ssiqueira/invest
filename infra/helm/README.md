@@ -13,7 +13,7 @@ helm install <name> .
 ```
 ### Checking
 ```shell
-helm template <deployment> --values <deployment>/values.yaml > test.yml
+helm template <deployment> . --values <deployment>/values.yaml --debug
 ```
 ## Upgrading
 ```shell

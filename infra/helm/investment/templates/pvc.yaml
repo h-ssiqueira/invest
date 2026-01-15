@@ -1,0 +1,32 @@
+{{- range $pvcName, $pvcConfig := .Values.persistentVolumeClaim }}
+  {{- if $pvcConfig.enabled }}
+
+  {{- if not (or $pvcConfig.storageClassName $pvcConfig.volumeName) }}
+  {{- fail (printf "Error in PVC '%s': you must define at least one of 'storageClassName' or 'volumeName'." $pvcName) }}
+  {{- end }}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $pvcName }}
+  {{- with $pvcConfig.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $pvcConfig.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- toYaml $pvcConfig.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ $pvcConfig.size }}
+  storageClassName: {{ default "" $pvcConfig.storageClassName }}
+  {{- if $pvcConfig.volumeName }}
+  volumeName: {{ $pvcConfig.volumeName }}
+  {{- end }}
+  {{- end }}
+  {{- end }}

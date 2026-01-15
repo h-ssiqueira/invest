@@ -1,3 +1,4 @@
+{{- include "checkResourcesRequestsNotSet" . }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -11,6 +12,12 @@ spec:
   selector:
     matchLabels:
       {{- include "investment.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: {{ .Values.deploymentStrategy.type | default "RollingUpdate" }}
+    {{- if eq (.Values.deploymentStrategy.type | default "RollingUpdate") "RollingUpdate" }}
+    rollingUpdate:
+      {{ toYaml .Values.deploymentStrategy.rollingUpdate | nindent 6 }}
+    {{- end }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,69 +26,81 @@ spec:
       {{- end }}
       labels:
         {{- include "investment.labels" . | nindent 8 }}
-        {{- with .Values.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+          {{- with .Values.podLabels }}
+          {{- toYaml . | nindent 8 }}
+          {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "investment.serviceAccountName" . }}
-      {{- with .Values.podSecurityContext }}
       securityContext:
-        {{- toYaml . | nindent 8 }}
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.initContainers }}
+      initContainers:
+        {{- toYaml .Values.initContainers | nindent 8 }}
       {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.deploymentStrategy.terminationGracePeriodSeconds }}
       containers:
         - name: {{ .Chart.Name }}
-          {{- with .Values.securityContext }}
           securityContext:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ required "The field image.repository is required!" .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.deploy.ports.containerPort }}
               protocol: TCP
+            - name: metrics
+              containerPort: {{ .Values.deploy.ports.managementPort }}
+          {{- if .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.startupProbe }}
+          startupProbe:
+            {{- toYaml .Values.startupProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            limits:
+              cpu: {{ .Values.resources.limits.cpu | quote }}
+              memory: {{ .Values.resources.limits.memory | quote }}
+            {{- include "calculatedResourcesRequests" . | nindent 12 }}
           env:
             - name: JAVA_TOOL_OPTIONS
-              value: "-Xss256k -XX:MaxMetaspaceSize=128M -XX:ReservedCodeCacheSize=32M -XX:MaxDirectMemorySize=10M -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
-            - name: SERVER_TOMCAT_MAX_THREADS
-              value: "25"
-            - name: POSTGRESQL_HOST
-              value: {{ .Values.env.POSTGRESQL_HOST | quote }}
-            - name: POSTGRESQL_USERNAME
-              value: {{ .Values.env.POSTGRESQL_USERNAME | quote }}
-            - name: POSTGRESQL_PASSWORD
-              value: {{ .Values.env.POSTGRESQL_PASSWORD | quote }}
-            - name: SERVER_PORT
-              value: {{ .Values.env.SERVER_PORT | quote }}
-            - name: KAGGLE_USER
-              value: {{ .Values.env.KAGGLE_USER | quote }}
-            - name: KAGGLE_KEY
-              value: {{ .Values.env.KAGGLE_KEY | quote }}
-          {{- with .Values.livenessProbe }}
-          livenessProbe:
+              value: "{{ .Values.environment.javaToolOptionsExtra }}"
+            {{- with .Values.environment.env }}
             {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.readinessProbe }}
-          readinessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.resources }}
-          resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.volumeMounts }}
+            {{- end }}
           volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-      restartPolicy: Always
-      {{- with .Values.volumes }}
+            {{- if .Values.volumeMounts }}
+              {{- toYaml .Values.volumeMounts | nindent 12 }}
+              {{- end }}
+              {{- range $pvcName, $pvcConfig := .Values.persistentVolumeClaim }}
+              {{- if $pvcConfig.enabled }}
+              - name: {{ $pvcName }}
+                mountPath: {{ $pvcConfig.mountPath }}
+              {{- end }}
+              {{- end }}
+        {{- if .Values.sidecars }}
+        {{- toYaml .Values.sidecars | nindent 8 }}
+        {{- end }}
       volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- if .Values.volumes }}
+          {{- toYaml .Values.volumes | nindent 8 }}
+          {{- end }}
+          {{- range $pvcName, $pvcConfig := .Values.persistentVolumeClaim }}
+          {{- if $pvcConfig.enabled }}
+          - name: {{ $pvcName }}
+            persistentVolumeClaim:
+              claimName: {{ $pvcName }}
+          {{- end }}
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
