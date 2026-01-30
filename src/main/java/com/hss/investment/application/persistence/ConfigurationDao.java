@@ -31,17 +31,15 @@ public class ConfigurationDao {
     }
 
     public void saveLastRateUpdate(ZonedDateTime lastRateUpdate) {
-        if (getLastUpdatedTimestamp().isPresent()) {
-            jdbcTemplate.update(
+        getLastUpdatedTimestamp().ifPresentOrElse(_ -> jdbcTemplate.update(
                 "UPDATE configuration SET last_rate_update = ?",
                 Timestamp.from(lastRateUpdate.toInstant())
-            );
-        } else {
-            jdbcTemplate.update(
+            ),
+            () -> jdbcTemplate.update(
                 "INSERT INTO configuration (last_rate_update) VALUES (?)",
                 Timestamp.from(lastRateUpdate.toInstant())
-            );
-        }
+            )
+        );
     }
 
     public Optional<LocalDate> getLastInvestmentUpdated() {
@@ -56,10 +54,9 @@ public class ConfigurationDao {
     }
 
     public void saveLastInvestmentUpdate(LocalDate date) {
-        if (getLastInvestmentUpdated().isPresent()) {
-            jdbcTemplate.update("UPDATE configuration SET last_investment_update = ?", date);
-        } else {
-            jdbcTemplate.update("INSERT INTO configuration (last_investment_update) VALUES (?)", date);
-        }
+        getLastInvestmentUpdated().ifPresentOrElse(
+            _ -> jdbcTemplate.update("UPDATE configuration SET last_investment_update = ?", date),
+            () -> jdbcTemplate.update("INSERT INTO configuration (last_investment_update) VALUES (?)", date)
+        );
     }
 }

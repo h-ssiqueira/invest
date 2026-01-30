@@ -1,0 +1,27 @@
+{{- if .Values.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "investment.fullname" . }}
+  labels:
+    {{- include "investment.labels" . | nindent 4 }}
+      {{- with .Values.monitoring.labels }}
+      {{- toYaml . | nindent 4 }}
+      {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "investment.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - port: {{ .Values.serviceMonitor.port | default "http" }}
+      scheme: {{ .Values.serviceMonitor.scheme | default "http" }}
+      interval: {{ .Values.serviceMonitor.interval }}
+      path: {{ .Values.serviceMonitor.uri }}
+      basicAuth:
+        username:
+          name: {{ include "investment.fullname" . }}-basic-auth
+          key: "username"
+        password:
+          name: {{ include "investment.fullname" . }}-basic-auth
+          key: "password"
+{{- end }}

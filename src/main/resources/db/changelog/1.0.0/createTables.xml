@@ -87,6 +87,7 @@
             <column name="IDEMPOTENCY" type="VARCHAR(100)">
                 <constraints nullable="false" unique="true"/>
             </column>
+            <column name="RESPONSE" type="VARCHAR(1000)"/>
         </createTable>
 
         <createIndex tableName="IDEMPOTENCY" indexName="idx_idempotency_idempotency">

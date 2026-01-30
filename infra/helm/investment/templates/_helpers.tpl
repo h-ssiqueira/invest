@@ -60,3 +60,23 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Check if resources.requests is set and fail if it is.
+This is to ensure that requests are not manually set, as they are calculated automatically from limits.
+*/}}
+{{- define "checkResourcesRequestsNotSet" -}}
+{{- if hasKey .Values.resources "requests" }}
+{{- fail "You must not set 'resources.requests' manually. The values are automatically calculated from 'resources.limits'." }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Calculate resources.requests based on resources.limits.
+This is used to ensure that requests are always set based on the limits.
+*/}}
+{{- define "calculatedResourcesRequests" -}}
+requests:
+  cpu: {{ .Values.resources.limits.cpu | quote }}
+  memory: {{ .Values.resources.limits.memory | quote }}
+{{- end -}}

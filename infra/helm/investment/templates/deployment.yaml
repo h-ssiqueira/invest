@@ -1,0 +1,115 @@
+{{- include "checkResourcesRequestsNotSet" . }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "investment.fullname" . }}
+  labels:
+    {{- include "investment.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "investment.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: {{ .Values.deploymentStrategy.type | default "RollingUpdate" }}
+    {{- if eq (.Values.deploymentStrategy.type | default "RollingUpdate") "RollingUpdate" }}
+    rollingUpdate:
+      {{ toYaml .Values.deploymentStrategy.rollingUpdate | nindent 6 }}
+    {{- end }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "investment.labels" . | nindent 8 }}
+          {{- with .Values.podLabels }}
+          {{- toYaml . | nindent 8 }}
+          {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "investment.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.initContainers }}
+      initContainers:
+        {{- toYaml .Values.initContainers | nindent 8 }}
+      {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.deploymentStrategy.terminationGracePeriodSeconds }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ required "The field image.repository is required!" .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.deploy.ports.containerPort }}
+              protocol: TCP
+            - name: metrics
+              containerPort: {{ .Values.deploy.ports.managementPort }}
+          {{- if .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.startupProbe }}
+          startupProbe:
+            {{- toYaml .Values.startupProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            limits:
+              cpu: {{ .Values.resources.limits.cpu | quote }}
+              memory: {{ .Values.resources.limits.memory | quote }}
+            {{- include "calculatedResourcesRequests" . | nindent 12 }}
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "{{ .Values.environment.javaToolOptionsExtra }}"
+            {{- with .Values.environment.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          volumeMounts:
+            {{- if .Values.volumeMounts }}
+              {{- toYaml .Values.volumeMounts | nindent 12 }}
+              {{- end }}
+              {{- range $pvcName, $pvcConfig := .Values.persistentVolumeClaim }}
+              {{- if $pvcConfig.enabled }}
+              - name: {{ $pvcName }}
+                mountPath: {{ $pvcConfig.mountPath }}
+              {{- end }}
+              {{- end }}
+        {{- if .Values.sidecars }}
+        {{- toYaml .Values.sidecars | nindent 8 }}
+        {{- end }}
+      volumes:
+        {{- if .Values.volumes }}
+          {{- toYaml .Values.volumes | nindent 8 }}
+          {{- end }}
+          {{- range $pvcName, $pvcConfig := .Values.persistentVolumeClaim }}
+          {{- if $pvcConfig.enabled }}
+          - name: {{ $pvcName }}
+            persistentVolumeClaim:
+              claimName: {{ $pvcName }}
+          {{- end }}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

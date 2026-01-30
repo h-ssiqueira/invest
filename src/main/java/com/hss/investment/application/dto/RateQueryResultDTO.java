@@ -14,6 +14,7 @@ public class RateQueryResultDTO {
     private LocalDate initialDate;
     private LocalDate finalDate;
 
+    @SuppressWarnings("unused")
     public RateQueryResultDTO(BigDecimal rate, LocalDate initialDate) {
         this.rate = rate;
         this.initialDate = initialDate;

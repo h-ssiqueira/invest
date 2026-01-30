@@ -40,10 +40,9 @@ public final class InvestmentPostfixedCalculationService extends InvestmentCalcu
             amount = calculatePeriodAmount(amount, dailyRate, groups.get(i));
             i++;
         }
-        if (i < groups.size()) {
-            amount = calculatePeriodAmount(amount, investment.selicTimeline().getLast().rate(), groups.get(i));
-        }
-        return amount;
+        return i < groups.size()
+            ? calculatePeriodAmount(amount, investment.selicTimeline().getLast().rate(), groups.get(i))
+            : amount;
     }
 
     public static List<Integer> splitWithStreams(List<LocalDate> dates, List<LocalDate> splitPoints) {

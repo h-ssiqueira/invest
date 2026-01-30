@@ -1,0 +1,209 @@
+replicaCount: 1
+
+image:
+  repository: docker.io/hssiqueira/investments
+  pullPolicy: IfNotPresent
+  tag: "1.0.0-SNAPSHOT"
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+deploymentStrategy:
+  type: Recreate
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+  terminationGracePeriodSeconds: 5
+
+environment:
+  # Minimum application necessary memory: Xss * 250 + metaSpace + codeCache + directMemory
+  javaToolOptionsExtra: "-Xss256k -XX:MaxMetaspaceSize=128M -XX:ReservedCodeCacheSize=32M -XX:MaxDirectMemorySize=10M -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
+  env:
+    - name: KAGGLE_USER
+      value: "hssiqueira"
+    - name: KAGGLE_KEY
+      value: ""
+
+initContainers: []
+
+sidecars: []
+
+service:
+  type: ClusterIP
+  port: 8081
+  nodePort: ''
+
+ingress:
+  enabled: false
+#  className: ""
+#  annotations:
+#     kubernetes.io/ingress.class: nginx
+#     kubernetes.io/tls-acme: "true"
+#  hosts:
+#    - host: chart-example.local
+#      paths:
+#        - path: /
+#          pathType: ImplementationSpecific
+#  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+deploy:
+  ports:
+    containerPort: 8081
+    managementPort: 8081
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 1024Mi
+#  requests:
+#    cpu: 1000m
+#    memory: 512Mi
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: 8081
+  periodSeconds: 5
+  timeoutSeconds: 5
+  initialDelaySeconds: 90
+  failureThreshold: 5
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: 8081
+  periodSeconds: 5
+  timeoutSeconds: 5
+  initialDelaySeconds: 60
+  failureThreshold: 5
+
+startupProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: 8081
+  periodSeconds: 5
+  timeoutSeconds: 5
+  initialDelaySeconds: 30
+  failureThreshold: 50
+
+autoscaling:
+  enabled: false
+  # minReplicas: 1
+  # maxReplicas: 10
+  # targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+persistentVolumeClaim:
+  investment-volume:
+    enabled: false
+    mountPath: "/"
+    size: 1Gi
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: gp3
+    labels: {}
+    annotations: {}
+
+volumes:
+  - name: investment-properties
+    configMap:
+      name: investment-properties
+
+volumeMounts:
+  - name: investment-properties
+    mountPath: /properties
+  - name: investment-volume
+    mountPath: /logs
+
+extraConfigMaps: []
+
+extraSecrets: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+configMap:
+  name: investment-properties
+  labels:
+    app: investment
+  data:
+    #######################################################################
+    application.properties:
+      # Application main port
+      server.port: "8081"
+
+      # Cors configuration
+      application.security.cors.allowedOrigins: "*"
+
+      # Datasource
+      spring.datasource.test-on-borrow: "true"
+      spring.datasource.driver-class-name: "org.postgresql.Driver"
+      spring.datasource.jdbc-url: "jdbc:postgresql://bank-postgresql:5432/investment"
+      spring.datasource.username: "postgres"
+      spring.datasource.password: "admin"
+      spring.datasource.hikari.connection-timeout: 5000
+      spring.datasource.hikari.idle-timeout: 10000
+      spring.datasource.hikari.minimum-idle: 1
+      spring.datasource.hikari.maximum-pool-size: 3
+      spring.datasource.hikari.connection-test-query: "SELECT 1"
+
+      # OAuth2 configuration for actuator
+      application.security.oauth.clientId: "hss"
+      application.security.oauth.secret: "hss"
+
+      # Maximum file and request sizes
+      spring.servlet.multipart.max-file-size: "10MB"
+      spring.servlet.multipart.max-request-size: "10MB"
+
+      # Identifier generation configuration
+      spring.jpa.properties.hibernate.id.generator.stored_last_used: "false"
+      spring.jpa.properties.hibernate.id.optimizer.pooled.prefer_lo: "true"
+
+      # Log configuration
+      #logging.config: "/logs/logback.xml"
+      #logging.file.name: "/logs/investment-server.log"
+      logging.pattern.console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %X{traceId:-} %-5level %logger{36} - %msg%n"
+      logging.pattern.file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %X{traceId:-} %-5level %logger{36} - %msg%n"
+      #logging.file.max-size: "1024MB"
+      #logging.file.max-history: "5"
+
+      # Timeout configuration
+      restTemplate.connect-timeout: "10000"
+      restTemplate.read-timeout: "1m"
+
+      # Tomcat configuration
+      server.tomcat.connection-timeout: "10000"
+
+serviceMonitor:
+  enabled: false
+  uri: /actuator/prometheus
+  interval: 10s
+  port: http
+  scheme: http
+  basicAuth:
+    username: hss
+    password: hss
+  labels:
+    release: kube-prometheus-stack

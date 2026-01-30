@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -70,10 +72,11 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
     }
 
     @Override
-    public List<InvestmentResultResponseDTO> retrieveInvestments(InvestmentQueryDTO dto) {
+    public Page<InvestmentResultResponseDTO> retrieveInvestments(InvestmentQueryDTO dto) {
         validateInitialAndFinalDates(dto.initialDate(), dto.finalDate());
         var result = investmentRepository.findByParameters(dto, dto.page());
-        return result.stream()
+        return new PageImpl<>(
+        result.getContent().stream()
             .map(item -> {
                 var calculations = delegator.delegate(retrieveDTO(item));
                 return new InvestmentResultResponseDTO()
@@ -87,7 +90,7 @@ public non-sealed class InvestmentServiceImpl implements InvestmentService {
                     .profit(calculations.profitFormatted())
                     .aliquot(InvestmentAliquot.fromValue(item.baseRate().aliquot().name()))
                     .earnings(calculations.earningsFormatted());
-            }).toList();
+            }).toList(), result.getPageable(), result.getTotalElements());
     }
 
     @Override
