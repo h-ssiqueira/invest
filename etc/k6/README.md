@@ -19,13 +19,13 @@ k6 run etc/k6/loadtest.js
 * Run only the rates scenario:
 
 ```bash
-k6 run --scenario rates_test -e BASE_URL=http://localhost:8080 etc/k6/loadtest.js
+k6 run -e BASE_URL=http://localhost:8083 -e SCENARIO=ratesScenario etc/k6/loadtest.js
 ```
 
-* Run only the simulate scenario:
+* Run only the simulate investment scenario:
 
 ```bash
-k6 run --scenario simulate_test -e BASE_URL=http://localhost:8080 etc/k6/loadtest.js
+k6 run -e BASE_URL=http://localhost:8083 -e SCENARIO=simulateScenario etc/k6/loadtest.js
 ```
 ___
 Notes
