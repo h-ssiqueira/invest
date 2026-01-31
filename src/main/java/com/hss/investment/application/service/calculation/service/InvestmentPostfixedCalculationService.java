@@ -61,7 +61,10 @@ public final class InvestmentPostfixedCalculationService extends InvestmentCalcu
     }
 
     private List<LocalDate> retrieveHolidays(InvestmentCalculationSelic investment) {
-        var holidays = holidayRepository.findByReferenceDateBetween(investment.investmentRange().initialDate(), investment.investmentRange().finalDate());
+        var holidays = holidayRepository.findByReferenceDateBetween(
+            investment.investmentRange().initialDate(),
+            investment.investmentRange().finalDate()
+        );
         return holidays.stream()
             .filter(h -> !SATURDAY.equals(h.getDayOfWeek()) && !SUNDAY.equals(h.getDayOfWeek()))
             .toList();

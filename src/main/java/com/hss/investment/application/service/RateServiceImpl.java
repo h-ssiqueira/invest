@@ -68,7 +68,7 @@ public non-sealed class RateServiceImpl implements RateService {
             ipca.referenceDate().isEqual(lastIPCA.referenceDate())
         ));
         logSuccess(rateList.size());
-        ipcaRepository.saveAllAndFlush(rateList);
+        ipcaRepository.insertAllMissingRates(rateList);
     }
 
     @Override

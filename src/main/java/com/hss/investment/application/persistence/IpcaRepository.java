@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface IpcaRepository extends JpaRepository<Ipca, Integer> {
+public interface IpcaRepository extends JpaRepository<Ipca, Integer>, IpcaCustomRepository {
 
     @Query("""
         SELECT new com.hss.investment.application.dto.RateQueryResultDTO(i.rate.rate,i.referenceDate)

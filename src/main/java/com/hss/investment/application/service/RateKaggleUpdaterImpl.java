@@ -108,12 +108,12 @@ public non-sealed class RateKaggleUpdaterImpl implements RateKaggleUpdater {
     }
 
     private static byte[] getCsvBytes(ZipInputStream zis) throws IOException {
-        var baos = new ByteArrayOutputStream();
+        var outputStream = new ByteArrayOutputStream();
         var buffer = new byte[4096];
         int len;
         while ((len = zis.read(buffer)) > 0)
-            baos.write(buffer, 0, len);
-        return baos.toByteArray();
+            outputStream.write(buffer, 0, len);
+        return outputStream.toByteArray();
     }
 
     private void processCSV(byte[] csvBytes, String filename) throws IOException {

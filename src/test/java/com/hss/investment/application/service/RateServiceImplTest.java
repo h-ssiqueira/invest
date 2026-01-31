@@ -96,7 +96,7 @@ class RateServiceImplTest {
 
         assertAll(
             () -> verify(ipcaRepository).findFirstByOrderByReferenceDateDesc(),
-            () -> verify(ipcaRepository).saveAllAndFlush(any()),
+            () -> verify(ipcaRepository).insertAllMissingRates(any()),
             () -> verifyNoInteractions(selicRepository)
         );
     }
@@ -112,7 +112,7 @@ class RateServiceImplTest {
 
         assertAll(
             () -> verify(ipcaRepository).findFirstByOrderByReferenceDateDesc(),
-            () -> verify(ipcaRepository).saveAllAndFlush(any()),
+            () -> verify(ipcaRepository).insertAllMissingRates(any()),
             () -> verifyNoInteractions(selicRepository)
         );
     }
