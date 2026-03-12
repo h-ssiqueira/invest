@@ -9,7 +9,7 @@ const DURATION_WARMUP = Number(__ENV.DURATION_WARMUP) || 5;
 const DURATION_MAIN = Number(__ENV.DURATION_MAIN) || 10;
 const SCENARIO = __ENV.SCENARIO || 'ratesScenario';
 
-// Conatant definitions
+// Constant definitions
 const RATE_TYPE = ['SELIC', `IPCA`];
 const INVESTMENT_TYPE = ['CDB', 'RDB', 'LCA', 'LCI', 'CRA', 'CRI'];
 const ALIQUOT_TYPE = ['PREFIXED', 'INFLATION', 'POSTFIXED'];
@@ -119,7 +119,7 @@ function randomDates() {
     let initial = Math.min(t1, t2);
     let final = Math.max(t1, t2);
 
-    const oneDay = 24 * 60 * 60 * 1000;
+    const oneDayInMs = 86400000;
     if (final - initial < oneDay) {
         final = Math.min(initial + oneDay, end);
         initial = Math.max(initial - oneDay, start);
