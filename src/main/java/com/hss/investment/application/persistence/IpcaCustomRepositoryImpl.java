@@ -26,7 +26,7 @@ public class IpcaCustomRepositoryImpl implements IpcaCustomRepository {
         for (var ipca : ipcaList) {
             sql.append("(?, ?),");
             params.add(Date.valueOf(ipca.referenceDate()));
-            params.add(ipca.rate());
+            params.add(ipca.rate().ratePercentage());
         }
         sql.setLength(sql.length() - 1);
         jdbcTemplate.update(sql.toString(), params.toArray());

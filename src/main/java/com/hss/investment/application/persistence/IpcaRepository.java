@@ -14,7 +14,11 @@ public interface IpcaRepository extends JpaRepository<Ipca, Integer>, IpcaCustom
     @Query("""
         SELECT new com.hss.investment.application.dto.RateQueryResultDTO(i.rate.rate,i.referenceDate)
         FROM Ipca i
-        WHERE (i.referenceDate BETWEEN COALESCE(:initialDate, i.referenceDate) AND COALESCE(:finalDate, i.referenceDate))
+        WHERE date_trunc('month', i.referenceDate) BETWEEN
+              COALESCE(date_trunc('month', CAST(:initialDate AS timestamp)),
+                       date_trunc('month', i.referenceDate)) AND
+              COALESCE(date_trunc('month', CAST(:finalDate AS timestamp)),
+                       date_trunc('month', i.referenceDate))
         ORDER BY i.referenceDate ASC""")
     List<RateQueryResultDTO> findByReferenceDateBetween(@Param("initialDate") LocalDate initialDate, @Param("finalDate") LocalDate finalDate);
 

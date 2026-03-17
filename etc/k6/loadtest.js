@@ -46,7 +46,6 @@ const scenarios = (exec, throughput, vus, warmupDuration, mainDuration) => ({
 
 export const options = {
     scenarios: { ...scenarios(SCENARIO, THROUGHPUT, FIXED_VUS, DURATION_WARMUP, DURATION_MAIN) },
-    discardResponseBodies: true,
     thresholds: {},
     summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)', 'count']
 };
@@ -82,7 +81,11 @@ export function simulateScenario() {
             finalDate: dates.finalDate,
             amount: randomValue(100000),
         });
-        checkResponseAndWriteMetrics(http.post(url, payload, postPutPatchHeaders));
+        var res = http.post(url, payload, postPutPatchHeaders)
+        
+        if(!checkResponseAndWriteMetrics(res)){
+            console.error(payload);
+        }
     });
 }
 
@@ -98,6 +101,7 @@ function checkResponseAndWriteMetrics(res) {
         console.error(`❌ Request failed with status ${res.status}: ${res.body}`);
     }
     customMetrics[__ENV.MY_SCENARIO].add(res.timings.duration);
+    return output;
 }
 
 // Random data generators
@@ -120,9 +124,9 @@ function randomDates() {
     let final = Math.max(t1, t2);
 
     const oneDayInMs = 86400000;
-    if (final - initial < oneDay) {
-        final = Math.min(initial + oneDay, end);
-        initial = Math.max(initial - oneDay, start);
+    if (final - initial < oneDayInMs) {
+        final = Math.min(initial + oneDayInMs, end);
+        initial = Math.max(initial - oneDayInMs, start);
     }
 
     const fmt = (ms) => new Date(ms).toISOString().slice(0, 10);

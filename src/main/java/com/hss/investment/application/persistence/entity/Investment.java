@@ -196,7 +196,7 @@ public class Investment {
         }
 
         public int retrieveDaysFromPeriod(YearMonth month) {
-            return Math.toIntExact(month.atDay(1).until(retrieveFinalDate(), ChronoUnit.DAYS));
+            return Math.abs(Math.toIntExact(month.atDay(1).until(retrieveFinalDate(), ChronoUnit.DAYS)));
         }
     }
 
